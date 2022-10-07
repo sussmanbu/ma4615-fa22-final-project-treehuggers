@@ -23,9 +23,17 @@ Mary is a senior majoring in Marine Science. Her favorite type of tree is willow
 
 Github Account: https://github.com/mel-bu 
 
-## Maecey Niksch
+## Maecey Niksch (they/she)
 
 Maecey is a senior majoring in International Relations. Their favorite type of tree is pine.
+
+Github Account: https://github.com/mjniksch
+
+## Jordyn Nickerson (she/her)
+
+Jordyn is a senior majoring in Biology CMG and minoring in Math. Her favorite type of tree is the giant sequoia.
+
+Github Account: https://github.com/JordynNick
 
 <!-- Please leave in the information below -->
 
