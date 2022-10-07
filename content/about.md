@@ -11,9 +11,11 @@ This comes from the file `content/about.md`.
 This is a website for the final project for MA[46]15 Data Science with R by Team TEAMNAME.
 The members of this team are below.
 
-## Luis Iberico
+## Jenna Riedl (she/her)
 
-Luis is a Ph.D. student in Stats and is the Teaching Fellow for the course.
+Jenna is a senior majoring in Painting and minoring in Statistics. Her favorite tree is a single oak in the forest behind her house that is home to an extremely insistent squirrel. 
+
+Github Account: https://github.com/jenna-readl
 
 ## Dan Sussman
 
