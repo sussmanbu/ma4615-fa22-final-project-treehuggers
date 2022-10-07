@@ -17,6 +17,12 @@ Jenna is a senior majoring in Painting and minoring in Statistics. Her favorite 
 
 Github Account: https://github.com/jenna-readl
 
+## Mary Lane (she/her)
+
+Mary is a senior majoring in Marine Science. Her favorite type of tree is willow. 
+
+Github Account: https://github.com/mel-bu 
+
 ## Dan Sussman
 
 Dan is a professor in the Math/Stat department and is the instructor for the course.
