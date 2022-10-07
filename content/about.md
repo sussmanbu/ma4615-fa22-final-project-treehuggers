@@ -8,7 +8,7 @@ draft: false
 
 This comes from the file `content/about.md`.
 
-This is a website for the final project for MA[46]15 Data Science with R by Team TEAMNAME.
+This is a website for the final project for MA[46]15 Data Science with R by Team Treehuggers.
 The members of this team are below.
 
 ## Jenna Riedl (she/her)
@@ -23,9 +23,9 @@ Mary is a senior majoring in Marine Science. Her favorite type of tree is willow
 
 Github Account: https://github.com/mel-bu 
 
-## Dan Sussman
+## Maecey Niksch
 
-Dan is a professor in the Math/Stat department and is the instructor for the course.
+Maecey is a senior majoring in International Relations. Their favorite type of tree is pine.
 
 <!-- Please leave in the information below -->
 
