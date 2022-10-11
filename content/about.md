@@ -35,6 +35,12 @@ Jordyn is a senior majoring in Biology CMG and minoring in Math. Her favorite ty
 
 Github Account: https://github.com/JordynNick
 
+## Junyi(Jenny) Huang (she/her)
+
+Jenny is a senior majoring in Data Science. She doesn't really have a favorite tree.
+
+Github Account: https://github.com/jyiyih
+
 <!-- Please leave in the information below -->
 
 ### Info About this Template.
