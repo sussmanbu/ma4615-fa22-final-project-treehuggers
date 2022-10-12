@@ -47,7 +47,7 @@ Everyone should now have their computer set up with blogdown, hugo and your team
 In turn, do the following:
 
 0. Press Pull in the Git tab to get the latest changes.
-1. Open the `about.md` file from the `content` folder and add your name to the file, write a quick introduction, and include a link to your Github account page. (The first person can remove Wan-chi and Dan from the list).
+1. Open the `about.md` file from the `content` folder and add your name to the file, write a quick introduction, and include a link to your Github account page. (The first person can remove Luis and Dan from the list).
 2. Commit the changes to `about.md` and Push your changes.
 3. Check that your changes are showing up on netlify.
 4. Make sure to wait until one team member is done before the next person starts again at 0.

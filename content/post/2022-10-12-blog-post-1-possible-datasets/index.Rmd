@@ -1,0 +1,21 @@
+---
+title: 'Blog Post 1: Possible Datasets'
+author: Treehuggers
+date: '2022-10-12'
+slug: []
+categories: []
+tags: []
+description: This post contains 3 potential datasets for our group to explore during our final project. 
+toc: yes
+authors: []
+series: []
+lastmod: '2022-10-12T09:38:24-04:00'
+featuredVideo: ~
+featuredImage: ~
+---
+
+Our group is interested in general themes of green spaces and how that related to the mental or physical health of the population. Within these themes, we have found the following three datasets. 
+
+1. Parks by Census Tract (US, 2018)
+Link: https://www.openicpsr.org/openicpsr/project/117921/version/V1/view
+In order to open the dataset, you must create a free account. We have done this and downloaded the dataset. This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories. The data describes the number and area of parks for each census tract. It was created by the Trust for Public Land to aid researchers in learning about how access to public parks may contribute to physical and mental health.
