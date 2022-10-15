@@ -25,7 +25,7 @@ Github Account: https://github.com/mel-bu
 
 ## Maecey Niksch (they/she)
 
-Maecey is a senior majoring in International Relations. Their favorite type of tree is pine.
+Maecey is a senior majoring in International Relations and minoring in Statistical Methods. Their favorite type of tree is pine.
 
 Github Account: https://github.com/mjniksch
 
