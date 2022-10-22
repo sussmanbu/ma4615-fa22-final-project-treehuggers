@@ -38,7 +38,8 @@ First Plot - Parks dataset: "Total number of parks in 10 counties in California"
 
 ```{r echo=TRUE}
 library(tidyverse)
-tract_ca <- read.csv("nanda_parks_tract_2018_01P.csv") %>% 
+tract_ca <- read.csv("nanda_parks_tract_2018_01P.csv") 
+tract_ca %>% 
   filter(grepl('^06', tract_fips10), any_open_park == 1)
 tract_ca2 <- tract_ca %>% head(10)
 park_graph1 <- ggplot(tract_ca2, aes(x = tract_fips10, y = count_open_parks)) + geom_col() + labs(title = "Total number of parks in 10 counties in California", x = "county code", y = "number of parks")
