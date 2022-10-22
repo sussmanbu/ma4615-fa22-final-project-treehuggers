@@ -1,0 +1,36 @@
+---
+title: 'Blogpost #2 - Data Loading and Cleaning & Exploratory Data Analysis'
+author: Treehuggers
+date: '2022-10-21'
+slug: []
+categories: []
+tags: []
+description: We outline our steps to load and clean our data, and we conduct our initial exploratory data analysis.
+toc: yes
+authors: []
+series: []
+lastmod: '2022-10-21T23:09:57-04:00'
+featuredVideo: ~
+featuredImage: ~
+---
+
+
+<div id="TOC">
+
+</div>
+
+<p>Data Loading and Cleaning</p>
+<p>We chose to work with the Parks by Census Tract (US, 2018) dataset alongside the State of California: Asthma Hospitalization Rates by County dataset.</p>
+<p>To initially load and clean our data, we need to take the Census tract codes from the parks dataset and match them to the California counties in the asthma dataset. Ideally, we will filter the parks dataset for California and create a new column in the parks dataset with county name, and then we could join the two datasets together. The Census tract code indicates California by starting with “06,” and the next three digits of the 11 character Census tract code correspond to the county. Additionally, for the asthma dataset, some of the data in certain columns (particularly the age group column) also needs to be cleaned so that it will be readable and won’t cause an error in R; this can be done by editing the csv file (change the - to “to”), through Google Sheets or Excel, or we can figure a way to do it in RStudio.</p>
+<p>We also need to select a subset of the asthma dataset for the year 2018, since the parks dataset is from 2018. We are also taking a subset of the parks dataset by filtering for only the California Census tracts by county.</p>
+<p>For the asthma dataset, we will need to remove missing values (NAs) for some of age-adjusted hospitalization rates.</p>
+<p>Exploratory Data Analysis</p>
+<p>Our initial exploration of the data was within each respective dataset, as we have not tidyed the datasets enough to join them together just yet.</p>
+<p>For the parks data, we will only look at the CA counties. We will also eventually only select certain columns from the data, and we may leave out count_open_parkstc10, count_open_parkstc5, count_open_parkstc3, tract_area, and tot_park_area depending on what is the most relevant to our project.</p>
+<p>On the other hand, for the asthma dataset, we will be mostly focusing on variables such as the county, age group, year, and number of hospitalizations.</p>
+<p>Currently, we have not looked for any big, obvious patterns in the data because the datasets are way too large and need to be cleaned to notice certain patterns, as well as to combine the datasets together.</p>
+<p>First Plot - Parks dataset: “Total number of parks in 10 counties in California”
+Filtered the data to include only CA counties and only counties that had at least one open park. Then, filtered the data to select the first 10 counties arbitrarily, since all of the counties was too much data to plot. Constructed a plot of the total number of parks in the first 10 California counties.</p>
+<p>Second Plot - Asthma dataset: Plot of the number of asthma hospitalizations in California counties for 2018
+Due to not yet having cleaned the data, there are some age groups that did not appear in the graph, even though it is colored by age group.</p>
+<p>There is a problem which we think requires cleaning the data. For the variables age group and strata name, which consists of All ages, 0-17 years, 18+ years, 0-4 years, 5-17 years, 18-64 years, and 65+ years, it doesn’t show up this way in R. In R, the dashes (-) in these are replaced with &lt;96&gt; and are not readable through R.</p>

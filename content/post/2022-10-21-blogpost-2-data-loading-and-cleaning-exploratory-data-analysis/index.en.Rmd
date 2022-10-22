@@ -1,0 +1,55 @@
+---
+title: 'Blogpost #2 - Data Loading and Cleaning & Exploratory Data Analysis'
+author: Treehuggers
+date: '2022-10-21'
+slug: []
+categories: []
+tags: []
+description: ~
+toc: yes
+authors: []
+series: []
+lastmod: '2022-10-21T23:58:39-04:00'
+featuredVideo: ~
+featuredImage: ~
+---
+
+Data Loading and Cleaning
+
+We chose to work with the Parks by Census Tract (US, 2018) dataset alongside the State of California: Asthma Hospitalization Rates by County dataset.
+
+To initially load and clean our data, we need to take the Census tract codes from the parks dataset and match them to the California counties in the asthma dataset. Ideally, we will filter the parks dataset for California and create a new column in the parks dataset with county name, and then we could join the two datasets together. The Census tract code indicates California by starting with "06," and the next three digits of the 11 character Census tract code correspond to the county. Additionally, for the asthma dataset, some of the data in certain columns (particularly the age group column) also needs to be cleaned so that it will be readable and won't cause an error in R; this can be done by editing the csv file (change the - to "to"), through Google Sheets or Excel, or we can figure a way to do it in RStudio.
+
+We also need to select a subset of the asthma dataset for the year 2018, since the parks dataset is from 2018. We are also taking a subset of the parks dataset by filtering for only the California Census tracts by county.
+
+For the asthma dataset, we will need to remove missing values (NAs) for some of age-adjusted hospitalization rates.
+
+Exploratory Data Analysis
+
+Our initial exploration of the data was within each respective dataset, as we have not tidyed the datasets enough to join them together just yet.
+
+For the parks data, we will only look at the CA counties. We will also eventually only select certain columns from the data, and we may leave out count_open_parkstc10, count_open_parkstc5, count_open_parkstc3, tract_area, and tot_park_area depending on what is the most relevant to our project.
+
+On the other hand, for the asthma dataset, we will be mostly focusing on variables such as the county, age group, year, and number of hospitalizations.
+
+Currently, we have not looked for any big, obvious patterns in the data because the datasets are way too large and need to be cleaned to notice certain patterns, as well as to combine the datasets together.
+
+First Plot - Parks dataset: "Total number of parks in 10 counties in California" Filtered the data to include only CA counties and only counties that had at least one open park. Then, filtered the data to select the first 10 counties arbitrarily, since all of the counties was too much data to plot. Constructed a plot of the total number of parks in the first 10 California counties.
+
+```{r eval=FALSE, include=FALSE}
+library(tidyverse)
+tract_ca <- read.csv(dataset/"nanda_parks_tract_2018_01P.csv") %>% 
+  filter(grepl('^06', tract_fips10), any_open_park == 1)
+tract_ca2 <- tract_ca %>% head(10)
+park_graph1 <- ggplot(tract_ca2, aes(x = tract_fips10, y = count_open_parks)) + geom_col() + labs(title = "Total number of parks in 10 counties in California", x = "county code", y = "number of parks")
+```
+
+Second Plot - Asthma dataset: Plot of the number of asthma hospitalizations in California counties for 2018 Due to not yet having cleaned the data, there are some age groups that did not appear in the graph, even though it is colored by age group.
+
+```{r eval=FALSE, include=FALSE}
+asthma <- read.csv(dataset/"asthma_hospitalization_rates_by_county_2015_2019.csv")
+asthma_2018 <- asthma %>% filter(YEAR == "2018")
+asthma_2018 %>% filter(COUNTY == "California") %>% group_by(AGE.GROUP) %>% ggplot() + aes(x = AGE.GROUP, y = NUMBER.OF.HOSPITALIZATIONS, fill = AGE.GROUP) + geom_col() + labs(x = "AGE GROUP", y = "HOSPITALIZATIONS")
+```
+
+There is a problem which we think requires cleaning the data. For the variables age group and strata name, which consists of All ages, 0-17 years, 18+ years, 0-4 years, 5-17 years, 18-64 years, and 65+ years, it doesn't show up this way in R. In R, the dashes (-) in these are replaced with \<96\> and are not readable through R.
