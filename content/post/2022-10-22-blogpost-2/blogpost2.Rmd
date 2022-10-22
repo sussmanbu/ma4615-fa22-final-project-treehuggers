@@ -1,0 +1,15 @@
+---
+title: 'Blogpost #2'
+author: Treehuggers
+date: '2022-10-22'
+slug: []
+categories: []
+tags: []
+description: ~
+toc: yes
+authors: []
+series: []
+lastmod: '2022-10-22T01:29:14-04:00'
+featuredVideo: ~
+featuredImage: ~
+---
