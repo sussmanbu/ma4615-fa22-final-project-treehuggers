@@ -38,7 +38,8 @@ First Plot - Parks dataset: "Total number of parks in 10 counties in California"
 Filtered the data to include only CA counties and only counties that had at least one open park. Then, filtered the data to select the first 10 counties arbitrarily, since all of the counties was too much data to plot. Constructed a plot of the total number of parks in the first 10 California counties.
 
 ```{r}
-tract_ca <- nanda_parks_tract_2018_01P %>% 
+
+tract_ca <- read.csv(nanda_parks_tract_2018_01P.csv) %>% 
   filter(grepl('^06', tract_fips10), any_open_park == 1)
 tract_ca2 <- tract_ca %>% head(10)
 park_graph1 <- ggplot(tract_ca2, aes(x = tract_fips10, y = count_open_parks)) + geom_col() + labs(title = "Total number of parks in 10 counties in California", x = "county code", y = "number of parks")
