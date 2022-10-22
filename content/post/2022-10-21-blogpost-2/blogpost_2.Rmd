@@ -1,0 +1,15 @@
+---
+title: 'Blogpost #2'
+author: Daniel Sussman
+date: '2022-10-21'
+slug: []
+categories: []
+tags: []
+description: ~
+toc: yes
+authors: []
+series: []
+lastmod: '2022-10-21T23:49:48-04:00'
+featuredVideo: ~
+featuredImage: ~
+---
