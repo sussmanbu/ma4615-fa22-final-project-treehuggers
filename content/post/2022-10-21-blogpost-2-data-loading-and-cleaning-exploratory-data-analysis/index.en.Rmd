@@ -46,7 +46,7 @@ ggplot(tract_ca, aes(x = tract_fips10, y = count_open_parks)) + geom_col() + lab
 
 Second Plot - Asthma dataset: Plot of the number of asthma hospitalizations in California counties for 2018 Due to not yet having cleaned the data, there are some age groups that did not appear in the graph, even though it is colored by age group.
 
-```{r echo=TRUE, plot2 echo=TRUE}
+```{r asthma plot, echo=TRUE}
 asthma_ca <- read_csv(here::here("dataset", "asthma-hospitalization-rates-by-county-2015_2019.csv"))
 
 asthma_2018 <- asthma_ca %>% filter(YEAR == "2018")
