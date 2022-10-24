@@ -24,4 +24,44 @@ head(CAcensustract)
 
 
 
+```{r separate TYPE}
+
+```
+
+
+
+```{r separate FULLCODE}
+
+```
+
+
+
+```{r separate STATE}
+
+```
+
+
+
+```{r separate COUNTY}
+
+```
+
+
+
+```{r separate TRACT}
+
+```
+
+
+
+```{r separate SHEETS}
+
+```
+
+
+
+```{r filter out empty columns}
+
+```
+
 
