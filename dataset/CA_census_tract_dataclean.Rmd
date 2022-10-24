@@ -1,0 +1,27 @@
+--
+title: Data Clean-up for CA_censustract.csv
+description:
+toc: true
+featuredVideo:
+featuredImage: 
+draft: false
+--
+
+This comes from the file `dataset/CA_census_tract_dataclean.Rmd`.
+
+
+
+```{r setup}
+library(tidyverse)
+```
+
+
+
+```{r load data}
+CAcensustract <- read_csv("CA_countytract.csv")
+head(CAcensustract)
+```
+
+
+
+
