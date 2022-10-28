@@ -1,0 +1,24 @@
+---
+title: 'Blogpost #3 - Data for Equity'
+author: Treehuggers
+date: '2022-10-28'
+slug: []
+categories: []
+tags: []
+description: We apply the Data for Equity Principles article to our project.
+toc: yes
+authors: []
+series: []
+lastmod: '2022-10-28T09:25:44-04:00'
+featuredVideo: ~
+featuredImage: ~
+---
+The datasets that we are currently planning on working with are the Parks by Census Tract dataset (https://www.openicpsr.org/openicpsr/project/117921/version/V1/view) and the State of California: Asthma Hospitalization Rates by County dataset (https://catalog.data.gov/dataset/asthma-hospitalization-rates-by-county-9d17d).
+
+The principles for equitable data practice are relevant to our investigation of how the data was collected. For example, the NaNDA Parks dataset uses ParkServe to obtain source data on the number of parks in each area. ParkServe includes public local, state, and national parks, school parks, and privately owned parks that are publicly accessible (it excludes privately owned parks, gated communities, and private cemeteries). However, this definition of “accessible” just means that technically, everyone is allowed to enter these spaces. If people are not able to find/afford transportation to these locations, read about the parks in a language they understand, or be comfortable inside the space due to disability or sensory needs, then the “public” space is not truly accessible. 
+
+Furthermore, equitable data practices influence how we process this data. The NaNDA Parks dataset does not involve specific people or de-identification practices, but our secondary dataset (the Asthma dataset) is missing values in situations where including the information might lead to identification of the people involved (i.e. if only one person from a specific county was hospitalized for asthma, it would be really easy to cross-reference the county with some other gathered variables, like race and age, and potentially re-identify the individual). Although missing values make data processing more difficult, it’s important for us to make sure that any secondary datasets we use have properly de-identified their subjects to uphold the principle of Beneficence and protect subjects from harm, especially since we’ll be using physical health data.
+
+Finally, while we’re analyzing the data about green spaces, we should be conscious of the ways in which green space access has historically been inequitably distributed across different socioeconomic and racial areas. However, we must also be careful not to assume causality, since that’s not something our data analysis can cover. Although we may discover associations between green spaces and fewer hospitalizations for lung-related issues, or between lack of green space and increased mental health issues, we must practice Transparency be clear that our analysis cannot prove that green space improves health or that increasing green space in historically non-green areas would unilaterally better the physical health of community members. That would be research for a further study. 
+
+This data could potentially be misused in a variety of ways. For example, using “total park area” versus “proportion open to the public” to compare public health data across counties could fail to account for how counties that can afford to have large areas of unused, protected but inaccessible land may be counties that are generally wealthier, which can influence public and health outcomes greatly. With public health data being used, it’s likely that some communities (communities of color, neurodivergent people, disabled people) will be underrepresented due to inability to get to the doctor or mistrust with doctors, which could violate the principle of Justice. The data could be misconstrued to show that some areas have “better” physical health outcomes for these communities when in reality they are underreported. In order to uphold the principle of Justice, we must be aware of this potentiality and acknowledge it properly in our analysis of the data.
