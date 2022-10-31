@@ -17,17 +17,68 @@ library(tidyverse)
 
 ```{r data tidy}
 CAcountytract <- read_csv("CA_countytract.csv") %>% 
-  rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>% #creating easier to use name
-  separate(col="remaining", into = c("TYPE", "remains1"), (5)) %>% #creating TYPE column
-  separate(col="remains1", into = c("semi1", "remains11"), sep=(1)) %>% #separating semicolon
-  separate(col="remains11", into = c("FULLCODE", "remains2"), sep = (11)) %>% #creating FULLCODE column
-  separate(col="remains2", into = c("semi2", "remains22"), sep=(1)) %>% #separating semicolon
-  separate(col="remains22", into = c("STATE", "remains3"), sep = (2)) %>% #creating STATE column
-  separate(col="remains3", into = c("semi3", "remains33"), sep=(1)) %>% #separating semicolon
-  separate(col="remains33", into = c("COUNTY", "remains4"), sep = (3)) %>% #creating COUNTY column
-  separate(col="remains4", into = c("semi4", "remains44"), sep=(1)) %>% #separating semicolon
-  separate(col="remains44", into = c("TRACT", "SHEETS"), sep = ";") %>% #creating TRACT and SHEETS columns
-  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", remove = FALSE) %>% #uniting columns to make COUNTY_CODE
+  
+  rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>% 
+  #creating easier to use name for variable 
+  #remains (with or without a number following it) will always have the remainder of the string to be processed 
+  #the original variable name gives the order of the values in the string
+  
+  separate(col="remaining", into = c("TYPE", "remains1"), (5)) %>% 
+  #creating TYPE column 
+  #says if piece of land is tract, block, state, etc 
+  #should all be "tract"
+  
+  separate(col="remains1", into = c("semi1", "remains11"), sep=(1)) %>% 
+  #separating semicolon to delete later
+  
+  separate(col="remains11", into = c("FULLCODE", "remains2"), sep = (11)) %>% 
+  #creating FULLCODE column 
+  #the full code is the state code followed by the county code and then the tract number
+  #no spaces, underscores, or periods 
+  #decimal marks removed
+  #complete ID for a tract when outside of context of known state or county
+  #need this to fully and uniquely identify a tract
+  
+  separate(col="remains2", into = c("semi2", "remains22"), sep=(1)) %>% 
+  #separating semicolon to delete later
+  
+  separate(col="remains22", into = c("STATE", "remains3"), sep = (2)) %>% 
+  #creating STATE column 
+  #gives two number code which indicates what state the piece of land is in
+  #should all be the same because these data are only for within California
+  #California's state code is 06
+  
+  separate(col="remains3", into = c("semi3", "remains33"), sep=(1)) %>% 
+  #separating semicolon to delete later
+  
+  separate(col="remains33", into = c("COUNTY", "remains4"), sep = (3)) %>% 
+  #creating COUNTY column #gives a three number code which indicates which state the piece of land is in 
+  #two counties in different states can have the same county code 
+  #each county is only in one state
+  #each county contains at least one census tract (some contain many while others have only 1)
+  #county names in all capitals
+  
+  separate(col="remains4", into = c("semi4", "remains44"), sep=(1)) %>% 
+  #separating semicolon to delete later
+  
+  separate(col="remains44", into = c("TRACT", "SHEETS"), sep = ";") %>% 
+  #creating TRACT and SHEETS columns 
+  #tract column contains a tract number of varying length that identifies a census tract within a state and county 
+  #tract location can be found by using state and county 
+  #can be places with same tract number in state if they are in different counties 
+  #sheets column identifies where maps of the tract can be found
+  
+  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", remove = FALSE) %>% 
+  #uniting columns to make COUNTY_CODE
+  #one of our datasets identifies which county something occurs in using this format
+  #leaves original columns in dataset because remove=FALSE
+  #county code is unique to each county in California
+  
   select(-semi1, -semi2, -semi3, -semi4, -"...3", -"...4", -"...5", -"...6")
+  #removing the temporary columns used to move the semi colons
+  #remove excess columns accidentally created
+  #could reorder columns here if that would be helpful
+
 #head(CAcountytract)
+#if want to test/check the outcome
 ```

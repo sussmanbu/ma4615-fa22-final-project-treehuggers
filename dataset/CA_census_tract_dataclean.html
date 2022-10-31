@@ -400,17 +400,63 @@ pre code {
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>##Data tidying:</p>
 <pre class="r"><code>CAcountytract &lt;- read_csv(&quot;CA_countytract.csv&quot;) %&gt;% 
-  rename(&quot;remaining&quot; = &quot;TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS&quot;) %&gt;% #creating easier to use name
-  separate(col=&quot;remaining&quot;, into = c(&quot;TYPE&quot;, &quot;remains1&quot;), (5)) %&gt;% #creating TYPE column
-  separate(col=&quot;remains1&quot;, into = c(&quot;semi1&quot;, &quot;remains11&quot;), sep=(1)) %&gt;% #separating semicolon
-  separate(col=&quot;remains11&quot;, into = c(&quot;FULLCODE&quot;, &quot;remains2&quot;), sep = (11)) %&gt;% #creating FULLCODE column
-  separate(col=&quot;remains2&quot;, into = c(&quot;semi2&quot;, &quot;remains22&quot;), sep=(1)) %&gt;% #separating semicolon
-  separate(col=&quot;remains22&quot;, into = c(&quot;STATE&quot;, &quot;remains3&quot;), sep = (2)) %&gt;% #creating STATE column
-  separate(col=&quot;remains3&quot;, into = c(&quot;semi3&quot;, &quot;remains33&quot;), sep=(1)) %&gt;% #separating semicolon
-  separate(col=&quot;remains33&quot;, into = c(&quot;COUNTY&quot;, &quot;remains4&quot;), sep = (3)) %&gt;% #creating COUNTY column
-  separate(col=&quot;remains4&quot;, into = c(&quot;semi4&quot;, &quot;remains44&quot;), sep=(1)) %&gt;% #separating semicolon
-  separate(col=&quot;remains44&quot;, into = c(&quot;TRACT&quot;, &quot;SHEETS&quot;), sep = &quot;;&quot;) %&gt;% #creating TRACT and SHEETS columns
-  unite(col = &quot;COUNTY_CODE&quot;, c(&quot;STATE&quot;, &quot;COUNTY&quot;), sep=&quot;&quot;, remove = FALSE) %&gt;% #uniting columns to make COUNTY_CODE
+  
+  rename(&quot;remaining&quot; = &quot;TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS&quot;) %&gt;% 
+  #creating easier to use name for variable 
+  #remains (with or without a number following it) will always have the remainder of the string to be processed 
+  #the original variable name gives the order of the values in the string
+  
+  separate(col=&quot;remaining&quot;, into = c(&quot;TYPE&quot;, &quot;remains1&quot;), (5)) %&gt;% 
+  #creating TYPE column 
+  #says if piece of land is tract, block, state, etc 
+  #should all be &quot;tract&quot;
+  
+  separate(col=&quot;remains1&quot;, into = c(&quot;semi1&quot;, &quot;remains11&quot;), sep=(1)) %&gt;% 
+  #separating semicolon to delete later
+  
+  separate(col=&quot;remains11&quot;, into = c(&quot;FULLCODE&quot;, &quot;remains2&quot;), sep = (11)) %&gt;% 
+  #creating FULLCODE column 
+  #the full code is the state code followed by the county code and then the tract number
+  #no spaces, underscores, or periods 
+  #decimal marks removed
+  #complete ID for a tract when outside of context of known state or county
+  #need this to fully and uniquely identify a tract
+  
+  separate(col=&quot;remains2&quot;, into = c(&quot;semi2&quot;, &quot;remains22&quot;), sep=(1)) %&gt;% 
+  #separating semicolon to delete later
+  
+  separate(col=&quot;remains22&quot;, into = c(&quot;STATE&quot;, &quot;remains3&quot;), sep = (2)) %&gt;% 
+  #creating STATE column 
+  #gives two number code which indicates what state the piece of land is in
+  #should all be the same because these data are only for within California
+  #California&#39;s state code is 06
+  
+  separate(col=&quot;remains3&quot;, into = c(&quot;semi3&quot;, &quot;remains33&quot;), sep=(1)) %&gt;% 
+  #separating semicolon to delete later
+  
+  separate(col=&quot;remains33&quot;, into = c(&quot;COUNTY&quot;, &quot;remains4&quot;), sep = (3)) %&gt;% 
+  #creating COUNTY column #gives a three number code which indicates which state the piece of land is in 
+  #two counties in different states can have the same county code 
+  #each county is only in one state
+  #each county contains at least one census tract (some contain many while others have only 1)
+  #county names in all capitals
+  
+  separate(col=&quot;remains4&quot;, into = c(&quot;semi4&quot;, &quot;remains44&quot;), sep=(1)) %&gt;% 
+  #separating semicolon to delete later
+  
+  separate(col=&quot;remains44&quot;, into = c(&quot;TRACT&quot;, &quot;SHEETS&quot;), sep = &quot;;&quot;) %&gt;% 
+  #creating TRACT and SHEETS columns 
+  #tract column contains a tract number of varying length that identifies a census tract within a state and county 
+  #tract location can be found by using state and county 
+  #can be places with same tract number in state if they are in different counties 
+  #sheets column identifies where maps of the tract can be found
+  
+  unite(col = &quot;COUNTY_CODE&quot;, c(&quot;STATE&quot;, &quot;COUNTY&quot;), sep=&quot;&quot;, remove = FALSE) %&gt;% 
+  #uniting columns to make COUNTY_CODE
+  #one of our datasets identifies which county something occurs in using this format
+  #leaves original columns in dataset because remove=FALSE
+  #county code is unique to each county in California
+  
   select(-semi1, -semi2, -semi3, -semi4, -&quot;...3&quot;, -&quot;...4&quot;, -&quot;...5&quot;, -&quot;...6&quot;)</code></pre>
 <pre><code>## New names:
 ## Rows: 9129 Columns: 6
@@ -424,7 +470,12 @@ pre code {
 ## • `` -&gt; `...4`
 ## • `` -&gt; `...5`
 ## • `` -&gt; `...6`</code></pre>
-<pre class="r"><code>#head(CAcountytract)</code></pre>
+<pre class="r"><code>  #removing the temporary columns used to move the semi colons
+  #remove excess columns accidentally created
+  #could reorder columns here if that would be helpful
+
+#head(CAcountytract)
+#if want to test/check the outcome</code></pre>
 
 
 
