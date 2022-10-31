@@ -9,101 +9,25 @@ draft: false
 
 This comes from the file `dataset/CA_census_tract_dataclean.Rmd`.
 
-
-
 ```{r setup}
 library(tidyverse)
 ```
 
-Reading the csv of the dataset and checking the head of the dataset
+##Data tidying:
 
-```{r load data}
-CAcountytract <- read_csv("CA_countytract.csv") #need to specify to make dataset with only 2 columns
-head(CAcountytract)
-```
-
-
-
-```{r separate TYPE}
-#character
-CA_ctot_1 <- CAcountytract %>%
-  rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>%
-  separate(col="remaining", into = c("TYPE", "remains1"), (5)) 
-head(CA_ctot_1)
-```
-
-
-
-```{r separate FULLCODE}
-#factor
-#may need to remove semicolon
-CA_ctot_2 <- CA_ctot_1 %>%
-  separate(col="remains1", into = c("semi1", "remains11"), sep=(1)) %>%
-  separate(col="remains11", into = c("FULLCODE", "remains2"), sep = (11))
-head(CA_ctot_2)
-```
-
-
-
-```{r separate STATE}
-#factor
-#may need to remove semicolon
-CA_ctot_3 <- CA_ctot_2 %>%
-  separate(col="remains2", into = c("semi2", "remains22"), sep=(1)) %>%
-  separate(col="remains22", into = c("STATE", "remains3"), sep = (2))
-head(CA_ctot_3)
-```
-
-
-
-```{r separate COUNTY}
-#factor
-#may need to remove semicolon
-CA_ctot_4 <- CA_ctot_3 %>%
-  separate(col="remains3", into = c("semi3", "remains33"), sep=(1)) %>%
-  separate(col="remains33", into = c("COUNTY", "remains4"), sep = (3))
-head(CA_ctot_4)
-```
-
-
-
-```{r separate TRACT}
-#factor
-#may need to remove semicolon
-CA_ctot_5 <- CA_ctot_4 %>%
-  separate(col="remains4", into = c("semi4", "remains44"), sep=(1)) %>%
-  separate(col="remains44", into = c("TRACT", "remains5"), sep = ";") 
-head(CA_ctot_5)
-```
-
-
-
-```{r separate SHEETS}
-#factor or maybe numeric
-#may need to remove semicolon
-CA_ctot_6 <- CA_ctot_5 %>%
-  rename("SHEETS" = "remains5")
-head(CA_ctot_6)
-```
-
-
-
-```{r create COUNTY_CODE}
-#factor
-#mutate
-#state then county code with no spaces
-CA_ctot_7 <- CA_ctot_6 %>%
-  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", remove = FALSE) 
-head(CA_ctot_7)
-```
-
-
-
-```{r filter out empty columns}
-#if not able to have data load with only two columns
-CA_county_ID <- CA_ctot_7 %>%
+```{r data tidy}
+CAcountytract <- read_csv("CA_countytract.csv") %>% 
+  rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>% #creating easier to use name
+  separate(col="remaining", into = c("TYPE", "remains1"), (5)) %>% #creating TYPE column
+  separate(col="remains1", into = c("semi1", "remains11"), sep=(1)) %>% #separating semicolon
+  separate(col="remains11", into = c("FULLCODE", "remains2"), sep = (11)) %>% #creating FULLCODE column
+  separate(col="remains2", into = c("semi2", "remains22"), sep=(1)) %>% #separating semicolon
+  separate(col="remains22", into = c("STATE", "remains3"), sep = (2)) %>% #creating STATE column
+  separate(col="remains3", into = c("semi3", "remains33"), sep=(1)) %>% #separating semicolon
+  separate(col="remains33", into = c("COUNTY", "remains4"), sep = (3)) %>% #creating COUNTY column
+  separate(col="remains4", into = c("semi4", "remains44"), sep=(1)) %>% #separating semicolon
+  separate(col="remains44", into = c("TRACT", "SHEETS"), sep = ";") %>% #creating TRACT and SHEETS columns
+  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", remove = FALSE) %>% #uniting columns to make COUNTY_CODE
   select(-semi1, -semi2, -semi3, -semi4, -"...3", -"...4", -"...5", -"...6")
-head(CA_county_ID)
+#head(CAcountytract)
 ```
-
-
