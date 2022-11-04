@@ -1,0 +1,22 @@
+--
+title: Data Summary for CAcensustract
+description: Data summary for CAcensustract for project EDA
+toc: true
+featuredVideo:
+featuredImage: 
+draft: false
+--
+
+## Run CA_census_tract_dataclean.Rmd first.
+## This analysis uses the CAcountytract output of that file. 
+
+```{r census-tract ID summary}
+
+library(tidyverse)
+
+CAcountytract %>% 
+  group_by(COUNTY_NAME) %>%
+  count(COUNTY_NAME) %>%
+  ggplot(aes(x=n)) + geom_boxplot()
+
+```
