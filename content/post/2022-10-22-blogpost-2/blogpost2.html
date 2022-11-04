@@ -31,12 +31,21 @@ featuredImage: ~
 <p>Currently, we have not looked for any big, obvious patterns in the data because the datasets are way too large and need to be cleaned to notice certain patterns, as well as to combine the datasets together.</p>
 <p>First Plot - Parks dataset: “Total number of parks in 10 counties in California” Filtered the data to include only CA counties and only counties that had at least one open park. Then, filtered the data to select the first 10 counties arbitrarily, since all of the counties was too much data to plot. Constructed a plot of the total number of parks in the first 10 California counties.</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.1.3</code></pre>
 <pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
-## v ggplot2 3.3.6     v purrr   0.3.4
-## v tibble  3.1.8     v dplyr   1.0.9
-## v tidyr   1.2.0     v stringr 1.4.1
-## v readr   2.1.2     v forcats 0.5.2
-## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.6     v dplyr   1.0.9
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.2</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>parks &lt;- read_csv(here::here(&quot;dataset&quot;, &quot;nanda_parks_tract_2018_01P.csv&quot;))</code></pre>
@@ -66,3 +75,6 @@ asthma_2018 %&gt;% filter(COUNTY == &quot;California&quot;) %&gt;%
   group_by(`AGE GROUP`) %&gt;% ggplot(aes(x = `AGE GROUP`, y = `NUMBER OF HOSPITALIZATIONS`, fill = `AGE GROUP`)) + geom_col() + labs(x = &quot;AGE GROUP&quot;, y = &quot;HOSPITALIZATIONS&quot;)</code></pre>
 <p><img src="/post/2022-10-22-blogpost-2/blogpost2_files/figure-html/asthma%20plot-1.png" width="672" /></p>
 <p>There is a problem which we think requires cleaning the data. For the variables age group and strata name, which consists of All ages, 0-17 years, 18+ years, 0-4 years, 5-17 years, 18-64 years, and 65+ years, it doesn’t show up this way in R. In R, the dashes (-) in these are replaced with &lt;96&gt; and are not readable through R.</p>
+<p>Third Plot - full parks dataset: Here, we summarized the data for each state (using the first two digits of tracts_fips10).</p>
+<pre class="r"><code>state_parks &lt;- parks %&gt;%
+  select()</code></pre>
