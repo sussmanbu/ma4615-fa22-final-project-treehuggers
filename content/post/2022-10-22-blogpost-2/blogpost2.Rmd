@@ -54,3 +54,10 @@ asthma_2018 %>% filter(COUNTY == "California") %>%
 ```
 
 There is a problem which we think requires cleaning the data. For the variables age group and strata name, which consists of All ages, 0-17 years, 18+ years, 0-4 years, 5-17 years, 18-64 years, and 65+ years, it doesn't show up this way in R. In R, the dashes (-) in these are replaced with \<96\> and are not readable through R.
+
+Third Plot - full parks dataset: Here, we summarized the data for each state (using the first two digits of tracts_fips10). 
+
+``` {r}
+state_parks <- parks %>%
+  
+```
