@@ -34,6 +34,12 @@ CAcountytract <- read_csv("CA_countytract.csv") %>%
   select(-semi1, -semi2, -semi3, -semi4, -"...3", -"...4", -"...5", -"...6")
   
 view(CAcountytract)
+
+CAcountytract %>% 
+  group_by(COUNTY_NAME) %>%
+  count(COUNTY_NAME) %>%
+  ggplot(aes(x=n)) + geom_boxplot()
+
 ```
 
 ```{r Exploratory Data Analysis: Parks Data}
