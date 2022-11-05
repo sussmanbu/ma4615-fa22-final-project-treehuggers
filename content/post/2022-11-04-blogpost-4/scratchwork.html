@@ -1,0 +1,147 @@
+
+
+
+<table>
+<tbody>
+<tr class="odd">
+<td>title: Data Summary for CAcensustract</td>
+</tr>
+<tr class="even">
+<td>description: Data summary for CAcensustract for project EDA</td>
+</tr>
+<tr class="odd">
+<td>toc: true</td>
+</tr>
+<tr class="even">
+<td>featuredVideo:</td>
+</tr>
+<tr class="odd">
+<td>featuredImage:</td>
+</tr>
+<tr class="even">
+<td>draft: false</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
+## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.6     v dplyr   1.0.9
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.2</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>path &lt;- (&quot;C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset&quot;)
+setwd(path)
+
+CAcountytract &lt;- read_csv(&quot;CA_countytract.csv&quot;) %&gt;% 
+  rename(&quot;remaining&quot; = &quot;TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS&quot;) %&gt;% 
+  separate(col=&quot;remaining&quot;, into = c(&quot;TYPE&quot;, &quot;remains1&quot;), (5)) %&gt;% 
+  separate(col=&quot;remains1&quot;, into = c(&quot;semi1&quot;, &quot;remains11&quot;), sep=(1)) %&gt;% 
+  separate(col=&quot;remains11&quot;, into = c(&quot;FULLCODE&quot;, &quot;remains2&quot;), sep = (11)) %&gt;% 
+  separate(col=&quot;remains2&quot;, into = c(&quot;semi2&quot;, &quot;remains22&quot;), sep=(1)) %&gt;% 
+  separate(col=&quot;remains22&quot;, into = c(&quot;STATE&quot;, &quot;remains3&quot;), sep = (2)) %&gt;% 
+  separate(col=&quot;remains3&quot;, into = c(&quot;semi3&quot;, &quot;remains33&quot;), sep=(1)) %&gt;% 
+  separate(col=&quot;remains33&quot;, into = c(&quot;COUNTY&quot;, &quot;remains4&quot;), sep = (3)) %&gt;% 
+  separate(col=&quot;remains4&quot;, into = c(&quot;semi4&quot;, &quot;remains44&quot;), sep=(1)) %&gt;% 
+  separate(col=&quot;remains44&quot;, into = c(&quot;TRACT&quot;, &quot;SHEETS&quot;), sep = &quot;;&quot;) %&gt;% 
+  unite(col = &quot;COUNTY_CODE&quot;, c(&quot;STATE&quot;, &quot;COUNTY&quot;), sep=&quot;&quot;, remove = FALSE) %&gt;% 
+  select(-semi1, -semi2, -semi3, -semi4, -&quot;...3&quot;, -&quot;...4&quot;, -&quot;...5&quot;, -&quot;...6&quot;)</code></pre>
+<pre><code>## New names:
+## Rows: 9129 Columns: 6
+## -- Column specification
+## -------------------------------------------------------- Delimiter: &quot;,&quot; chr
+## (2): TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS, COUNTY_NAME lgl (4): ...3,
+## ...4, ...5, ...6
+## i Use `spec()` to retrieve the full column specification for this data. i
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## * `` -&gt; `...3`
+## * `` -&gt; `...4`
+## * `` -&gt; `...5`
+## * `` -&gt; `...6`</code></pre>
+<pre class="r"><code>view(CAcountytract)</code></pre>
+<pre class="r"><code>CAcountytract %&gt;% 
+  group_by(COUNTY_NAME) %&gt;%
+  count(COUNTY_NAME) %&gt;%
+  ggplot(aes(x=n)) + geom_boxplot() + labs(x = &quot;Number of Tracts&quot;, title = &quot;Number of Census Tracts per California County&quot;)</code></pre>
+<p><img src="/post/2022-11-04-blogpost-4/scratchwork_files/figure-html/census-tract%20ID%20summary-1.png" width="672" /></p>
+<pre class="r"><code>path &lt;- (&quot;C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset&quot;)
+setwd(path)
+
+nanda_parks_tract_2018_01P &lt;- read_csv(&quot;nanda_parks_tract_2018_01P.csv&quot;)</code></pre>
+<pre><code>## Rows: 73057 Columns: 11
+## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;,&quot;
+## chr  (1): tract_fips10
+## dbl (10): any_open_park, count_open_parks, count_open_parks_tc10, count_open...
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tract_ca &lt;- nanda_parks_tract_2018_01P %&gt;% 
+  filter(grepl(&#39;^06&#39;, tract_fips10), any_open_park == 1)
+
+clean1_tract &lt;- tract_ca %&gt;% 
+  select(tract_fips10, count_open_parks, tract_area_sqmiles, tot_park_area_sqmiles, prop_park_area_tract)
+colnames(clean1_tract) &lt;- c(&quot;tractcode&quot;, &quot;open_parks_tract&quot;, &quot;tract_area_sqmiles&quot;, &quot;total_open_park_area_sqmiles&quot;, &quot;prop_open_park_land_within_tract&quot;) 
+
+CA_countytract &lt;- read_csv(&quot;CA_countytract.csv&quot;)</code></pre>
+<pre><code>## New names:
+## Rows: 9129 Columns: 6
+## -- Column specification
+## -------------------------------------------------------- Delimiter: &quot;,&quot; chr
+## (2): TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS, COUNTY_NAME lgl (4): ...3,
+## ...4, ...5, ...6
+## i Use `spec()` to retrieve the full column specification for this data. i
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## * `` -&gt; `...3`
+## * `` -&gt; `...4`
+## * `` -&gt; `...5`
+## * `` -&gt; `...6`</code></pre>
+<pre class="r"><code>CA_countytract2 &lt;- CA_countytract %&gt;% mutate(tractcode = str_sub(`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, 7, 17))
+
+joined_CA_countytract &lt;- clean1_tract %&gt;% inner_join(CA_countytract2, by = &quot;tractcode&quot;)
+clean2_tract &lt;- joined_CA_countytract %&gt;% 
+  select(-`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, -...3, -...4, -...5, -...6)
+clean2_tract &lt;- clean2_tract[, c(1, 6, 2, 3, 4, 5)]
+colnames(clean2_tract) &lt;- c(&quot;tractcode&quot;, &quot;county_name&quot;, &quot;open_parks_tract&quot;, &quot;tract_area_sqmiles&quot;, &quot;total_open_park_area_sqmiles&quot;, &quot;prop_open_park_land_within_tract&quot;)
+
+view(clean2_tract)</code></pre>
+<pre class="r"><code>grouped_data &lt;- clean2_tract %&gt;%
+    group_by(county_name) %&gt;%
+    mutate(county_total_open_parks = sum(open_parks_tract)) %&gt;%
+    mutate(county_total_area = sum(tract_area_sqmiles)) %&gt;%
+    mutate(county_total_park_area = sum(total_open_park_area_sqmiles)) %&gt;%
+    mutate(prop_park_land_county = (county_total_park_area/county_total_area)) %&gt;%
+  mutate(num_tracts = n()) %&gt;%
+    select(county_name, county_total_open_parks, county_total_area, county_total_park_area, prop_park_land_county, num_tracts)
+
+grouped_summary &lt;- grouped_data %&gt;%
+    summarize(county_total_open_parks = mean(county_total_open_parks), 
+              county_total_area = mean(county_total_area), 
+              county_total_park_area = mean(county_total_park_area), 
+              prop_park_land_county = (county_total_park_area/county_total_area), 
+    num_tracts = mean(num_tracts)) %&gt;%
+    select(county_name, county_total_open_parks, county_total_area, county_total_park_area, prop_park_land_county, num_tracts)
+
+
+ggplot(data = grouped_summary) +
+  geom_point(aes(x = county_total_area, y = county_total_park_area, color = num_tracts)) + 
+  labs(x= &quot;Total Area of County (sqm)&quot;, y = &quot;Total Area of Parks in County (sqm)&quot;, title = &quot;Park Area vs. Total Area of CA Counties&quot;, color = &quot;Number of Census Tracts in County&quot;)</code></pre>
+<p><img src="/post/2022-11-04-blogpost-4/scratchwork_files/figure-html/EDA%20Parks%20Data-1.png" width="672" /></p>
+<pre class="r"><code>clean2_tract &lt;- clean2_tract %&gt;%
+  group_by(county_name) %&gt;%
+  mutate(num_tracts = n())
+
+ggplot(data = clean2_tract, aes(x=county_name, y=prop_open_park_land_within_tract)) + 
+  geom_boxplot(aes(group = county_name, color = num_tracts)) + labs(title = &quot;Proportion of Open Park Land in Census Tracts for Each CA County&quot;, x = &quot;County&quot;, y = &quot;Proportion of Open Park Land in Census Tracts&quot;, color = &quot;Number of Census Tracts in County&quot;)</code></pre>
+<p><img src="/post/2022-11-04-blogpost-4/scratchwork_files/figure-html/EDA%20Parks%20Data-2.png" width="672" /></p>
