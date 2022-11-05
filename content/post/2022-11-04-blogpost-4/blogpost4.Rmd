@@ -55,6 +55,14 @@ colnames(asthma_2018) <- c("county_name", "year", "strata", "strata_name", "age_
 parks_asthma <- clean2_tract %>% inner_join(asthma_2018, by = "county_name")
 ```
 
+The following is a plot of the asthma dataset with the total number of hospitalizations in the whole state of California, not separated by county. There are 58 counties in California and we are in the process of figuring out how to graph/plot or take this data and visualize it, without it being too messy.
+
+```{r asthma_plot}
+cal <- asthma_2018 %>% filter(county_name == "CALIFORNIA", strata == "Age groups", !is.na(hospitalizations)) %>% group_by(age_group)
+cal%>%ggplot(aes(x = age_group, y = hospitalizations)) + geom_col() + labs(x = "Age Groups", y = "Total Hospitalizations in CA")
+```
+
+Something that is good to note about the asthma dataset is that when it states California under county, it represents the state as a whole as California is not a county within California itself. From the data, you can see that all the numerics under hospitalizations and the age adjusted rate are the totals and averages from the other 58 counties within California.
 
 Below is an initial plot of the total open park land by county (using the sums of the total open park area for each tract in square miles) against the age-adjusted asthma hospitalization rate in each county (by total population).
 
@@ -66,14 +74,6 @@ parks_asthma %>%
 
 Based on this plot, there doesn't seem to be much of a correlation. When we move on into modeling (and all of our data is tidier), we should be able to model the relationship better.
 
-The following is a plot of the asthma dataset with the total number of hospitalizations in the whole state of California, not separated by county. There are 58 counties in California and we are in the process of figuring out how to graph/plot or take this data and visualize it, without it being too messy.
-
-```{r asthma_plot}
-cal <- asthma_2018 %>% filter(county_name == "CALIFORNIA", strata == "Age groups", !is.na(hospitalizations)) %>% group_by(age_group)
-cal%>%ggplot(aes(x = age_group, y = hospitalizations)) + geom_col() + labs(x = "Age Groups", y = "Total Hospitalizations in CA")
-```
-
-Something that is nice to note about the asthma dataset is that when it states California under county, it represents the state as a whole as California is not a county within California itself. From the data, you can see that all the numerics under hospitalizations and the age adjusted rate are the totals and averages from the other 58 counties within California.
 
 
 
