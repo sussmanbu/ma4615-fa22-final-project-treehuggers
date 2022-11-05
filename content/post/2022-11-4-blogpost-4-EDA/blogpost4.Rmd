@@ -38,9 +38,11 @@ view(CAcountytract)
 CAcountytract %>% 
   group_by(COUNTY_NAME) %>%
   count(COUNTY_NAME) %>%
-  ggplot(aes(x=n)) + geom_boxplot()
+  ggplot(aes(x=n)) + geom_boxplot() + labs(x = "Number of Tracts", title = "Number of Census Tracts per California County")
 
 ```
+
+
 
 ```{r Exploratory Data Analysis: Parks Data}
 
