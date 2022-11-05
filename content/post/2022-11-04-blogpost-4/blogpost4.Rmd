@@ -1,113 +1,56 @@
 ---
-title: 'Blogpost #4'
+title: 'Blogpost #4 - EDA'
 author: Treehuggers
-date: '2022-11-04'
+date: '2022-10-28'
 slug: []
 categories: []
 tags: []
-description: We conduct deeper and broader EDA and discuss our initial thoughts and results for modeling.
+description: We perform an Exploratory Data Analysis on the data.
 toc: yes
 authors: []
 series: []
-lastmod: '2022-11-04T21:06:32-04:00'
+lastmod: '2022-11-04T09:25:44-04:00'
 featuredVideo: ~
 featuredImage: ~
 ---
+```{r Load and Clean Parks Data}
+library(tidyverse)
 
-First, we load tidyverse and the Parks by Census Tract dataset and filter the data so that it only includes California counties and counties with at least one open park. We also tidy up the data some more to only include relevant columns with the select function, storing this in a new dataset called "clean1_tract" and renaming the columns to be more descriptive.
+path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
+setwd(path)
 
-```{r parksdata_tidy}
-suppressPackageStartupMessages(library(tidyverse))
-nanda_parks_tract_2018_01P <- read_csv(here::here("dataset", "nanda_parks_tract_2018_01P.csv"))
+CAcountytract <- read_csv("CA_countytract.csv") %>% 
+  rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>% 
+  separate(col="remaining", into = c("TYPE", "remains1"), (5)) %>% 
+  separate(col="remains1", into = c("semi1", "remains11"), sep=(1)) %>% 
+  separate(col="remains11", into = c("FULLCODE", "remains2"), sep = (11)) %>% 
+  separate(col="remains2", into = c("semi2", "remains22"), sep=(1)) %>% 
+  separate(col="remains22", into = c("STATE", "remains3"), sep = (2)) %>% 
+  separate(col="remains3", into = c("semi3", "remains33"), sep=(1)) %>% 
+  separate(col="remains33", into = c("COUNTY", "remains4"), sep = (3)) %>% 
+  separate(col="remains4", into = c("semi4", "remains44"), sep=(1)) %>% 
+  separate(col="remains44", into = c("TRACT", "SHEETS"), sep = ";") %>% 
+  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", remove = FALSE) %>% 
+  select(-semi1, -semi2, -semi3, -semi4, -"...3", -"...4", -"...5", -"...6")
+  
+view(CAcountytract)
 
-tract_ca <- nanda_parks_tract_2018_01P %>% 
-  filter(grepl('^06', tract_fips10), any_open_park == 1)
+CAcountytract %>% 
+  group_by(COUNTY_NAME) %>%
+  count(COUNTY_NAME) %>%
+  ggplot(aes(x=n)) + geom_boxplot() + labs(x = "Number of Tracts", title = "Number of Census Tracts per California County")
 
-clean1_tract <- tract_ca %>% 
-  select(tract_fips10, count_open_parks, tract_area_sqmiles, tot_park_area_sqmiles, prop_park_area_tract)
-colnames(clean1_tract) <- c("tractcode", "open_parks_tract", "tract_area_sqmiles", "total_open_park_area_sqmiles", "prop_open_park_land_within_tract") 
 ```
 
-Then, since the Parks by Census Tract dataset doesn't include the county names, we load in "CA_countytract", which is a catalog of all of the counties by tract code. After isolating the full tract code from this dataset and creating a new column "tractcode", we are able to use an inner join to join the two tables with "tractcode" as the key. The inner join joins the tidied CA_countytract table with the clean1_tract table, keeping all of the rows where tractcode from clean1_tract matches tractcode in CA_countytract. Then, for the joined dataset, we get rid of extraneous columns and reorder and rename the columns to our liking.
 
-```{r join_tractcode}
-CA_countytract <- read_csv(here::here("dataset", "CA_countytract.csv"))
-CA_countytract2 <- CA_countytract %>% mutate(tractcode = str_sub(`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, 7, 17))
 
-joined_CA_countytract <- clean1_tract %>% inner_join(CA_countytract2, by = "tractcode")
-clean2_tract <- joined_CA_countytract %>% 
-  select(-`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, -...3, -...4, -...5, -...6)
-clean2_tract <- clean2_tract[, c(1, 6, 2, 3, 4, 5)]
-colnames(clean2_tract) <- c("tractcode", "county_name", "open_parks_tract", "tract_area_sqmiles", "total_open_park_area_sqmiles", "prop_open_park_land_within_tract")
+```{r Exploratory Data Analysis: Parks Data}
+
 ```
 
-Now, we prepare the county_name as a key within the asthma data in order to join the asthma dataset with the parks dataset. First, we filter the asthma dataset to only include data from 2018, since the parks dataset is also from 2018. For now, we're also removing any strata data on race/ethnicity, as analysis of this would only really be useful if we have data on the total population of the race/ethnicity in that tract or county (this is a potential avenue for us to explore later in our project using tidycensus, but for now we're excluding this information for the sake of this blogpost).
+```{r Exploratory Data Analysis: Asthma}
 
-We rename "COUNTY" to "county_name", as well as tidy up some of the other column names. We also change the county names to be in uppercase, so that they match across the tables when we do the join. Then, we join the asthma dataset with the parks dataset. (Note: the asthma dataset still needs some tidying, as there are multiple strata in one column, etc. We plan to do this as soon as possible, but tidying the parks dataset was our priority for this week)
-
-```{r parks_asthma}
-asthma <- read_csv(here::here("dataset", "asthma.csv"))
-asthma_2018 <- asthma %>% filter(YEAR == "2018")
-asthma_2018 <- asthma_2018 %>% filter(STRATA != "Race/ethnicity")
-asthma_2018 <- asthma_2018 %>% mutate(COUNTY = str_to_upper(COUNTY))
-colnames(asthma_2018) <- c("county_name", "year", "strata", "strata_name", "age_group", "hospitalizations", "age_adjusted_hosp_rate", "comment")
-
-parks_asthma <- clean2_tract %>% inner_join(asthma_2018, by = "county_name")
 ```
 
 
-Below is an initial plot of the total open park land by county (using the sums of the total open park area for each tract in square miles) against the age-adjusted asthma hospitalization rate in each county (by total population).
-
-```{r parkarea_hosprate_plot}
-parks_asthma %>% 
-  filter(strata == "Total population", !is.na(age_adjusted_hosp_rate)) %>%
-  group_by(county_name) %>% mutate(prop_park_county = sum(total_open_park_area_sqmiles)) %>% ggplot(aes(y = prop_park_county, x = age_adjusted_hosp_rate)) + geom_point() + labs(x = "Age-Adjusted Asthma Hospitalization Rate in County (Total Population)", y = "Total Open Park Land by County (Square Miles)")
-```
-
-Based on this plot, there doesn't seem to be much of a correlation. When we move on into modeling (and all of our data is tidier), we should be able to model the relationship better.
-
-
-For the Parks data itself, we use the new clean2_tract dataset and create new variables that count up the total parks, total square mileage, and total square mileage of open park land within each county, rather than within each individual census tract. We then collapse this into a summary dataset that contains these values for each county. 
-
-
-``` {r Parks Data Grouped By County }
-grouped_data <- clean2_tract %>%
-    group_by(county_name) %>%
-    mutate(county_total_open_parks = sum(open_parks_tract)) %>%
-    mutate(county_total_area = sum(tract_area_sqmiles)) %>%
-    mutate(county_total_park_area = sum(total_open_park_area_sqmiles)) %>%
-    mutate(prop_park_land_county = (county_total_park_area/county_total_area)) %>%
-  mutate(num_tracts = n()) %>%
-    select(county_name, county_total_open_parks, county_total_area, county_total_park_area, prop_park_land_county, num_tracts)
-
-grouped_summary <- grouped_data %>%
-    summarize(county_total_open_parks = mean(county_total_open_parks), 
-              county_total_area = mean(county_total_area), 
-              county_total_park_area = mean(county_total_park_area), 
-              prop_park_land_county = (county_total_park_area/county_total_area), 
-    num_tracts = mean(num_tracts)) %>%
-    select(county_name, county_total_open_parks, county_total_area, county_total_park_area, prop_park_land_county, num_tracts)
-```
-
-Next, we create a scatterplot of the total number of parks versus the number of census tracts (a good rough measurement of population density) for each county. From this plot, we can see that as the number of census tracts increases, the number of parks does as well, in what seems to be a fairly linear, significantly positive relationship. This could merit some modeling and further exploring. We try coloring the points by the proportion of park land to total land area of each county. There does not seem to be any major pattern that relates the number of parks to the proportion of park-to-total land area within each county, based on this plot. 
-
-``` {r Scatterplot}
-ggplot(data = grouped_summary) + 
-  geom_point(aes(x=num_tracts, y = county_total_open_parks, color=prop_park_land_county)) +
-  labs(x="Number of Census Tracts in County", y="Total Number of Open Parks", title="Total Number of Open Parks vs. Number of Census Tracts in CA Counties")
-```
-
-We then create a series of boxplots for each county that show the proportion of park-to-total land area, colored by the number of census tracts. Although the number of counties makes this a little hard to read, a few major things stand out. Firstly, in most counties, the median proportion of park-to-total land area in a census tract is around less than .1 (10%). However, there are a significant number of outliers for many of these counties. If each census tract contains approximately 4000 (usually 1200-8000) people, there are probably certain areas of each county where there's a lot of green space for a relatively small number of residents. LA also jumps out as a major outlier (light blue) because of the sheer number of census tracts it has. It would be interesting to take LA out of the dataset and see what happens, although in the previous plot, it seems to exhibit a similar ratio of parks-to-census tracts as compared to the other counties. 
-
-
-``` {r boxplots}
-
-clean2_tract <- clean2_tract %>%
-  group_by(county_name) %>%
-  mutate(num_tracts = n())
-
-ggplot(data = clean2_tract, aes(x=county_name, y=prop_open_park_land_within_tract)) + 
-  geom_boxplot(aes(group = county_name, color = num_tracts)) + labs(title = "Proportion of Open Park Land in Census Tracts for Each CA County", x = "County", y = "Proportion of Open Park Land in Census Tracts", color = "Number of Census Tracts in County")
-
-```
 
