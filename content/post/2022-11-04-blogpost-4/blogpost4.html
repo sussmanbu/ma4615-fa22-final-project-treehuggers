@@ -1,0 +1,82 @@
+---
+title: 'Blogpost #4'
+author: Treehuggers
+date: '2022-11-04'
+slug: []
+categories: []
+tags: []
+description: We conduct deeper and broader EDA and discuss our initial thoughts and results for modeling.
+toc: yes
+authors: []
+series: []
+lastmod: '2022-11-04T21:06:32-04:00'
+featuredVideo: ~
+featuredImage: ~
+---
+
+
+<div id="TOC">
+
+</div>
+
+<p>First, we load tidyverse and the Parks by Census Tract dataset and filter the data so that it only includes California counties and counties with at least one open park. We also tidy up the data some more to only include relevant columns with the select function, storing this in a new dataset called “clean1_tract” and renaming the columns to be more descriptive.</p>
+<pre class="r"><code>suppressPackageStartupMessages(library(tidyverse))
+nanda_parks_tract_2018_01P &lt;- read_csv(here::here(&quot;dataset&quot;, &quot;nanda_parks_tract_2018_01P.csv&quot;))</code></pre>
+<pre><code>## Rows: 73057 Columns: 11
+## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;,&quot;
+## chr  (1): tract_fips10
+## dbl (10): any_open_park, count_open_parks, count_open_parks_tc10, count_open...
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>tract_ca &lt;- nanda_parks_tract_2018_01P %&gt;% 
+  filter(grepl(&#39;^06&#39;, tract_fips10), any_open_park == 1)
+
+clean1_tract &lt;- tract_ca %&gt;% 
+  select(tract_fips10, count_open_parks, tract_area_sqmiles, tot_park_area_sqmiles, prop_park_area_tract)
+colnames(clean1_tract) &lt;- c(&quot;tractcode&quot;, &quot;open_parks_tract&quot;, &quot;tract_area_sqmiles&quot;, &quot;total_open_park_area_sqmiles&quot;, &quot;prop_open_park_land_within_tract&quot;) </code></pre>
+<p>Then, since the Parks by Census Tract dataset doesn’t include the county names, we load in “CA_countytract”, which is a catalog of all of the counties by tract code. After isolating the full tract code from this dataset and creating a new column “tractcode”, we are able to use an inner join to join the two tables with “tractcode” as the key. The inner join joins the tidied CA_countytract table with the clean1_tract table, keeping all of the rows where tractcode from clean1_tract matches tractcode in CA_countytract. Then, for the joined dataset, we get rid of extraneous columns and reorder and rename the columns to our liking.</p>
+<pre class="r"><code>CA_countytract &lt;- read_csv(here::here(&quot;dataset&quot;, &quot;CA_countytract.csv&quot;))</code></pre>
+<pre><code>## New names:
+## Rows: 9129 Columns: 6
+## -- Column specification
+## -------------------------------------------------------- Delimiter: &quot;,&quot; chr
+## (2): TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS, COUNTY_NAME lgl (4): ...3,
+## ...4, ...5, ...6
+## i Use `spec()` to retrieve the full column specification for this data. i
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## * `` -&gt; `...3`
+## * `` -&gt; `...4`
+## * `` -&gt; `...5`
+## * `` -&gt; `...6`</code></pre>
+<pre class="r"><code>CA_countytract2 &lt;- CA_countytract %&gt;% mutate(tractcode = str_sub(`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, 7, 17))
+
+joined_CA_countytract &lt;- clean1_tract %&gt;% inner_join(CA_countytract2, by = &quot;tractcode&quot;)
+clean2_tract &lt;- joined_CA_countytract %&gt;% 
+  select(-`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, -...3, -...4, -...5, -...6)
+clean2_tract &lt;- clean2_tract[, c(1, 6, 2, 3, 4, 5)]
+colnames(clean2_tract) &lt;- c(&quot;tractcode&quot;, &quot;county_name&quot;, &quot;open_parks_tract&quot;, &quot;tract_area_sqmiles&quot;, &quot;total_open_park_area_sqmiles&quot;, &quot;prop_open_park_land_within_tract&quot;)</code></pre>
+<p>Now, we prepare the county_name as a key within the asthma data in order to join the asthma dataset with the parks dataset. First, we filter the asthma dataset to only include data from 2018, since the parks dataset is also from 2018. For now, we’re also removing any strata data on race/ethnicity, as analysis of this would only really be useful if we have data on the total population of the race/ethnicity in that tract or county (this is a potential avenue for us to explore later in our project using tidycensus, but for now we’re excluding this information for the sake of this blogpost).</p>
+<p>We rename “COUNTY” to “county_name”, as well as tidy up some of the other column names. We also change the county names to be in uppercase, so that they match across the tables when we do the join. Then, we join the asthma dataset with the parks dataset. (Note: the asthma dataset still needs some tidying, as there are multiple strata in one column, etc. We plan to do this as soon as possible, but tidying the parks dataset was our priority for this week)</p>
+<pre class="r"><code>asthma &lt;- read_csv(here::here(&quot;dataset&quot;, &quot;asthma.csv&quot;))</code></pre>
+<pre><code>## Rows: 3658 Columns: 8
+## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;,&quot;
+## chr (5): COUNTY, STRATA, STRATA_NAME, AGE_GROUP, COMMENT
+## dbl (2): YEAR, AGE_ADJUSTED_HOSPITALIZATION_RATE
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>asthma_2018 &lt;- asthma %&gt;% filter(YEAR == &quot;2018&quot;)
+asthma_2018 &lt;- asthma_2018 %&gt;% filter(STRATA != &quot;Race/ethnicity&quot;)
+asthma_2018 &lt;- asthma_2018 %&gt;% mutate(COUNTY = str_to_upper(COUNTY))
+colnames(asthma_2018) &lt;- c(&quot;county_name&quot;, &quot;year&quot;, &quot;strata&quot;, &quot;strata_name&quot;, &quot;age_group&quot;, &quot;hospitalizations&quot;, &quot;age_adjusted_hosp_rate&quot;, &quot;comment&quot;)
+
+parks_asthma &lt;- clean2_tract %&gt;% inner_join(asthma_2018, by = &quot;county_name&quot;)</code></pre>
+<p>Below is an initial plot of the total open park land by county (using the sums of the total open park area for each tract in square miles) against the age-adjusted asthma hospitalization rate in each county (by total population).</p>
+<pre class="r"><code>parks_asthma %&gt;% 
+  filter(strata == &quot;Total population&quot;, !is.na(age_adjusted_hosp_rate)) %&gt;%
+  group_by(county_name) %&gt;% mutate(prop_park_county = sum(total_open_park_area_sqmiles)) %&gt;% ggplot(aes(y = prop_park_county, x = age_adjusted_hosp_rate)) + geom_point() + labs(x = &quot;Age-Adjusted Asthma Hospitalization Rate in County (Total Population)&quot;, y = &quot;Total Open Park Land by County (Square Miles)&quot;)</code></pre>
+<p><img src="/post/2022-11-04-blogpost-4/blogpost4_files/figure-html/parkarea_hosprate_plot-1.png" width="672" /></p>
+<p>Based on this plot, there doesn’t seem to be much of a correlation. When we move on into modeling (and all of our data is tidier), we should be able to model the relationship better.</p>
