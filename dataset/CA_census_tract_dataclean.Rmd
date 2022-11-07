@@ -16,7 +16,7 @@ library(tidyverse)
 ##Data tidying:
 
 ```{r data tidy}
-CAcountytract <- read_csv("CA_countytract.csv") %>% 
+CAcountytract <- read_csv("CA_countytract.csv", show_col_types=FALSE) %>% 
   
   rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>% 
   #creating easier to use name for variable 
@@ -74,11 +74,12 @@ CAcountytract <- read_csv("CA_countytract.csv") %>%
   #leaves original columns in dataset because remove=FALSE
   #county code is unique to each county in California
   
-  select(-semi1, -semi2, -semi3, -semi4, -"...3", -"...4", -"...5", -"...6")
+  select(-semi1, -semi2, -semi3, -semi4, -"...3", -"...4", -"...5", -"...6") 
   #removing the temporary columns used to move the semi colons
   #remove excess columns accidentally created
   #could reorder columns here if that would be helpful
 
+write_rds(CAcountytract, "CAcountytract_clean.rds")
 #head(CAcountytract)
 #if want to test/check the outcome
 ```
@@ -107,4 +108,5 @@ CAcountytract <- read_csv("CA_countytract.csv") %>%
   
 view(CAcountytract)
 
+write_rds(CAcountytract, "CAcountytract_clean.rds")
 ```
