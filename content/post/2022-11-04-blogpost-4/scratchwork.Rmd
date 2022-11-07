@@ -1,0 +1,100 @@
+--
+title: Data Summary for CAcensustract
+description: Data summary for CAcensustract for project EDA
+toc: true
+featuredVideo:
+featuredImage: 
+draft: false
+--
+
+```{r Load and Clean Parks Data}
+library(tidyverse)
+
+path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
+setwd(path)
+
+CAcountytract <- read_csv("CA_countytract.csv") %>% 
+  rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>% 
+  separate(col="remaining", into = c("TYPE", "remains1"), (5)) %>% 
+  separate(col="remains1", into = c("semi1", "remains11"), sep=(1)) %>% 
+  separate(col="remains11", into = c("FULLCODE", "remains2"), sep = (11)) %>% 
+  separate(col="remains2", into = c("semi2", "remains22"), sep=(1)) %>% 
+  separate(col="remains22", into = c("STATE", "remains3"), sep = (2)) %>% 
+  separate(col="remains3", into = c("semi3", "remains33"), sep=(1)) %>% 
+  separate(col="remains33", into = c("COUNTY", "remains4"), sep = (3)) %>% 
+  separate(col="remains4", into = c("semi4", "remains44"), sep=(1)) %>% 
+  separate(col="remains44", into = c("TRACT", "SHEETS"), sep = ";") %>% 
+  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", remove = FALSE) %>% 
+  select(-semi1, -semi2, -semi3, -semi4, -"...3", -"...4", -"...5", -"...6")
+  
+view(CAcountytract)
+```
+
+```{r census-tract ID summary}
+
+CAcountytract %>% 
+  group_by(COUNTY_NAME) %>%
+  count(COUNTY_NAME) %>%
+  ggplot(aes(x=n)) + geom_boxplot() + labs(x = "Number of Tracts", title = "Number of Census Tracts per California County")
+
+```
+
+``` {r Parks Dataset Cleaning and Joining with County Data}
+
+path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
+setwd(path)
+
+nanda_parks_tract_2018_01P <- read_csv("nanda_parks_tract_2018_01P.csv")
+
+tract_ca <- nanda_parks_tract_2018_01P %>% 
+  filter(grepl('^06', tract_fips10), any_open_park == 1)
+
+clean1_tract <- tract_ca %>% 
+  select(tract_fips10, count_open_parks, tract_area_sqmiles, tot_park_area_sqmiles, prop_park_area_tract)
+colnames(clean1_tract) <- c("tractcode", "open_parks_tract", "tract_area_sqmiles", "total_open_park_area_sqmiles", "prop_open_park_land_within_tract") 
+
+CA_countytract <- read_csv("CA_countytract.csv")
+CA_countytract2 <- CA_countytract %>% mutate(tractcode = str_sub(`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, 7, 17))
+
+joined_CA_countytract <- clean1_tract %>% inner_join(CA_countytract2, by = "tractcode")
+clean2_tract <- joined_CA_countytract %>% 
+  select(-`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, -...3, -...4, -...5, -...6)
+clean2_tract <- clean2_tract[, c(1, 6, 2, 3, 4, 5)]
+colnames(clean2_tract) <- c("tractcode", "county_name", "open_parks_tract", "tract_area_sqmiles", "total_open_park_area_sqmiles", "prop_open_park_land_within_tract")
+
+view(clean2_tract)
+```
+
+```{r EDA Parks Data}
+
+grouped_data <- clean2_tract %>%
+    group_by(county_name) %>%
+    mutate(county_total_open_parks = sum(open_parks_tract)) %>%
+    mutate(county_total_area = sum(tract_area_sqmiles)) %>%
+    mutate(county_total_park_area = sum(total_open_park_area_sqmiles)) %>%
+    mutate(prop_park_land_county = (county_total_park_area/county_total_area)) %>%
+  mutate(num_tracts = n()) %>%
+    select(county_name, county_total_open_parks, county_total_area, county_total_park_area, prop_park_land_county, num_tracts)
+
+grouped_summary <- grouped_data %>%
+    summarize(county_total_open_parks = mean(county_total_open_parks), 
+              county_total_area = mean(county_total_area), 
+              county_total_park_area = mean(county_total_park_area), 
+              prop_park_land_county = (county_total_park_area/county_total_area), 
+    num_tracts = mean(num_tracts)) %>%
+    select(county_name, county_total_open_parks, county_total_area, county_total_park_area, prop_park_land_county, num_tracts)
+
+
+ggplot(data = grouped_summary) +
+  geom_point(aes(x = county_total_area, y = county_total_park_area, color = num_tracts)) + 
+  labs(x= "Total Area of County (sqm)", y = "Total Area of Parks in County (sqm)", title = "Park Area vs. Total Area of CA Counties", color = "Number of Census Tracts in County")
+
+
+clean2_tract <- clean2_tract %>%
+  group_by(county_name) %>%
+  mutate(num_tracts = n())
+
+ggplot(data = clean2_tract, aes(x=county_name, y=prop_open_park_land_within_tract)) + 
+  geom_boxplot(aes(group = county_name, color = num_tracts)) + labs(title = "Proportion of Open Park Land in Census Tracts for Each CA County", x = "County", y = "Proportion of Open Park Land in Census Tracts", color = "Number of Census Tracts in County")
+
+```

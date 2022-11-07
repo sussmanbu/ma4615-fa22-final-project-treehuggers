@@ -1,25 +1,32 @@
 ---
-title: 'Blogpost #4'
+title: 'Blogpost #4 - EDA'
 author: Treehuggers
-date: '2022-11-04'
+date: '2022-10-28'
 slug: []
 categories: []
 tags: []
-description: We conduct deeper and broader EDA and discuss our initial thoughts and results for modeling.
+description: We perform an Exploratory Data Analysis on the data.
 toc: yes
 authors: []
 series: []
-lastmod: '2022-11-04T21:06:32-04:00'
+lastmod: '2022-11-04T09:25:44-04:00'
 featuredVideo: ~
 featuredImage: ~
 ---
 
-First, we load tidyverse and the Parks by Census Tract dataset and filter the data so that it only includes California counties and counties with at least one open park. We also tidy up the data some more to only include relevant columns with the select function, storing this in a new dataset called "clean1_tract" and renaming the columns to be more descriptive.
+First, we load tidyverse and the Parks by Census Tract dataset and filter the data so that it only includes California counties and counties with at least one open park. We also tidy up the data some more to only include relevant columns with the select function, storing this in a new dataset called “clean1_tract” and renaming the columns to be more descriptive.
 
-```{r parksdata_tidy}
+```{r}
 suppressPackageStartupMessages(library(tidyverse))
 nanda_parks_tract_2018_01P <- read_csv(here::here("dataset", "nanda_parks_tract_2018_01P.csv"))
-
+## Rows: 73057 Columns: 11
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## chr  (1): tract_fips10
+## dbl (10): any_open_park, count_open_parks, count_open_parks_tc10, count_open...
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
 tract_ca <- nanda_parks_tract_2018_01P %>% 
   filter(grepl('^06', tract_fips10), any_open_park == 1)
 
@@ -27,11 +34,22 @@ clean1_tract <- tract_ca %>%
   select(tract_fips10, count_open_parks, tract_area_sqmiles, tot_park_area_sqmiles, prop_park_area_tract)
 colnames(clean1_tract) <- c("tractcode", "open_parks_tract", "tract_area_sqmiles", "total_open_park_area_sqmiles", "prop_open_park_land_within_tract") 
 ```
+Then, since the Parks by Census Tract dataset doesn’t include the county names, we load in “CA_countytract”, which is a catalog of all of the counties by tract code. After isolating the full tract code from this dataset and creating a new column “tractcode”, we are able to use an inner join to join the two tables with “tractcode” as the key. The inner join joins the tidied CA_countytract table with the clean1_tract table, keeping all of the rows where tractcode from clean1_tract matches tractcode in CA_countytract. Then, for the joined dataset, we get rid of extraneous columns and reorder and rename the columns to our liking.
 
-Then, since the Parks by Census Tract dataset doesn't include the county names, we load in "CA_countytract", which is a catalog of all of the counties by tract code. After isolating the full tract code from this dataset and creating a new column "tractcode", we are able to use an inner join to join the two tables with "tractcode" as the key. The inner join joins the tidied CA_countytract table with the clean1_tract table, keeping all of the rows where tractcode from clean1_tract matches tractcode in CA_countytract. Then, for the joined dataset, we get rid of extraneous columns and reorder and rename the columns to our liking.
-
-```{r join_tractcode}
+``` {r}
 CA_countytract <- read_csv(here::here("dataset", "CA_countytract.csv"))
+## New names:
+## Rows: 9129 Columns: 6
+## -- Column specification
+## -------------------------------------------------------- Delimiter: "," chr
+## (2): TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS, COUNTY_NAME lgl (4): ...3,
+## ...4, ...5, ...6
+## i Use `spec()` to retrieve the full column specification for this data. i
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## * `` -> `...3`
+## * `` -> `...4`
+## * `` -> `...5`
+## * `` -> `...6`
 CA_countytract2 <- CA_countytract %>% mutate(tractcode = str_sub(`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, 7, 17))
 
 joined_CA_countytract <- clean1_tract %>% inner_join(CA_countytract2, by = "tractcode")
@@ -41,12 +59,20 @@ clean2_tract <- clean2_tract[, c(1, 6, 2, 3, 4, 5)]
 colnames(clean2_tract) <- c("tractcode", "county_name", "open_parks_tract", "tract_area_sqmiles", "total_open_park_area_sqmiles", "prop_open_park_land_within_tract")
 ```
 
-Now, we prepare the county_name as a key within the asthma data in order to join the asthma dataset with the parks dataset. First, we filter the asthma dataset to only include data from 2018, since the parks dataset is also from 2018. For now, we're also removing any strata data on race/ethnicity, as analysis of this would only really be useful if we have data on the total population of the race/ethnicity in that tract or county (this is a potential avenue for us to explore later in our project using tidycensus, but for now we're excluding this information for the sake of this blogpost).
+Now, we prepare the county_name as a key within the asthma data in order to join the asthma dataset with the parks dataset. First, we filter the asthma dataset to only include data from 2018, since the parks dataset is also from 2018. For now, we’re also removing any strata data on race/ethnicity, as analysis of this would only really be useful if we have data on the total population of the race/ethnicity in that tract or county (this is a potential avenue for us to explore later in our project using tidycensus, but for now we’re excluding this information for the sake of this blogpost).
 
-We rename "COUNTY" to "county_name", as well as tidy up some of the other column names. We also change the county names to be in uppercase, so that they match across the tables when we do the join. Then, we join the asthma dataset with the parks dataset. (Note: the asthma dataset still needs some tidying, as there are multiple strata in one column, etc. We plan to do this as soon as possible, but tidying the parks dataset was our priority for this week)
+We rename “COUNTY” to “county_name”, as well as tidy up some of the other column names. We also change the county names to be in uppercase, so that they match across the tables when we do the join. Then, we join the asthma dataset with the parks dataset. (Note: the asthma dataset still needs some tidying, as there are multiple strata in one column, etc. We plan to do this as soon as possible, but tidying the parks dataset was our priority for this week)
 
-```{r parks_asthma}
+``` {r}
 asthma <- read_csv(here::here("dataset", "asthma.csv"))
+## Rows: 3658 Columns: 8
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## chr (5): COUNTY, STRATA, STRATA_NAME, AGE_GROUP, COMMENT
+## dbl (2): YEAR, AGE_ADJUSTED_HOSPITALIZATION_RATE
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
 asthma_2018 <- asthma %>% filter(YEAR == "2018")
 asthma_2018 <- asthma_2018 %>% filter(STRATA != "Race/ethnicity")
 asthma_2018 <- asthma_2018 %>% mutate(COUNTY = str_to_upper(COUNTY))
@@ -55,6 +81,7 @@ colnames(asthma_2018) <- c("county_name", "year", "strata", "strata_name", "age_
 parks_asthma <- clean2_tract %>% inner_join(asthma_2018, by = "county_name")
 ```
 
+<<<<<<< HEAD
 The following is a plot of the asthma dataset with the total number of hospitalizations in the whole state of California, not separated by county. There are 58 counties in California and we are in the process of figuring out how to graph/plot or take this data and visualize it, without it being too messy.
 
 ```{r asthma_plot}
@@ -63,17 +90,79 @@ cal%>%ggplot(aes(x = age_group, y = hospitalizations)) + geom_col() + labs(x = "
 ```
 
 Something that is good to note about the asthma dataset is that when it states California under county, it represents the state as a whole as California is not a county within California itself. From the data, you can see that all the numerics under hospitalizations and the age adjusted rate are the totals and averages from the other 58 counties within California.
+=======
+The following is a plot of the asthma dataset with the total number of hospitalizations in the whole state of California, not separated by county. There are 58 counties in California and we are in the process of figuring out how to graph/plot or take this data and visualize it, without it being too messy while still being able to show all the counties so that we can use it to model the relationships between the two datasets for each county. 
+
+```{r asthma_col}
+cal <- asthma_2018 %>% filter(county_name == "CALIFORNIA", strata == "Age groups", !is.na(hospitalizations)) %>% group_by(age_group)
+cal%>%ggplot(aes(x = age_group, y = hospitalizations)) + geom_col() + labs(x = "Age Groups", y = "Total Hospitalizations in CA")
+```
+Something that is good to note about the asthma dataset is that when it states California under county, it represents the state as a whole as California is not a county within California itself. From the data, you can see that all the numerics under hospitalizations and the age adjusted rate are the totals and averages from the other 58 counties within California.
+
+Here is another plot that shows the total number of hospitalizations of the each population for each county in California. It is quite difficult to note which county is which based on the graph because of how many counties there are. However, overall we can tell that most counties have a fairly low (0-1000) number of hospitalizations. If possible, it would be interesting to compare the number of hospitalizations to the number of census tracts (as a rough population estimate) or find the proportion of hospitalizations relative to the total population of the county to see if the extremely high hospitalization value is an outlier, or just a very populated area like LA. 
+
+``` {r asthma_point}
+asthma_2018 %>% filter(county_name != "CALIFORNIA", strata == "Total population", !is.na(hospitalizations)) %>% ggplot(aes(x = county_name, y = hospitalizations)) + geom_jitter()
+```
+
+>>>>>>> 67c658f68ea1f209716ff8a7b2608f24fc33890c
 
 Below is an initial plot of the total open park land by county (using the sums of the total open park area for each tract in square miles) against the age-adjusted asthma hospitalization rate in each county (by total population).
 
-```{r parkarea_hosprate_plot}
+``` {r}
 parks_asthma %>% 
   filter(strata == "Total population", !is.na(age_adjusted_hosp_rate)) %>%
   group_by(county_name) %>% mutate(prop_park_county = sum(total_open_park_area_sqmiles)) %>% ggplot(aes(y = prop_park_county, x = age_adjusted_hosp_rate)) + geom_point() + labs(x = "Age-Adjusted Asthma Hospitalization Rate in County (Total Population)", y = "Total Open Park Land by County (Square Miles)")
 ```
 
-Based on this plot, there doesn't seem to be much of a correlation. When we move on into modeling (and all of our data is tidier), we should be able to model the relationship better.
+Based on this plot, there doesn’t seem to be much of a correlation. When we move on into modeling (and all of our data is tidier), we should be able to model the relationship better.
 
 
 
 
+<<<<<<< HEAD
+=======
+Next we focus on the newly cleaned Parks dataset. Based on the new clean2_tract, we create new variables that summarize the total park space, total land area, and total number of parks for each county, rather than just census tract.We also create a variable num_tracts which counts up the total number of census tracts per county (which is a rough measurement of population density). 
+
+```{r EDA Parks Data}
+
+grouped_data <- clean2_tract %>%
+    group_by(county_name) %>%
+    mutate(county_total_open_parks = sum(open_parks_tract)) %>%
+    mutate(county_total_area = sum(tract_area_sqmiles)) %>%
+    mutate(county_total_park_area = sum(total_open_park_area_sqmiles)) %>%
+    mutate(prop_park_land_county = (county_total_park_area/county_total_area)) %>%
+  mutate(num_tracts = n()) %>%
+    select(county_name, county_total_open_parks, county_total_area, county_total_park_area, prop_park_land_county, num_tracts)
+
+grouped_summary <- grouped_data %>%
+    summarize(county_total_open_parks = mean(county_total_open_parks), 
+              county_total_area = mean(county_total_area), 
+              county_total_park_area = mean(county_total_park_area), 
+              prop_park_land_county = (county_total_park_area/county_total_area), 
+    num_tracts = mean(num_tracts)) %>%
+    select(county_name, county_total_open_parks, county_total_area, county_total_park_area, prop_park_land_county, num_tracts)
+```
+
+Next, we create a scatterplot of total number of census tracts versus total number of open parks for each county. These appear to show a steep, linear, positive correlation, and therefore this relationship merits further investigation and modeling. When we color the datapoints by proportion of park-to-total land area for the county, there does not appear to be a relationship between the counties with a higher number of parks and the counties with a higher proportion of park-to-total land area. 
+
+``` {r scatterplot}
+ggplot(data = grouped_summary) + 
+  geom_point(aes(x=num_tracts, y = county_total_open_parks, color=prop_park_land_county)) +
+  labs(x="Number of Census Tracts in County", y="Total Number of Open Parks", title="Total Number of Open Parks vs. Number of Census Tracts in CA Counties")
+
+```
+
+After this, we create boxplots that show the proportions of park-to-total land area for the census tracts within each county. Although the number of counties makes this a little hard to read, a few things stand out. Firstly, the median percentage of park land for census tracts in most counties is only about 10%, but there are a large number of outliers for many of the counties. Since census tracts usually contain about 4000 (1200-8000) people, this means that some areas must have much larger amounts of green space for relatively small amounts of people. Secondly, LA (light blue) stands out for the sheer number of census tracts. It might be interesting to remove LA from the data to see what trends are like without it, although it appeared in line with the general positive, linear pattern of the other plot. It also wasn’t a significant outlier in some of the other plots we made. 
+
+``` {r Boxplots}
+clean2_tract <- clean2_tract %>%
+  group_by(county_name) %>%
+  mutate(num_tracts = n())
+
+ggplot(data = clean2_tract, aes(x=county_name, y=prop_open_park_land_within_tract)) + 
+  geom_boxplot(aes(group = county_name, color = num_tracts)) + labs(title = "Proportion of Open Park Land in Census Tracts for Each CA County", x = "County", y = "Proportion of Open Park Land in Census Tracts", color = "Number of Census Tracts in County")
+
+```
+
+>>>>>>> 67c658f68ea1f209716ff8a7b2608f24fc33890c
