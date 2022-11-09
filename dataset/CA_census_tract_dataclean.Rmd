@@ -16,6 +16,9 @@ library(tidyverse)
 ##Data tidying:
 
 ```{r data tidy}
+path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
+setwd(path)
+
 CAcountytract <- read_csv("CA_countytract.csv", show_col_types=FALSE) %>% 
   
   rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>% 
@@ -68,7 +71,7 @@ CAcountytract <- read_csv("CA_countytract.csv", show_col_types=FALSE) %>%
   #can be places with same tract number in state if they are in different counties 
   #sheets column identifies where maps of the tract can be found
   
-  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", remove = FALSE) %>% 
+  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", as.factor()) %>% 
   #uniting columns to make COUNTY_CODE
   #one of our datasets identifies which county something occurs in using this format
   #leaves original columns in dataset because remove=FALSE
@@ -87,26 +90,26 @@ write_rds(CAcountytract, "CAcountytract_clean.rds")
 ``` {r Parks Data Cleaning for Common Use}
 # this code sets the working directory to the correct folder for the Parks data, so it can be copied over for use in any other folder of this project
 
-library(tidyverse)
+#library(tidyverse)
 
-path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
-setwd(path)
+#path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
+#setwd(path)
 
-CAcountytract <- read_csv("CA_countytract.csv") %>% 
-  rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>% 
-  separate(col="remaining", into = c("TYPE", "remains1"), (5)) %>% 
-  separate(col="remains1", into = c("semi1", "remains11"), sep=(1)) %>% 
-  separate(col="remains11", into = c("FULLCODE", "remains2"), sep = (11)) %>% 
-  separate(col="remains2", into = c("semi2", "remains22"), sep=(1)) %>% 
-  separate(col="remains22", into = c("STATE", "remains3"), sep = (2)) %>% 
-  separate(col="remains3", into = c("semi3", "remains33"), sep=(1)) %>% 
-  separate(col="remains33", into = c("COUNTY", "remains4"), sep = (3)) %>% 
-  separate(col="remains4", into = c("semi4", "remains44"), sep=(1)) %>% 
-  separate(col="remains44", into = c("TRACT", "SHEETS"), sep = ";") %>% 
-  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", remove = FALSE) %>% 
-  select(-semi1, -semi2, -semi3, -semi4, -"...3", -"...4", -"...5", -"...6")
+#CAcountytract <- read_csv("CA_countytract.csv") %>% 
+  #rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>% 
+  #separate(col="remaining", into = c("TYPE", "remains1"), (5)) %>% 
+  #separate(col="remains1", into = c("semi1", "remains11"), sep=(1)) %>% 
+  #separate(col="remains11", into = c("FULLCODE", "remains2"), sep = (11)) %>% 
+  #separate(col="remains2", into = c("semi2", "remains22"), sep=(1)) %>% 
+  #separate(col="remains22", into = c("STATE", "remains3"), sep = (2)) %>% 
+  #separate(col="remains3", into = c("semi3", "remains33"), sep=(1)) %>% 
+  #separate(col="remains33", into = c("COUNTY", "remains4"), sep = (3)) %>% 
+  #separate(col="remains4", into = c("semi4", "remains44"), sep=(1)) %>% 
+  #separate(col="remains44", into = c("TRACT", "SHEETS"), sep = ";") %>% 
+  #unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", remove = FALSE) %>% 
+  #select(-semi1, -semi2, -semi3, -semi4, -"...3", -"...4", -"...5", -"...6")
   
-view(CAcountytract)
+#view(CAcountytract)
 
-write_rds(CAcountytract, "CAcountytract_clean.rds")
+#write_rds(CAcountytract, "CAcountytract_clean.rds")
 ```

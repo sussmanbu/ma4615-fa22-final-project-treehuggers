@@ -1,4 +1,6 @@
 
+##not currently functional
+
 library(tidyverse)
 
 CAcountytract <- read_csv("CA_countytract.csv") %>% 
