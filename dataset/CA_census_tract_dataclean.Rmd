@@ -17,7 +17,7 @@ library(tidyverse)
 
 ```{r data tidy}
 path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
-setwd(path)
+#setwd(path)
 
 CAcountytract <- read_csv("CA_countytract.csv", show_col_types=FALSE) %>% 
   
@@ -71,7 +71,7 @@ CAcountytract <- read_csv("CA_countytract.csv", show_col_types=FALSE) %>%
   #can be places with same tract number in state if they are in different counties 
   #sheets column identifies where maps of the tract can be found
   
-  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="", as.factor()) %>% 
+  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="") %>% 
   #uniting columns to make COUNTY_CODE
   #one of our datasets identifies which county something occurs in using this format
   #leaves original columns in dataset because remove=FALSE
@@ -82,7 +82,7 @@ CAcountytract <- read_csv("CA_countytract.csv", show_col_types=FALSE) %>%
   #remove excess columns accidentally created
   #could reorder columns here if that would be helpful
 
-write_rds(CAcountytract, "CAcountytract_clean.rds")
+write_rds(CAcountytract, "CAcountytract_clean.RData")
 #head(CAcountytract)
 #if want to test/check the outcome
 ```

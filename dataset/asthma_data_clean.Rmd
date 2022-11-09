@@ -1,0 +1,65 @@
+title: Data Cleanup for asthma.csv (children's data only)
+
+Creates an RData file titled "asthmaCA_kids.RData" which features the children's data only. Asthma in children is highly linked to air pollution, and looking at children's asthma data can give insight into air pollution levels. 
+
+This comes from the file `dataset/asthma_data_clean.Rmd`.
+
+```{r kids}
+library(tidyverse)
+
+path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
+#setwd(path)
+
+asthmaCA <- read_csv("asthma.csv", show_col_types=FALSE) %>%
+  filter(AGE_GROUP == "0-17 years") %>%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %>%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %>%
+  select(-COMMENT)
+
+write_rds(asthmaCA, "asthmaCA_kids.RData")
+```
+
+The below section looks at the racial and ethnic backgrounds of asthma sufferers in California. Since air pollution is often a bigger issue for those who experience environmental injustice, this could help shed light on where that is happening. If some of the counties like up with those with high rates of childhood asthma, it becomes even more convincing. 
+
+```{r racial}
+CAasthma <- read_csv("asthma.csv", show_col_types=FALSE) %>%
+  filter(STRATA == "Race/ethnicity") %>%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %>%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %>%
+  select(-COMMENT)
+  #pivot_wider(names_from=STRATA_NAME, values_from=STRATA_NAME)
+
+write_rds(CAasthma, "asthmaCA_race_ethnicity.RData")
+#head(CAasthma)
+```
+
+The below chunk creates a dataset in an RData file with the asthma rate for two different age classes of children. 
+
+```{r kids 2}
+Cali_asthma <- read_csv("asthma.csv", show_col_types=FALSE) %>%
+  filter(STRATA == "Age groups") %>%
+  filter(AGE_GROUP == c("0-4 years", "5-17")) %>%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %>%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %>%
+  select(-COMMENT)
+
+write_rds(Cali_asthma, "asthmaCA_kids_2.RData")
+#head(Cali_asthma)
+```
+
+
+
+```{r kids v adults}
+asthma_Cali <- read_csv("asthma.csv", show_col_types=FALSE) %>%
+  filter(STRATA == "Child vs. adult") %>%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %>%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %>%
+  select(-COMMENT)
+
+write_rds(asthma_Cali, "asthmaCA_kids_v_adults.RData")
+#head(asthma_Cali)
+```
+
+
+
+
