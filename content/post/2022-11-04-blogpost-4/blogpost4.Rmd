@@ -17,7 +17,7 @@ featuredImage: ~
 First, we load tidyverse and the Parks by Census Tract dataset and filter the data so that it only includes California counties and counties with at least one open park. We also tidy up the data some more to only include relevant columns with the select function, storing this in a new dataset called “clean1_tract” and renaming the columns to be more descriptive.
 
 ```{r}
-suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(suppressWarnings(library(tidyverse)))
 nanda_parks_tract_2018_01P <- read_csv(here::here("dataset", "nanda_parks_tract_2018_01P.csv"))
 ## Rows: 73057 Columns: 11
 ## -- Column specification --------------------------------------------------------
