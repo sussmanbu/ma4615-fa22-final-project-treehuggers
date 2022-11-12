@@ -35,8 +35,33 @@ colnames(asthmaCA_race_ethnicity) &lt;- c(&quot;county_name&quot;, &quot;year&qu
 asthmaCA_race_ethnicity &lt;- asthmaCA_race_ethnicity %&gt;% mutate(county_name = str_to_upper(county_name))
 
 parks_asthmaCA_race_ethnicity &lt;- clean_parks_data %&gt;% inner_join(asthmaCA_race_ethnicity, by = &quot;county_name&quot;)</code></pre>
-<p>Our initial findings are that we have some outliers that we originally suspected were very large counties, specifically Los Angeles. Through plots, we can see that the outliers in the asthma datasets are both Los Angeles, which makes sense given what we previously noted about the county’s much denser population. Based on this plot, we can see that Los Angeles has the highest amount of hospitalizations by far compared to the other counties.</p>
-<pre class="r"><code>asthmaCA_race_ethnicity %&gt;% filter(county_name != &quot;California&quot;, strata == &quot;Total population&quot;, !is.na(number_hospitalizations)) %&gt;% ggplot(aes(x = county_name, y = number_hospitalizations)) + geom_jitter() + labs(x = &quot;County Name&quot;, y = &quot;Number of Hospitalizations&quot;, title = &quot;Total Number of Asthma Hospitalizations for California Counties in 2018&quot;) </code></pre>
+<p>Our initial findings are that we have some outliers that we originally suspected were very large counties, specifically Los Angeles. Using a plot we made for our last blogpost and the cumulative sum of the number of open parks in Los Angeles, we can see that the outlier in the parks dataset is Los Angeles, which makes sense given what we previously noted about the county’s much denser population.</p>
+<pre class="r"><code>grouped_data &lt;- clean_parks_data %&gt;%
+    group_by(county_name) %&gt;%
+    mutate(county_total_open_parks = sum(open_parks_tract)) %&gt;%
+    mutate(county_total_area = sum(tract_area_sqmiles)) %&gt;%
+    mutate(county_total_park_area = sum(total_open_park_area_sqmiles)) %&gt;%
+    mutate(prop_park_land_county = (county_total_park_area/county_total_area)) %&gt;%
+  mutate(num_tracts = n()) %&gt;%
+    select(county_name, county_total_open_parks, county_total_area, county_total_park_area, prop_park_land_county, num_tracts)
+
+grouped_summary &lt;- grouped_data %&gt;%
+    summarize(county_total_open_parks = mean(county_total_open_parks), 
+              county_total_area = mean(county_total_area), 
+              county_total_park_area = mean(county_total_park_area), 
+              prop_park_land_county = (county_total_park_area/county_total_area), 
+    num_tracts = mean(num_tracts)) %&gt;%
+    select(county_name, county_total_open_parks, county_total_area, county_total_park_area, prop_park_land_county, num_tracts)
+
+ggplot(data = grouped_summary) + 
+  geom_point(aes(x=num_tracts, y = county_total_open_parks, color=prop_park_land_county)) +
+  labs(x=&quot;Number of Census Tracts in County&quot;, y=&quot;Total Number of Open Parks&quot;, title=&quot;Total Number of Open Parks vs. Number of Census Tracts in CA Counties&quot;)</code></pre>
 <p><img src="/post/2022-11-11-blogpost-5/blogpost5_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<p>The biggest issue in combining data so far has not been the actual combining part but cleaning the data prior to combining it. It was, and still is, difficult to clean the asthma dataset because of how the columns are arranged, and the parks dataset also provided some issues when we had to determine which tracts belong to which counties. However, the actual combining has been going well. We just need to finalize how much and what kind of information we want from the asthma dataset, particularly in regards to age and race.</p>
+<pre class="r"><code>(clean_parks_data %&gt;% filter(county_name == &quot;LOS_ANGELES&quot;) %&gt;% summarize(sum = cumsum(open_parks_tract)) %&gt;% tail(n = 1))</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##     sum
+##   &lt;dbl&gt;
+## 1  2446</code></pre>
+<p>The plot above has a singular point close to 2,500, with the other points, all indicating number of parks, being less than half of this value. The cumulative sum of the number of parks in Los Angeles is 2,446, so we can reasonably assume that the outlier point is Los Angeles, and that Los Angeles is probably an outlier in the asthma dataset as well, although this will take further EDA to confirm.</p>
+<p>The biggest issue in combining data so far has not been the actual combining part but instead the cleaning of the data prior to combining it. It was, and still is, difficult to clean the asthma dataset because of how the columns are arranged, and the parks dataset also provided some issues when we had to determine which tracts belong to which counties. However, the actual combining has been going well. We just need to finalize how much and what kind of information we want from the asthma dataset, particularly in regards to age and race.</p>
 <p>Other than this, we are pretty much finished combining the datasets. Our next steps are continuing to clean the data and performing further analysis now that it is combined. We will identify any other outliers and examine trends between our many variables through further plotting.</p>
