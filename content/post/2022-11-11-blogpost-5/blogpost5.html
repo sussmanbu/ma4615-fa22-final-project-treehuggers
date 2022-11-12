@@ -21,7 +21,7 @@ featuredImage: ~
 
 <p>For our project, we are combining two datasets: one on asthma hospitalization rates per county in California and one on the number of parks per census tract in California. We also had to make a temporary dataset to organize which census tracts belonged to which counties since the names were not included in the parks dataset, and we combined the temporary dataset with the parks dataset. The asthma dataset contains asthma hospitalization rates along with demographic information such as age group and race, and the parks dataset contains the amount of land used for parks and the total amount of land in each census tract, as well as the proportion of land used for public parks.</p>
 <p>We used inner_join() by tractcode to join our original parks dataset with the temporary dataset with the county names associated with each tract. The code we used to accomplish this can be seen in our previous blog post, Blog Post 4.</p>
-<p>We are still doing some cleaning of the asthma dataset but have performed an initial cleaning and combined what we have so far with our cleaned parks dataset using inner_join() by county_name. This is what we have so far:</p>
+<p>We are still doing some cleaning of the asthma dataset but have performed an initial cleaning and combined what we have so far with our cleaned parks dataset using inner_join() by county_name. This is what we have so far in terms of cleaning and combining using the asthma dataset:</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(tidyverse))
 
 load(here::here(&quot;dataset&quot;, &quot;clean_parks_data.RData&quot;))

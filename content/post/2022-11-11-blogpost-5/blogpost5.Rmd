@@ -18,7 +18,7 @@ For our project, we are combining two datasets: one on asthma hospitalization ra
 
 We used inner_join() by tractcode to join our original parks dataset with the temporary dataset with the county names associated with each tract. The code we used to accomplish this can be seen in our previous blog post, Blog Post 4.
 
-We are still doing some cleaning of the asthma dataset but have performed an initial cleaning and combined what we have so far with our cleaned parks dataset using inner_join() by county_name. This is what we have so far:
+We are still doing some cleaning of the asthma dataset but have performed an initial cleaning and combined what we have so far with our cleaned parks dataset using inner_join() by county_name. This is what we have so far in terms of cleaning and combining using the asthma dataset:
 
 ```{r}
 suppressPackageStartupMessages(library(tidyverse))
