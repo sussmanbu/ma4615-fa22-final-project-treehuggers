@@ -82,7 +82,7 @@ CAcountytract <- read_csv("CA_countytract.csv", show_col_types=FALSE) %>%
   #remove excess columns accidentally created
   #could reorder columns here if that would be helpful
 
-write_rds(CAcountytract, "CAcountytract_clean.RData")
+saveRDS(CAcountytract, "CAcountytract_clean.RData")
 #head(CAcountytract)
 #if want to test/check the outcome
 ```

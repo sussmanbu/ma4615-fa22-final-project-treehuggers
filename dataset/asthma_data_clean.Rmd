@@ -16,7 +16,7 @@ asthmaCA <- read_csv("asthma.csv", show_col_types=FALSE) %>%
   filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %>%
   select(-COMMENT)
 
-write_rds(asthmaCA, "asthmaCA_kids.RData")
+saveRDS(asthmaCA, "asthmaCA_kids.RData")
 ```
 
 The below section looks at the racial and ethnic backgrounds of asthma sufferers in California. Since air pollution is often a bigger issue for those who experience environmental injustice, this could help shed light on where that is happening. If some of the counties like up with those with high rates of childhood asthma, it becomes even more convincing. 
@@ -29,7 +29,7 @@ CAasthma <- read_csv("asthma.csv", show_col_types=FALSE) %>%
   select(-COMMENT)
   #pivot_wider(names_from=STRATA_NAME, values_from=STRATA_NAME)
 
-write_rds(CAasthma, "asthmaCA_race_ethnicity.RData")
+saveRDS(CAasthma, "asthmaCA_race_ethnicity.RData")
 #head(CAasthma)
 ```
 
@@ -43,7 +43,7 @@ Cali_asthma <- read_csv("asthma.csv", show_col_types=FALSE) %>%
   filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %>%
   select(-COMMENT)
 
-write_rds(Cali_asthma, "asthmaCA_kids_2.RData")
+saveRDS(Cali_asthma, "asthmaCA_kids_2.RData")
 #head(Cali_asthma)
 ```
 
@@ -56,7 +56,7 @@ asthma_Cali <- read_csv("asthma.csv", show_col_types=FALSE) %>%
   filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %>%
   select(-COMMENT)
 
-write_rds(asthma_Cali, "asthmaCA_kids_v_adults.RData")
+saveRDS(asthma_Cali, "asthmaCA_kids_v_adults.RData")
 #head(asthma_Cali)
 ```
 
