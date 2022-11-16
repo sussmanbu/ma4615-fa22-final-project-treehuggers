@@ -18,6 +18,7 @@ First, we load tidyverse and the Parks by Census Tract dataset and filter the da
 
 ```{r}
 suppressPackageStartupMessages(suppressWarnings(library(tidyverse)))
+
 nanda_parks_tract_2018_01P <- read_csv(here::here("dataset", "nanda_parks_tract_2018_01P.csv"))
 ## Rows: 73057 Columns: 11
 ## -- Column specification --------------------------------------------------------
