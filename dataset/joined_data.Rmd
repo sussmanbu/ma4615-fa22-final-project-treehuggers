@@ -1,0 +1,65 @@
+---
+title: "joined_data"
+author: "Maecey Niksch"
+date: "2022-11-18"
+output: pdf_document
+---
+After loading the clean datasets, this code will join the parks and asthma data together.
+
+```{r joined1_parks_asthmaCA_kids}
+library(tidyverse)
+path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
+
+#initial tidying to create foreign key for join
+colnames(asthmaCA_kids) <- c("county_name", "year", "strata", "strata_name", "age_group", "number_hospitalizations", "age_adjusted_hospitalization_rate")
+asthmaCA_kids <- asthmaCA_kids %>% mutate(county_name = str_to_upper(county_name))
+
+#joining the datasets
+joined1 <- clean_parks_data %>% inner_join(asthmaCA_kids, by = "county_name")
+
+saveRDS(joined1, "parks_asthmaCA_kids.RData")
+
+```
+
+```{r joined2_parks_asthmaCA_kids_2}
+#initial tidying to create foreign key for join
+colnames(asthmaCA_kids_2) <- c("county_name", "year", "strata", "strata_name", "age_group", "number_hospitalizations", "age_adjusted_hospitalization_rate")
+asthmaCA_kids_2 <- asthmaCA_kids_2 %>% mutate(county_name = str_to_upper(county_name))
+
+#joining the datasets
+joined2 <- clean_parks_data %>% inner_join(asthmaCA_kids_2, by = "county_name")
+
+saveRDS(joined2, "parks_asthmaCA_kids_2.RData")
+```
+
+```{r joined3_parks_asthmaCA_kids_v_adults}
+#initial tidying to create foreign key for join
+colnames(asthmaCA_kids_v_adults) <- c("county_name", "year", "strata", "strata_name", "age_group", "number_hospitalizations", "age_adjusted_hospitalization_rate")
+asthmaCA_kids_v_adults <- asthmaCA_kids_v_adults %>% mutate(county_name = str_to_upper(county_name))
+
+#joining the datasets
+joined3 <- clean_parks_data %>% inner_join(asthmaCA_kids_v_adults, by = "county_name")
+
+saveRDS(joined3, "parks_asthmaCA_kids_v_adults.RData")
+
+```
+
+```{r joined4_parks_asthmaCA_race_ethnicity}
+#initial tidying to create foreign key for join
+colnames(asthmaCA_race_ethnicity) <- c("county_name", "year", "strata", "race_ethnicity", "age_group", "number_hospitalizations", "age_adjusted_hospitalization_rate")
+asthmaCA_race_ethnicity <- asthmaCA_race_ethnicity %>% mutate(county_name = str_to_upper(county_name))
+
+#joining the datasets
+joined4 <- clean_parks_data %>% inner_join(asthmaCA_race_ethnicity, by = "county_name")
+
+saveRDS(joined4, "parks_asthmaCA_race_ethnicity.RData")
+```
+
+
+
+
+
+
+
+
+
