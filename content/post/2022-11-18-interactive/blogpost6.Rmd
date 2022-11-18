@@ -1,0 +1,37 @@
+---
+title: Blogpost 6 - Interactive
+author: Treehuggers
+date: '2022-11-18'
+slug: []
+categories: []
+tags: []
+description: In this post, we describe our ideas for the interactive for our final project.
+toc: yes
+authors: []
+series: []
+lastmod: '2022-11-18T18:15:10-05:00'
+featuredVideo: ~
+featuredImage: ~
+---
+
+An idea that we have for our interactive is making an interactive map of California where you can zoom in on counties. We can subset maps where you can select by race/ethnicity, age, number of hospitalizations, etc, which would make it more personal and individual. We could also combine our datasets with tidycensus to get more info to use.
+So far, the progress we have made is an outline of a map for California including the counties, but it is yet to be interactive. We also still are in the process of incorporating our data onto this map, as we are still figuring out leaflet, shiny, etc.
+
+```{r CA_maps}
+library(tidyverse)
+library(sf)
+library(USAboundaries) 
+epsg_CA <- 26943
+
+# CA Map
+USAboundaries::us_states() %>% filter(name == "California") %>% st_transform(epsg_CA) %>% ggplot() + geom_sf()
+
+#CA Map with counties
+USAboundaries::us_counties(states = "California") %>% ggplot() + geom_sf()
+
+```
+Some other ideas for the interactive may be making a plot which shows the number of hospitalizations by the strata (age groups, child vs. adult, race/ethnicity, children). It can be interactive by using checkboxes for each category, which can show and compare the number of hospitalizations. Another idea is creating a scatter plot of this, but instead of categories, we can use the year and users can scroll or play the years and see what has changed from 2015-2018. This can also be applied to a map (though our parks data is only from 2018, so this interactive would only incorporate the asthma dataset).
+
+Something else that we can do is map the number of open spaces there are for each county in California, either in the same map as the asthma hospitalizations or in its own individual interactive element.
+
+
