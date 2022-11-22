@@ -12,59 +12,18 @@ draft: false
 
 </div>
 
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<p>=======
-_______</p>
-<div id="first-dataset" class="section level2">
-<h2>First Dataset</h2>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>eb4561ef333b54b3a3612831121b7fe1b112d2a1
-Our first dataset, the NaNDA Parks data “Parks by Census Tract, United States, 2018,” came from the following source: <a href="https://www.openicpsr.org/openicpsr/project/117921/version/V1/view" class="uri">https://www.openicpsr.org/openicpsr/project/117921/version/V1/view</a>.
+<p>Our first dataset, the NaNDA Parks data “Parks by Census Tract, United States, 2018,” came from the following source: <a href="https://www.openicpsr.org/openicpsr/project/117921/version/V1/view" class="uri">https://www.openicpsr.org/openicpsr/project/117921/version/V1/view</a>.
 In order to open the dataset, you must create a free account. After this, both the dataset and an accompanying dictionary describing the variables (NaNDA_Parks_by_Census_Tract_2018_v1-1.pdf) can be downloaded.
 This data was collected by Phillippa Clarke, Robert Melendez, and Megan Chenoweth from the University of Michigan’s Institute for Social Research. The research was funded by the US Department of Health and Human Services, National Institutes of Health, National Institute on Aging; and the Department of Health and Human Services, Administration for Community Living, National Institute on Disability, Independent Living, and Rehabilitation Research.
 This dataset was created by the Trust for Public Land to aid researchers in learning about how access to public parks may contribute to physical and mental health. Since access to parks and greenspace has been shown to positively impact physical activity levels, health while aging, and people’s sense of well-being, this data provides researchers with concrete information about park access within each US census tract so they can further examine the impact of greenspace on health.
 This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories but including Alaska and Hawai’i. The data is from 2018, but was collected in 2020. It describes the number and area of parks for each census tract.
 The major variables that we considered were “count_open_parks”, which gave the total number of open parks in the census tract, “tract_area_sqmiles”, which described the total area of the census tract in square miles, and “tot_park_area_sqmiles”, which described the total area of parks within the census tract in square miles. These two variables enabled the calculation of “prop_park_area_tract”, which was the proportion of open park land within the total area of the census tract. We also used “tract_fips10”, the code for the census tract, during our data cleaning in order to isolate specific areas of the US and organize the data by county instead of census tract. This data cleaning process is further described below.
 Other variables in the dataset included count_open_parks_tc10, count_open_parks_tc5, count_open_parks_tc3, and any_open_parks. These were used by the researchers to control for a few census tracts that contained very high numbers of parks, and therefore were top-coded at 10, 5, 3, and 1 (ie, any value greater than n was replaced by the phrase “n or more” in the dataset). Although we explored these variables, they did not end up being extremely relevant to our final analyses. The dataset also included “tract_area” and “tot_park_area”, which described the areas of the census tracts and park lands in square meters, rather than square miles.</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</div>
-<div id="head" class="section level1">
-<h1>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</h1>
-<hr />
-<div id="second-dataset" class="section level2">
-<h2>Second Dataset</h2>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>eb4561ef333b54b3a3612831121b7fe1b112d2a1
-Our second dataset, Asthma Hospitalization Rates by County (for California), can be found at the following link: <a href="https://catalog.data.gov/dataset/asthma-hospitalization-rates-by-county-16dab" class="uri">https://catalog.data.gov/dataset/asthma-hospitalization-rates-by-county-16dab</a>. This data is publicly accessible and can be freely downloaded, along with the data dictionary.
+<p>Our second dataset, Asthma Hospitalization Rates by County (for California), can be found at the following link: <a href="https://catalog.data.gov/dataset/asthma-hospitalization-rates-by-county-16dab" class="uri">https://catalog.data.gov/dataset/asthma-hospitalization-rates-by-county-16dab</a>. This data is publicly accessible and can be freely downloaded, along with the data dictionary.
 This data was collected and published by the California Department of Public Health, along with California Breathing, Environmental Health Investigations Branch. This dataset covers the period from 2015 to 2019 and contains various statistics and demographics related to hospitalizations for asthma.
 Publicly funded hospitals publish annual surveys of some important demographic and health information on a generalized level. This information is collected by the state and distributed to the public; however, in accordance with proper deidentification practices, some of this data has been suppressed if the number of hospitalizations in a certain county is so low that someone could identify the individual person based on the dataset information.
 This dataset contains “county” and “year” variables to identify the geographic location and time period when the data was collected. There is also an “Age group” variable, which contains the following brackets: all ages, 0-4, 0-17, 5-17, 18-64-, 18+, and 65+. The variable “number of hospitalizations” give the number of hospitalizations for asthma in a named county for a named year - per hospitalization, not per person (as in, one person can count for multiple hospitalizations). The variable “age-adjusted hospitalization visit rate” is a numeric that roughly describes the proportion of hospitalizations for a specific county and age group’s population. The “comment” variable states whether data has been suppressed in a specific line of the dataset and why (generally for de-identification purposes).
 Finally, the “strata” and “strata name” categories contain general and specific demographic levels by which the data has been stratified. This included categories like age group, child vs. adult, and race/ethnicity for the “strata”, and the individual levels/categories were described with “strata name”. We worked a lot with these variables during data cleaning, as described below.</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
 <p>During data cleaning, we decided that since we would ultimately be combining the two datasets, we would focus on data from California and 2018 from both of the datasets in order to have a single set of data with the same parameters.
 Therefore, we started by filtering the Parks datasets for only California-based census tracts. To do this, we filtered by the census tract codes that started with “06” - California’s number. We then created a small data dictionary that connected each California county with its census tract numbers and then added “county name” as an additional variable in the dataset. We also did some cleanup of variable names to make them more standardized and clearer for our own use.
 Our code is shown below, along with descriptions of what each segment does:</p>
@@ -134,7 +93,6 @@ This function is used to specify directories within the project’s root directo
 You should never use absolute paths (eg. <code>/Users/danielsussman/path/to/project/</code> or <code>C:\\MA415\\Final_Project\\</code>) and using <code>here</code> ensures that it doesn’t matter what the current working directory is as long as you have this RStudio Project open.</p>
 <hr />
 </div>
-</div>
 <div id="files-in-static" class="section level2">
 <h2>Files in static</h2>
 <div id="load_and_clean_data.r" class="section level3">
@@ -177,5 +135,4 @@ To link to this file, you can use <code>[cleaning script](/load_and_clean_data.R
 <li>Make sure to remove excessive warnings, use clean easy-to-read code (without side scrolling), organize with sections, use bullets and other organization tools, etc.</li>
 </ul></li>
 </ul>
-</div>
 </div>
