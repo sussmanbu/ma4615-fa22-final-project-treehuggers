@@ -3,7 +3,7 @@ title: Data
 description:
 toc: true
 featuredVideo:
-featuredImage: images/data-import-cheatsheet-thumbs.png
+featuredImage: images/tree.jpeg
 draft: false
 ---
   Our first dataset, the NaNDA Parks data “Parks by Census Tract, United States, 2018,” came from the following source: https://www.openicpsr.org/openicpsr/project/117921/version/V1/view. 

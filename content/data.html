@@ -3,7 +3,7 @@ title: Data
 description:
 toc: true
 featuredVideo:
-featuredImage: images/data-import-cheatsheet-thumbs.png
+featuredImage: images/tree.jpeg
 draft: false
 ---
 
@@ -53,33 +53,24 @@ If you create a folder named <code>data</code> this will cause problems.</p>
 )</code></pre>
 <pre><code>## 
 ## &gt; library(tidyverse)</code></pre>
-<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
-## v ggplot2 3.3.5     v purrr   0.3.4
-## v tibble  3.1.6     v dplyr   1.0.9
-## v tidyr   1.2.0     v stringr 1.4.0
-## v readr   2.1.2     v forcats 0.5.2</code></pre>
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.2      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre><code>## 
 ## &gt; loan_data &lt;- read_csv(here::here(&quot;dataset&quot;, &quot;loan_refusal.csv&quot;))</code></pre>
 <pre><code>## Rows: 20 Columns: 5
-## -- Column specification --------------------------------------------------------
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (1): bank
 ## dbl (4): min, white, himin, hiwhite
 ## 
-## i Use `spec()` to retrieve the full column specification for this data.
-## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre><code>## 
 ## &gt; loan_data_clean &lt;- loan_data
 ## 
