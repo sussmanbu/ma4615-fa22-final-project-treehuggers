@@ -22,6 +22,10 @@ In order to open the dataset, you must create a free account. After this, both t
 	Finally, the “strata” and “strata name” categories contain general and specific demographic levels by which the data has been stratified. This included categories like age group, child vs. adult, and race/ethnicity for the “strata”, and the individual levels/categories were described with “strata name”. We worked a lot with these variables during data cleaning, as described below. 
 
 
+
+
+________
+All Information To Be Cut Before Final
 ## Where to keep data?
 
 
@@ -30,7 +34,6 @@ Below 50mb: In `dataset` folder
 Above 50mb: In `dataset_ignore` folder. This folder will be ignored by `git` so you'll have to manually sync these files across your team.
 
 ### Sharing your data
-
 
 For small datasets (<50mb), you can use the `dataset` folder that is tracked by github. Add the files just like you would any other file.
 
