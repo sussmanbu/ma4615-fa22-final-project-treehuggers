@@ -6,11 +6,8 @@ featuredVideo:
 featuredImage: images/tree.jpeg
 draft: false
 ---
-<<<<<<< HEAD
-
 _______
-=======
->>>>>>> ddf73a4128571cac82da33ccfa848fae5acf9679
+
 ## First Dataset
   Our first dataset, the NaNDA Parks data “Parks by Census Tract, United States, 2018,” came from the following source: https://www.openicpsr.org/openicpsr/project/117921/version/V1/view. 
 In order to open the dataset, you must create a free account. After this, both the dataset and an accompanying dictionary describing the variables (NaNDA_Parks_by_Census_Tract_2018_v1-1.pdf) can be downloaded. 
@@ -20,11 +17,8 @@ In order to open the dataset, you must create a free account. After this, both t
   The major variables that we considered were “count_open_parks”, which gave the total number of open parks in the census tract, “tract_area_sqmiles”, which described the total area of the census tract in square miles, and “tot_park_area_sqmiles”, which described the total area of parks within the census tract in square miles. These two variables enabled the calculation of “prop_park_area_tract”, which was the proportion of open park land within the total area of the census tract. We also used “tract_fips10”, the code for the census tract, during our data cleaning in order to isolate specific areas of the US and organize the data by county instead of census tract. This data cleaning process is further described below. 
   Other variables in the dataset included count_open_parks_tc10, count_open_parks_tc5, count_open_parks_tc3, and any_open_parks. These were used by the researchers to control for a few census tracts that contained very high numbers of parks, and therefore were top-coded at 10, 5, 3, and 1 (ie, any value greater than n was replaced by the phrase “n or more” in the dataset). Although we explored these variables, they did not end up being extremely relevant to our final analyses. The dataset also included “tract_area” and “tot_park_area”, which described the areas of the census tracts and park lands in square meters, rather than square miles.
 
-<<<<<<< HEAD
 ________
 
-=======
->>>>>>> ddf73a4128571cac82da33ccfa848fae5acf9679
 ## Second Dataset
   Our second dataset, Asthma Hospitalization Rates by County (for California), can be found at the following link: https://catalog.data.gov/dataset/asthma-hospitalization-rates-by-county-16dab. This data is publicly accessible and can be freely downloaded, along with the data dictionary. 
   This data was collected and published by the California Department of Public Health, along with California Breathing, Environmental Health Investigations Branch. This dataset covers the period from 2015 to 2019 and contains various statistics and demographics related to hospitalizations for asthma. 
