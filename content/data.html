@@ -34,6 +34,7 @@ In order to open the dataset, you must create a free account. After this, both t
 <p>clean2_tract &lt;- joined_CA_countytract %&gt;% select(-<code>TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS</code>, -…3, -…4, -…5, -…6) gets rid of extraneous columns; only leaves county names</p>
 <p>clean2_tract &lt;- clean2_tract[, c(1, 6, 2, 3, 4, 5)] reorders columns to put county name next to code</p>
 <p>colnames(clean2_tract) &lt;- c(“tractcode”, “county_name”, “open_parks_tract”, “tract_area_sqmiles”, “total_open_park_area_sqmiles”, “prop_open_park_land_within_tract”) quick rename of county name column to be less aggressively uppercase</p>
+<p>The following is a link for more details on how we cleaned our data: <a href="/load_and_clean_data.R">Cleaned and Joined Data</a>.</p>
 <hr />
 <p>All Information To Be Cut Before Final
 ## Where to keep data?</p>
@@ -77,7 +78,75 @@ If you create a folder named <code>data</code> this will cause problems.</p>
 ## &gt; write_csv(loan_data_clean, file = here::here(&quot;dataset&quot;, 
 ## +     &quot;loan_refusal_clean.csv&quot;))
 ## 
-## &gt; save(loan_data_clean, file = here::here(&quot;dataset/loan_refusal.RData&quot;))</code></pre>
+## &gt; save(loan_data_clean, file = here::here(&quot;dataset/loan_refusal.RData&quot;))
+## 
+## &gt; CAcountytract &lt;- read_csv(here::here(&quot;dataset&quot;, &quot;CA_countytract.csv&quot;), 
+## +     show_col_types = FALSE)</code></pre>
+<pre><code>## New names:
+## • `` -&gt; `...3`
+## • `` -&gt; `...4`
+## • `` -&gt; `...5`
+## • `` -&gt; `...6`</code></pre>
+<pre><code>## 
+## &gt; CAcountytract_clean &lt;- CAcountytract %&gt;% rename(remaining = &quot;TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS&quot;) %&gt;% 
+## +     separate(col = &quot;remaining&quot;, i .... [TRUNCATED] 
+## 
+## &gt; asthma &lt;- read_csv(here::here(&quot;dataset&quot;, &quot;asthma.csv&quot;), 
+## +     show_col_types = FALSE)
+## 
+## &gt; asthmaCA_kids &lt;- asthma %&gt;% filter(AGE_GROUP == &quot;0-17 years&quot;) %&gt;% 
+## +     filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %&gt;% filter(!is.na(NUMBER_ .... [TRUNCATED] 
+## 
+## &gt; asthmaCA_race_ethnicity &lt;- asthma %&gt;% filter(STRATA == 
+## +     &quot;Race/ethnicity&quot;) %&gt;% filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %&gt;% 
+## +     filter(!is .... [TRUNCATED] 
+## 
+## &gt; asthmaCA_kids_2 &lt;- asthma %&gt;% filter(STRATA == &quot;Age groups&quot;) %&gt;% 
+## +     filter(AGE_GROUP == c(&quot;0-4 years&quot;, &quot;5-17&quot;)) %&gt;% filter(!is.na(NUMBER_OF_HOSP .... [TRUNCATED] 
+## 
+## &gt; asthmaCA_kids_v_adults &lt;- asthma %&gt;% filter(STRATA == 
+## +     &quot;Child vs. adult&quot;) %&gt;% filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %&gt;% 
+## +     filter(!is .... [TRUNCATED] 
+## 
+## &gt; load(here::here(&quot;dataset&quot;, &quot;clean_parks_data.RData&quot;))
+## 
+## &gt; colnames(asthmaCA_kids) &lt;- c(&quot;county_name&quot;, &quot;year&quot;, 
+## +     &quot;strata&quot;, &quot;strata_name&quot;, &quot;age_group&quot;, &quot;number_hospitalizations&quot;, 
+## +     &quot;age_adjusted_hos ...&quot; ... [TRUNCATED] 
+## 
+## &gt; asthmaCA_kids &lt;- asthmaCA_kids %&gt;% mutate(county_name = str_to_upper(county_name))
+## 
+## &gt; joined1 &lt;- clean_parks_data %&gt;% inner_join(asthmaCA_kids, 
+## +     by = &quot;county_name&quot;)
+## 
+## &gt; colnames(asthmaCA_kids_2) &lt;- c(&quot;county_name&quot;, &quot;year&quot;, 
+## +     &quot;strata&quot;, &quot;strata_name&quot;, &quot;age_group&quot;, &quot;number_hospitalizations&quot;, 
+## +     &quot;age_adjusted_h ...&quot; ... [TRUNCATED] 
+## 
+## &gt; asthmaCA_kids_2 &lt;- asthmaCA_kids_2 %&gt;% mutate(county_name = str_to_upper(county_name))
+## 
+## &gt; joined2 &lt;- clean_parks_data %&gt;% inner_join(asthmaCA_kids_2, 
+## +     by = &quot;county_name&quot;)
+## 
+## &gt; colnames(asthmaCA_kids_v_adults) &lt;- c(&quot;county_name&quot;, 
+## +     &quot;year&quot;, &quot;strata&quot;, &quot;strata_name&quot;, &quot;age_group&quot;, &quot;number_hospitalizations&quot;, 
+## +     &quot;age_adj ...&quot; ... [TRUNCATED] 
+## 
+## &gt; asthmaCA_kids_v_adults &lt;- asthmaCA_kids_v_adults %&gt;% 
+## +     mutate(county_name = str_to_upper(county_name))
+## 
+## &gt; joined3 &lt;- clean_parks_data %&gt;% inner_join(asthmaCA_kids_v_adults, 
+## +     by = &quot;county_name&quot;)
+## 
+## &gt; colnames(asthmaCA_race_ethnicity) &lt;- c(&quot;county_name&quot;, 
+## +     &quot;year&quot;, &quot;strata&quot;, &quot;race_ethnicity&quot;, &quot;age_group&quot;, &quot;number_hospitalizations&quot;, 
+## +     &quot;age ...&quot; ... [TRUNCATED] 
+## 
+## &gt; asthmaCA_race_ethnicity &lt;- asthmaCA_race_ethnicity %&gt;% 
+## +     mutate(county_name = str_to_upper(county_name))
+## 
+## &gt; joined4 &lt;- clean_parks_data %&gt;% inner_join(asthmaCA_race_ethnicity, 
+## +     by = &quot;county_name&quot;)</code></pre>
 <p>Note how I use the <code>here::here</code> function from the <a href="https://here.r-lib.org/articles/here.html"><code>here</code> package</a> to avoid path problems.
 This function is used to specify directories within the project’s root directory.
 You should never use absolute paths (eg. <code>/Users/danielsussman/path/to/project/</code> or <code>C:\\MA415\\Final_Project\\</code>) and using <code>here</code> ensures that it doesn’t matter what the current working directory is as long as you have this RStudio Project open.</p>

@@ -51,7 +51,7 @@ clean2_tract <- clean2_tract[, c(1, 6, 2, 3, 4, 5)] reorders columns to put coun
 
 colnames(clean2_tract) <- c("tractcode", "county_name", "open_parks_tract", "tract_area_sqmiles", "total_open_park_area_sqmiles", "prop_open_park_land_within_tract") quick rename of county name column to be less aggressively uppercase
 
-
+The following is a link for more details on how we cleaned our data: [Cleaned and Joined Data](/load_and_clean_data.R). 
 
 ________
 All Information To Be Cut Before Final
