@@ -3,32 +3,53 @@ title: Analysis
 description:
 toc: true
 featuredVideo:
-featuredImage: https://upload.wikimedia.org/wikipedia/commons/7/77/Pebbleswithquarzite.jpg
+featuredImage: https://bjspark.com/wp-content/uploads/2021/03/blog-green-space-1.jpg
 draft: false
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 <div id="TOC">
 
 </div>
 
+<div id="data-analysis-motivation" class="section level2">
+<h2>Data Analysis Motivation</h2>
+<p>The variables that we are interested in looking at are the following:</p>
+<ul>
+<li>Total of Hospitalizations per county</li>
+<li>Total open park area per county</li>
+<li>Total area per county</li>
+<li>Total number of parks per county</li>
+<li>Total hospitalizations per county for race/ethincity</li>
+</ul>
+<p>Relationships between the variables that we are interested in looking at:</p>
+<ul>
+<li></li>
+</ul>
+<p>Some questions that we are interested in answering based on the variables are:</p>
+<ul>
+<li>Does access to green space indicate the likelihood of (childhood?) asthma hospitalization? (Is there a correlation between the amount of green spaces and asthma hospitalizations? Is there a correlation between the number of parks and asthma hospitalizations?)</li>
+<li>Does the proportion of county area which is preserved in parks have a different relationship to asthma hospitalizations than the count of parks per county? Is one or the other a better indicator?</li>
+</ul>
+</div>
+<div id="modeling-and-inference" class="section level2">
+<h2>Modeling and Inference</h2>
 <p>This comes from the file <code>content/analysis.Rmd</code>.</p>
 <p>We describe here our detailed data analysis.</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
-<pre><code>## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
-## ✓ tidyr   1.1.4     ✓ stringr 1.4.0
-## ✓ readr   2.1.1     ✓ forcats 0.5.1</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.2      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>print(getwd())</code></pre>
-<pre><code>## [1] &quot;/Users/dsussman/Dropbox (Personal)/Teaching/MA_415/project_template/content&quot;</code></pre>
+<pre><code>## [1] &quot;/Users/jyiyi/MA415/ma4615-fa22-final-project-treehuggers/content&quot;</code></pre>
 <pre class="r"><code>data &lt;- read_csv(here::here(&quot;dataset/loan_refusal_clean.csv&quot;))</code></pre>
-<pre><code>## Rows: 20 Columns: 5</code></pre>
-<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+<pre><code>## Rows: 20 Columns: 5
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (1): bank
 ## dbl (4): min, white, himin, hiwhite
@@ -38,6 +59,7 @@ draft: false
 <pre class="r"><code>load(here::here(&quot;dataset/loan_refusal.RData&quot;))
 print(ls())</code></pre>
 <pre><code>## [1] &quot;data&quot;            &quot;loan_data_clean&quot;</code></pre>
+</div>
 <div id="note-on-attribution" class="section level2">
 <h2>Note on Attribution</h2>
 <p>If you are directly quoting from a source, please make that clear. You can show quotes using <code>&gt;</code> like this</p>

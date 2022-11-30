@@ -3,9 +3,43 @@ title: Analysis
 description:
 toc: true
 featuredVideo:
-featuredImage: https://upload.wikimedia.org/wikipedia/commons/7/77/Pebbleswithquarzite.jpg
+featuredImage: https://bjspark.com/wp-content/uploads/2021/03/blog-green-space-1.jpg
 draft: false
 ---
+## Data Analysis Motivation
+The variables that we are interested in looking at are the following:
+
+* Total of Hospitalizations per county
+* Total open park area per county
+* Total area per county
+* Total number of parks per county
+* Total hospitalizations per county for race/ethincity
+
+
+Relationships between the variables that we are interested in looking at:
+
+* 
+
+
+Some questions that we are interested in answering based on the variables are:
+
+* Does access to green space indicate the likelihood of (childhood?) asthma hospitalization? (Is there a correlation between the amount of green spaces and asthma hospitalizations? Is there a correlation between the number of parks and asthma hospitalizations?)
+* Does the proportion of county area which is preserved in parks have a different relationship to asthma hospitalizations than the count of parks per county? Is one or the other a better indicator?
+
+
+
+
+
+## Modeling and Inference
+
+
+
+
+
+
+
+
+
 
 This comes from the file `content/analysis.Rmd`.
 
