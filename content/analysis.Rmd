@@ -26,7 +26,7 @@ The variables that we are interested in looking at are the following:
 Relationships between the variables that we are interested in looking at:
 
 * In general: air quality as it relates to open green space via asthma hospitalization data
-* (1) Total hospitalization and proportion of county area which is park looks at the relationship between asthma and open, preserved green area. Expect that there is less asthma when there is more park area. 
+* (1) Total hospitalization and proportion of county area which is park looks at the relationship between asthma and open, preserved green area. Expect that there is less asthma when there is more park area
 * (2) Total hospitalization and total number of parks per county looks at the relationship between asthma and open, preserved green areas through a different route. Expect that there is less asthma where there are more parks.
 * (3) Total hospitalizations per county for non-white populations and total hospitalizations per county for white populations looks at the prevalence of asthma in racial minority groups. Expect that some counties will have more asthma hospitalizations for racial minority groups than white populations.
 * (4) The results of (3) and the proportion of county area which is park land looks at the relationship between racial minority status, access to open green spaces, and asthma prevalence. Expect that the counties where there is more asthma hospitalization of minority groups to have less open park area. 
@@ -47,8 +47,8 @@ Some questions that we are interested in answering based on the variables are:
 ## Modeling and Inference
 
 ```{r}
-library(tidyverse)
-library(plotly)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(plotly))
 
 print(getwd())
 
