@@ -6,53 +6,249 @@ featuredVideo:
 featuredImage: https://bjspark.com/wp-content/uploads/2021/03/blog-green-space-1.jpg
 draft: false
 ---
+
+This comes from the file `content/analysis.Rmd`.
+
+We describe here our detailed data analysis.
+
 ## Data Analysis Motivation
+
 The variables that we are interested in looking at are the following:
 
-* Total of Hospitalizations per county
+* Total number of hospitalizations per county
 * Total open park area per county
 * Total area per county
 * Total number of parks per county
-* Total hospitalizations per county for race/ethincity
+* Total hospitalizations per county for race/ethnicity
+* Total hospitalizations of different age groups per county (particularly children)
 
 
 Relationships between the variables that we are interested in looking at:
 
-* 
+* In general: air quality as it relates to open green space via asthma hospitalization data
+* (1) Total hospitalization and proportion of county area which is park looks at the relationship between asthma and open, preserved green area. Expect that there is less asthma when there is more park area. 
+* (2) Total hospitalization and total number of parks per county looks at the relationship between asthma and open, preserved green areas through a different route. Expect that there is less asthma where there are more parks.
+* (3) Total hospitalizations per county for non-white populations and total hospitalizations per county for white populations looks at the prevalence of asthma in racial minority groups. Expect that some counties will have more asthma hospitalizations for racial minority groups than white populations.
+* (4) The results of (3) and the proportion of county area which is park land looks at the relationship between racial minority status, access to open green spaces, and asthma prevalence. Expect that the counties where there is more asthma hospitalization of minority groups to have less open park area. 
+* (5) The results of (3) and the number of parks per count looks at the relationship between racial minority status, access to open green spaces, and asthma prevalence through a second route. Expect that counties where asthma is more prevalent in minority groups than white populations to have fewer parks. 
+* (6) Comparison of the results from (1) and (4) looks at where both childhood asthma and asthma in minority populations are elevated. Counties where both are above some threshold would be identified as having high air pollution related to the socio-economic status of the community. If childhood asthma is high but asthma is not elevated in minority groups, this could be an area of higher air pollution which is not related to oppression or something else entirely. If childhood asthma is not elevated but asthma in non-white groups is, this could be an area with less air pollution but a greater proportion of residents who are not white or something else entirely. 
 
 
 Some questions that we are interested in answering based on the variables are:
 
 * Does access to green space indicate the likelihood of (childhood?) asthma hospitalization? (Is there a correlation between the amount of green spaces and asthma hospitalizations? Is there a correlation between the number of parks and asthma hospitalizations?)
 * Does the proportion of county area which is preserved in parks have a different relationship to asthma hospitalizations than the count of parks per county? Is one or the other a better indicator?
-
-
-
+* What areas have higher asthma hospitalization amoungst non-white groups than white groups? Is there a correlation between this and the proportion of county area which is preserved in parks? Is there a correlation between it and the number of parks in a county? Do the two different metrics for park prevalence have different relationships with the amount of asthma hospitalizations in white vs minority populations? Is one or the other a better indicator?
+* Using proportion of county area which is parkland, are there areas where childhood asthma and asthma with the non-white population are both elevated?
+* Using the number of parks per county, are there areas where both childhood asthma and asthma in minority populations are elevated?
+* Overall, can we relate air quality to open green space via asthma hospitalization data?
 
 
 ## Modeling and Inference
 
-
-
-
-
-
-
-
-
-
-This comes from the file `content/analysis.Rmd`.
-
-We describe here our detailed data analysis.
-
-
 ```{r}
 library(tidyverse)
+library(plotly)
+
 print(getwd())
-data <- read_csv(here::here("dataset/loan_refusal_clean.csv"))
-load(here::here("dataset/loan_refusal.RData"))
+
+load(here::here("dataset/asthmaCA_kids.RData"))
+load(here::here("dataset/asthmaCA_kids_v_adults.RData"))
+load(here::here("dataset/asthmaCA_kids_2.RData"))
+load(here::here("dataset/asthmaCA_race_ethnicity.RData"))
+load(here::here("dataset/clean_parks_data.RData"))
+load(here::here("dataset/parks_asthmaCA_kids.RData"))
+load(here::here("dataset/parks_asthmaCA_kids_v_adults.RData"))
+load(here::here("dataset/parks_asthmaCA_kids_2.RData"))
+load(here::here("dataset/parks_asthmaCA_race_ethnicity.RData"))
+
 print(ls())
 ```
+
+
+STATS
+
+* creates dataset with the summary statistics by county added (sums and averages for each county)
+
+```{r}
+parks_asthmaCA_kids_v_adults_countystats <- parks_asthmaCA_kids_v_adults %>% group_by(county_name) %>% 
+mutate(county_open_park_area = sum(total_open_park_area_sqmiles), county_open_parks = sum(open_parks_tract), county_number_hospitalizations = sum(number_hospitalizations), county_avg_open_park_area = mean(total_open_park_area_sqmiles), county_avg_open_parks = mean(open_parks_tract), county_avg_hospitalizations = mean(number_hospitalizations))
+```
+
+
+DATA: parks_asthma_CA_kids_v_adults
+
+* Overall Plot of County Tract Open Park Area by County and colored by County Tract Number of Hospitalizations
+
+```{r}
+parks_asthmaCA_kids_v_adults %>% 
+group_by(county_name) %>% 
+ggplot(aes(x = county_name %>% reorder(total_open_park_area_sqmiles), y = total_open_park_area_sqmiles, color = number_hospitalizations)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + labs(x = "County Name", y = "County Tract Open Park Area (square miles)", color = "County Tract Number of Hospitalizations") + scale_color_viridis_c(option = "plasma")
+```
+
+* Overall Plot of County Open Park Area by County and colored by County’s Number of Hospitalizations (fewer number of points since there’s one summary point per county, next trying with averages instead of sums)
+
+```{r}
+parks_asthmaCA_kids_v_adults_countystats %>% 
+ggplot(aes(x = county_name %>% reorder(county_open_park_area), y = county_open_park_area, color = county_number_hospitalizations)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + labs(x = "County Name", y = "County Open Park Area (square miles)", color = "County Number of Hospitalizations") + scale_color_viridis_c(option = "plasma")
+```
+
+* Overall Plot of County Average (by tract) Open Park Area by County and colored by County’s Average (by tract) Hospitalizations
+
+```{r}
+parks_asthmaCA_kids_v_adults_countystats %>% 
+ggplot(aes(x = county_name %>% reorder(county_avg_open_park_area), y = county_avg_open_park_area, color = county_avg_hospitalizations)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + labs(x = "County Name", y = "County Average (by tract) Open Park Area (square miles)", color = "County Average (by tract) Hospitalizations") + scale_color_viridis_c(option = "plasma")
+```
+
+* Faceted by Kids v. Adult: Age-Adjusted Hospitalization Rate by County and colored by County Open Park Area
+
+```{r}
+parks_asthmaCA_kids_v_adults_countystats %>% 
+group_by(county_name) %>% 
+ggplot(aes(x = county_name %>% reorder(age_adjusted_hospitalization_rate), y = age_adjusted_hospitalization_rate, color = county_open_park_area)) + geom_point() + facet_wrap(~ strata_name) + theme(axis.text.x = element_text(angle = 90)) + labs(x = "County", y = "Age-Adjusted Hospitalization Rate", color = "County Open Park Area") + scale_color_viridis_c()
+```
+
+* Similar as above: faceted by Kids v. Adult: Number of Hospitalizations by County and colored by County Open Park Area
+
+```{r}
+parks_asthmaCA_kids_v_adults_countystats %>% group_by(county_name) %>% ggplot(aes(x = county_name %>% reorder(number_hospitalizations), y = number_hospitalizations, color = county_open_park_area)) + geom_point() + facet_wrap(~ strata_name) + theme(axis.text.x = element_text(angle = 90)) + labs(x = "County", y = "Number of Hospitalizations", color = "County Open Park Area") + scale_color_viridis_c()
+```
+
+* Some models
+
+```{r}
+mod1 <- lm(county_number_hospitalizations ~ county_open_park_area, data = parks_asthmaCA_kids_v_adults_countystats)
+beta <- coef(mod1)
+parks_asthmaCA_kids_v_adults_countystats %>% ggplot(aes(x = county_open_park_area, y = county_number_hospitalizations)) + geom_point() + geom_abline(intercept = beta[1], slope = beta[2], color = "red")
+```
+
+
+DATA: parks_asthmaCA_race_ethnicity
+
+* getting the parks data for each individual census tract
+
+```{r}
+parks_data_by_tract <- parks_asthmaCA_race_ethnicity %>%
+group_by(tractcode) %>%
+summarize(open_parks_tract = mean(open_parks_tract), tract_area_sqmiles = mean(tract_area_sqmiles), total_open_park_area_sqmiles = mean(total_open_park_area_sqmiles), county_name = county_name)
+```
+
+* summing to get the total areas for parks and general land for each county
+
+```{r}
+parks_data_by_county <- parks_data_by_tract %>%
+group_by(county_name) %>%
+summarize(total_county_area_sqm = sum(tract_area_sqmiles), total_county_park_area_sqm = sum(total_open_park_area_sqmiles), county_num_parks = sum(open_parks_tract))
+```
+
+* Creating individualized datasets for each race and white vs. POC
+
+```{r}
+hospitalizations_white <- parks_asthmaCA_race_ethnicity %>%
+filter(race_ethnicity == "White") %>%
+group_by(county_name) %>%
+summarize(number_hospitalizations_white = mean(number_hospitalizations))
+
+hospitalizations_black <- parks_asthmaCA_race_ethnicity %>%
+filter(race_ethnicity == "Black") %>%
+group_by(county_name) %>%
+summarize(number_hospitalizations_black = mean(number_hospitalizations))
+
+hospitalizations_hispanic <- parks_asthmaCA_race_ethnicity %>%
+filter(race_ethnicity == "Hispanic") %>%
+group_by(county_name) %>%
+summarize(number_hospitalizations_hispanic = mean(number_hospitalizations))
+
+hospitalizations_asian_pi <- parks_asthmaCA_race_ethnicity %>%
+filter(race_ethnicity == "Asian/PI") %>%
+group_by(county_name) %>%
+summarize(number_hospitalizations_asian_pi = mean(number_hospitalizations))
+
+hospitalizations_ai_an <- parks_asthmaCA_race_ethnicity %>%
+filter(race_ethnicity == "AI/AN") %>%
+group_by(county_name) %>%
+summarize(number_hospitalizations_ai_an = mean(number_hospitalizations))
+
+hospitalizations_poc <- asthmaCA_race_ethnicity %>%
+filter(!race_ethnicity == "White") %>%
+group_by(county_name) %>%
+summarize(number_hospitalizations_poc = sum(number_hospitalizations))
+```
+
+* Total Number of Hospitalizations per County
+
+```{r}
+hospitalizations_total <- asthmaCA_race_ethnicity %>% group_by(COUNTY) %>% summarise(NUMBER_OF_HOSPITALIZATIONS = sum(NUMBER_OF_HOSPITALIZATIONS))
+```
+
+* Joining the datasets together via shared variable “county_name”
+
+```{r}
+CA_county_asthma_parks <-
+full_join(parks_data_by_county, hospitalizations_white, by = c("county" = "county_name"))
+
+CA_county_asthma_parks <- CA_county_asthma_parks %>%
+full_join(hospitalizations_poc, by = c("county" = "county_name"))
+
+CA_county_asthma_parks <- CA_county_asthma_parks %>%
+full_join(hospitalizations_hispanic, by = c("county" = "county_name"))
+
+CA_county_asthma_parks <- CA_county_asthma_parks %>%
+full_join(hospitalizations_asian_pi, by = c("county" = "county_name"))
+
+# as the AI/AN category values were all 0 or NA, we decided it was not useful to keep analyzing that information
+
+CA_county_asthma_parks <- CA_county_asthma_parks %>%
+full_join(hospitalizations_black, by = c("county" = "county_name"))
+
+CA_county_asthma_parks <- CA_county_asthma_parks %>%
+full_join(hospitalizations_total, by = c("county" = "county_name"))
+
+```
+
+
+DATA: parks_asthma_CA_kids
+
+* sum and averages of the number of total tract area, open park areas, and open park tracts
+
+```{r}
+sums <- parks_asthmaCA_kids %>% group_by(county_name) %>% mutate(total_tract_area = sum(tract_area_sqmiles), total_open_park_area = sum(total_open_park_area_sqmiles), num_open_parks = sum(open_parks_tract))
+
+avgs <- parks_asthmaCA_kids %>% group_by(county_name) %>% mutate(avg_tract_area = mean(tract_area_sqmiles), avg_open_park_area = mean(total_open_park_area_sqmiles), avg_num_open_parks = mean(open_parks_tract))
+```
+
+* relationship between the number of open parks and hospitalizations
+
+```{r}
+ggplotly(sums %>% ggplot(aes(num_open_parks, number_hospitalizations, col = county_name)) + geom_point() + labs(x = "Count of Open Parks", y = "Hospitalizations", col = "County Name"))
+```
+
+* number of open parks and hospitalizations rates
+
+```{r}
+ggplotly(sums %>% ggplot(aes(num_open_parks, age_adjusted_hospitalization_rate, col = county_name)) + geom_point() + labs(x = "Open Parks", y = "Hospitalizations Rate", col = "County Name"))
+```
+
+* number of total open parks area and the number of hospitalizations, colored with the rate of hospitalization
+
+```{r}
+ggplotly(sums %>% ggplot(aes(x = total_open_park_area, y = number_hospitalizations, col = age_adjusted_hospitalization_rate)) + geom_jitter() + labs(x = "Open Parks Area", y = "Hospitalizations", col = "Hospitalization Rate"))
+```
+
+* same plot as above but shows which county each data point is from
+
+```{r}
+ggplotly(sums %>% ggplot(aes(x = total_open_park, y = number_hospitalizations, col = county_name)) + geom_jitter() + labs(x = "Open Parks", y = "Hospitalizations", col = "County Name"))
+```
+
+
+## Flaws and Limitations
+
+* Not all parks contain much green space or plant life which would not relate them to air quality
+* In rural areas, people may benefit from the improved air quality from privately held land despite not being able to access the land (land with trees/fields)
+* LA’s unique geography makes the development of smog via thermal inversion much more likely. This traps air pollution. 
+* There are many more contributors to air quality and asthma than accessibility to open green spaces
+* We don't currently have census data on total populations in the counties which is a problem especially for the race and ethnicity data since we don't have a concept of how large or small the number of hospitalizations are in comparison to the total population. However, we are looking to integrate this data imminently
 
 ## Note on Attribution
 
