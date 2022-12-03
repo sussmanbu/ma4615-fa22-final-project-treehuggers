@@ -1,0 +1,40 @@
+---
+title: Blogpost 7
+author: Treehuggers
+date: '2022-12-02'
+slug: []
+categories: []
+tags: []
+description: In this post, we describe how we are continuing our exploratory data analysis and how we plan to polish our visualizations and tables.
+toc: yes
+authors: []
+series: []
+lastmod: '2022-12-02T20:46:17-05:00'
+featuredVideo: ~
+featuredImage: ~
+---
+
+How are you continuing your exploratory data analysis? Remember all the ways we visualized the COVID data in just a couple days. Make sure you’ve done a thorough exploration for your project. Lots of ideas will be dead ends but keep looking and think about attaching more data.
+
+* We are exploring the relationships between open park area/number of open parks in a county and number of hospitalizations in that county to analyze air quality as it relates to open green space, using asthma hospitalization rates as an indicator of air quality. To explore further relationships and possible factors, we are comparing the hospitalization rates of different age groups and races to the open park area in a county to see how different demographics may be disproportionately affected by where they live and the green space they have access to. We perform these comparisons through the joining of datasets and graphing of relevant information.
+
+* We are continuing our exploratory data analysis for the analysis page by looking at each individual joined dataset that we created (‘parks_asthmaCA_kids’, ‘parks_asthmaCA_kids2’, ‘parks_asthmaCA_kids_v_adults’, ‘parks_asthmaCA_race_ethnicity’) based on strata and its relationship to asthma hospitalization rates and number of hospitalizations. We’ve been experimenting with faceting and other ways to spice up our plots.
+
+* We are also potentially expanding our EDA with the possible addition of new data: census data on total populations of different races in the counties of California in 2018. This will allow us to better interpret and understand the information we have on the hospitalization rates of different races and ethnicities. It will put the numbers into context that we did not have before.
+
+* We are testing out different methods of modeling such as linear regressions, but we have yet to settle on the type of modeling we want to ultimately perform on our data.
+
+
+How do you plan to polish your visualizations and tables? Think about titles, captions, annotations, highlights. Look into ggpubr for tools to improve your figures and look into some of the options for displaying tables using https://gallery.htmlwidgets.org/.
+
+* Part of what we have done so far is polish our visualizations with titles, proper labels with text angles that make the county names more legible, and the viridis color palettes. As we continue finalizing our visualizations, we plan to add captions and/or annotations to highlight parts of the visualizations that we want to draw attention to for our analysis.
+
+* After reviewing the gallery of potential widgets, we think we may end up using DiagrammeR on our analysis page as a way to display the different parts of our data culminating in our central analysis, which also upholds our “tree” theme. This way, we can show our exploration of each of the different joined datasets with different strata and how these come together. 
+
+* ggpubr also has a way to nest plots (‘ggarrange()’) and arrange multiple plots in a grid format, which could be useful for showing multiple plots with the same dataset in comparison.
+
+* We may also make use of tmap since our data covers information across the many counties of California, making an easily customizable mapping tool very useful for displaying the data of specific counties and how they compare to each other.
+
+
+
+
