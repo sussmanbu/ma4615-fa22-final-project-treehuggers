@@ -170,9 +170,9 @@ group_by(county_name) %>%
 summarize(number_hospitalizations_ai_an = mean(number_hospitalizations))
 
 hospitalizations_poc <- asthmaCA_race_ethnicity %>%
-filter(!race_ethnicity == "White") %>%
-group_by(county_name) %>%
-summarize(number_hospitalizations_poc = sum(number_hospitalizations))
+filter(!STRATA_NAME == "White") %>%
+group_by(COUNTY) %>%
+summarize(number_hospitalizations_poc = sum(NUMBER_OF_HOSPITALIZATIONS))
 ```
 
 * Total Number of Hospitalizations per County
@@ -185,24 +185,24 @@ hospitalizations_total <- asthmaCA_race_ethnicity %>% group_by(COUNTY) %>% summa
 
 ```{r}
 CA_county_asthma_parks <-
-full_join(parks_data_by_county, hospitalizations_white, by = c("county" = "county_name"))
+full_join(parks_data_by_county, hospitalizations_white, by = c("county_name" = "county_name"))
 
 CA_county_asthma_parks <- CA_county_asthma_parks %>%
-full_join(hospitalizations_poc, by = c("county" = "county_name"))
+full_join(hospitalizations_poc, by = c("county_name" = "COUNTY"))
 
 CA_county_asthma_parks <- CA_county_asthma_parks %>%
-full_join(hospitalizations_hispanic, by = c("county" = "county_name"))
+full_join(hospitalizations_hispanic, by = c("county_name" = "county_name"))
 
 CA_county_asthma_parks <- CA_county_asthma_parks %>%
-full_join(hospitalizations_asian_pi, by = c("county" = "county_name"))
+full_join(hospitalizations_asian_pi, by = c("county_name" = "county_name"))
 
 # as the AI/AN category values were all 0 or NA, we decided it was not useful to keep analyzing that information
 
 CA_county_asthma_parks <- CA_county_asthma_parks %>%
-full_join(hospitalizations_black, by = c("county" = "county_name"))
+full_join(hospitalizations_black, by = c("county_name" = "county_name"))
 
 CA_county_asthma_parks <- CA_county_asthma_parks %>%
-full_join(hospitalizations_total, by = c("county" = "county_name"))
+full_join(hospitalizations_total, by = c("county_name" = "COUNTY"))
 
 ```
 
@@ -238,7 +238,7 @@ ggplotly(sums %>% ggplot(aes(x = total_open_park_area, y = number_hospitalizatio
 * same plot as above but shows which county each data point is from
 
 ```{r}
-ggplotly(sums %>% ggplot(aes(x = total_open_park, y = number_hospitalizations, col = county_name)) + geom_jitter() + labs(x = "Open Parks", y = "Hospitalizations", col = "County Name"))
+ggplotly(sums %>% ggplot(aes(x = total_open_park_area, y = number_hospitalizations, col = county_name)) + geom_jitter() + labs(x = "Open Parks", y = "Hospitalizations", col = "County Name"))
 ```
 
 
