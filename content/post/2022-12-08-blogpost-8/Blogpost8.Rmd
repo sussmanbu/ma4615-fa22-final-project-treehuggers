@@ -1,0 +1,18 @@
+---
+title: Blogpost 8
+author: Treehuggers
+date: '2022-12-08'
+slug: []
+categories: []
+tags: []
+description: ~
+toc: yes
+authors: []
+series: []
+lastmod: '2022-12-08T14:32:00-05:00'
+featuredVideo: ~
+featuredImage: ~
+---
+What is your tentative thesis?
+
+Our tentative thesis is that the counties in California with more open park areas are more likely to have fewer asthma hospitalizations compared to counties that do not have as much green spaces. In out project, we will try to observe our data around this thesis by visualizing our data and comparing the variables that are relevant. 
