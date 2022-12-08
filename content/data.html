@@ -34,26 +34,11 @@ In order to open the dataset, you must create a free account. After this, both t
 <p>clean2_tract &lt;- joined_CA_countytract %&gt;% select(-<code>TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS</code>, -…3, -…4, -…5, -…6) gets rid of extraneous columns; only leaves county names</p>
 <p>clean2_tract &lt;- clean2_tract[, c(1, 6, 2, 3, 4, 5)] reorders columns to put county name next to code</p>
 <p>colnames(clean2_tract) &lt;- c(“tractcode”, “county_name”, “open_parks_tract”, “tract_area_sqmiles”, “total_open_park_area_sqmiles”, “prop_open_park_land_within_tract”) quick rename of county name column to be less aggressively uppercase</p>
-<p>The following is a link for more details on how we cleaned our data: <a href="/load_and_clean_data.R">Cleaned and Joined Data</a>.</p>
-<hr />
-<p>All Information To Be Cut Before Final
-## Where to keep data?</p>
-<p>Below 50mb: In <code>dataset</code> folder</p>
-<p>Above 50mb: In <code>dataset_ignore</code> folder. This folder will be ignored by <code>git</code> so you’ll have to manually sync these files across your team.</p>
-<div id="sharing-your-data" class="section level3">
-<h3>Sharing your data</h3>
-<p>For small datasets (&lt;50mb), you can use the <code>dataset</code> folder that is tracked by github. Add the files just like you would any other file.</p>
-<p><strong>Do not</strong> use a folder named <code>data</code>.
-This folder is reserved by <code>hugo</code>.
-If you create a folder named <code>data</code> this will cause problems.</p>
-<p>For larger datasets, you’ll need to create a new folder in the project root directory named <code>dataset-ignore</code>. This will be ignored by git (based off the <code>.gitignore</code> file in the project root directory) which will help you avoid issues with Github’s size limits. Your team will have to manually make sure the data files in <code>dataset-ignore</code> are synced across team members.</p>
-<p>Your <a href="/load_and_clean_data.R">load_and_clean_data.R</a> file is how you will load and clean your data. Here is a an example of a very simple one.</p>
+<p>The following is a link for more details on how we cleaned our data: <a href="/load_and_clean_data.R">load_and_clean_data.R</a>.</p>
 <pre class="r"><code>source(
   here::here(&quot;static&quot;, &quot;load_and_clean_data.R&quot;),
-  echo = TRUE # Use echo=FALSE or omit it to avoid code output  
+  echo = FALSE # Use echo=FALSE or omit it to avoid code output  
 )</code></pre>
-<pre><code>## 
-## &gt; library(tidyverse)</code></pre>
 <pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
 ## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
 ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
@@ -61,137 +46,13 @@ If you create a folder named <code>data</code> this will cause problems.</p>
 ## ✔ readr   2.1.2      ✔ forcats 0.5.2 
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre><code>## 
-## &gt; loan_data &lt;- read_csv(here::here(&quot;dataset&quot;, &quot;loan_refusal.csv&quot;))</code></pre>
-<pre><code>## Rows: 20 Columns: 5
+## ✖ dplyr::lag()    masks stats::lag()
+## Rows: 20 Columns: 5
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (1): bank
 ## dbl (4): min, white, himin, hiwhite
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre><code>## 
-## &gt; loan_data_clean &lt;- loan_data
-## 
-## &gt; write_csv(loan_data_clean, file = here::here(&quot;dataset&quot;, 
-## +     &quot;loan_refusal_clean.csv&quot;))
-## 
-## &gt; save(loan_data_clean, file = here::here(&quot;dataset/loan_refusal.RData&quot;))
-## 
-## &gt; CAcountytract &lt;- read_csv(here::here(&quot;dataset&quot;, &quot;CA_countytract.csv&quot;), 
-## +     show_col_types = FALSE)</code></pre>
-<pre><code>## New names:
-## • `` -&gt; `...3`
-## • `` -&gt; `...4`
-## • `` -&gt; `...5`
-## • `` -&gt; `...6`</code></pre>
-<pre><code>## 
-## &gt; CAcountytract_clean &lt;- CAcountytract %&gt;% rename(remaining = &quot;TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS&quot;) %&gt;% 
-## +     separate(col = &quot;remaining&quot;, i .... [TRUNCATED] 
-## 
-## &gt; asthma &lt;- read_csv(here::here(&quot;dataset&quot;, &quot;asthma.csv&quot;), 
-## +     show_col_types = FALSE)
-## 
-## &gt; asthmaCA_kids &lt;- asthma %&gt;% filter(AGE_GROUP == &quot;0-17 years&quot;) %&gt;% 
-## +     filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %&gt;% filter(!is.na(NUMBER_ .... [TRUNCATED] 
-## 
-## &gt; asthmaCA_race_ethnicity &lt;- asthma %&gt;% filter(STRATA == 
-## +     &quot;Race/ethnicity&quot;) %&gt;% filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %&gt;% 
-## +     filter(!is .... [TRUNCATED] 
-## 
-## &gt; asthmaCA_kids_2 &lt;- asthma %&gt;% filter(STRATA == &quot;Age groups&quot;) %&gt;% 
-## +     filter(AGE_GROUP == c(&quot;0-4 years&quot;, &quot;5-17&quot;)) %&gt;% filter(!is.na(NUMBER_OF_HOSP .... [TRUNCATED] 
-## 
-## &gt; asthmaCA_kids_v_adults &lt;- asthma %&gt;% filter(STRATA == 
-## +     &quot;Child vs. adult&quot;) %&gt;% filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %&gt;% 
-## +     filter(!is .... [TRUNCATED] 
-## 
-## &gt; load(here::here(&quot;dataset&quot;, &quot;clean_parks_data.RData&quot;))
-## 
-## &gt; colnames(asthmaCA_kids) &lt;- c(&quot;county_name&quot;, &quot;year&quot;, 
-## +     &quot;strata&quot;, &quot;strata_name&quot;, &quot;age_group&quot;, &quot;number_hospitalizations&quot;, 
-## +     &quot;age_adjusted_hos ...&quot; ... [TRUNCATED] 
-## 
-## &gt; asthmaCA_kids &lt;- asthmaCA_kids %&gt;% mutate(county_name = str_to_upper(county_name))
-## 
-## &gt; joined1 &lt;- clean_parks_data %&gt;% inner_join(asthmaCA_kids, 
-## +     by = &quot;county_name&quot;)
-## 
-## &gt; colnames(asthmaCA_kids_2) &lt;- c(&quot;county_name&quot;, &quot;year&quot;, 
-## +     &quot;strata&quot;, &quot;strata_name&quot;, &quot;age_group&quot;, &quot;number_hospitalizations&quot;, 
-## +     &quot;age_adjusted_h ...&quot; ... [TRUNCATED] 
-## 
-## &gt; asthmaCA_kids_2 &lt;- asthmaCA_kids_2 %&gt;% mutate(county_name = str_to_upper(county_name))
-## 
-## &gt; joined2 &lt;- clean_parks_data %&gt;% inner_join(asthmaCA_kids_2, 
-## +     by = &quot;county_name&quot;)
-## 
-## &gt; colnames(asthmaCA_kids_v_adults) &lt;- c(&quot;county_name&quot;, 
-## +     &quot;year&quot;, &quot;strata&quot;, &quot;strata_name&quot;, &quot;age_group&quot;, &quot;number_hospitalizations&quot;, 
-## +     &quot;age_adj ...&quot; ... [TRUNCATED] 
-## 
-## &gt; asthmaCA_kids_v_adults &lt;- asthmaCA_kids_v_adults %&gt;% 
-## +     mutate(county_name = str_to_upper(county_name))
-## 
-## &gt; joined3 &lt;- clean_parks_data %&gt;% inner_join(asthmaCA_kids_v_adults, 
-## +     by = &quot;county_name&quot;)
-## 
-## &gt; colnames(asthmaCA_race_ethnicity) &lt;- c(&quot;county_name&quot;, 
-## +     &quot;year&quot;, &quot;strata&quot;, &quot;race_ethnicity&quot;, &quot;age_group&quot;, &quot;number_hospitalizations&quot;, 
-## +     &quot;age ...&quot; ... [TRUNCATED] 
-## 
-## &gt; asthmaCA_race_ethnicity &lt;- asthmaCA_race_ethnicity %&gt;% 
-## +     mutate(county_name = str_to_upper(county_name))
-## 
-## &gt; joined4 &lt;- clean_parks_data %&gt;% inner_join(asthmaCA_race_ethnicity, 
-## +     by = &quot;county_name&quot;)</code></pre>
-<p>Note how I use the <code>here::here</code> function from the <a href="https://here.r-lib.org/articles/here.html"><code>here</code> package</a> to avoid path problems.
-This function is used to specify directories within the project’s root directory.
-You should never use absolute paths (eg. <code>/Users/danielsussman/path/to/project/</code> or <code>C:\\MA415\\Final_Project\\</code>) and using <code>here</code> ensures that it doesn’t matter what the current working directory is as long as you have this RStudio Project open.</p>
-<hr />
-</div>
-<div id="files-in-static" class="section level2">
-<h2>Files in static</h2>
-<div id="load_and_clean_data.r" class="section level3">
-<h3><code>load_and_clean_data.R</code></h3>
-<p>The idea behind this file is that someone coming to your website could largely replicate your analyses after running this script on the original data sets to clean them.
-This file might create a derivative data set that you then use for your subsequent analysis.
-Note that you don’t need to run this script from every post/page.
-Instead, you can load in the results of this script, which could be plain text files or <code>.RData</code> files. In your data page you’ll describe how these results were created. If you have a very large data set, you might save smaller data sets that you can use for exploration purposes.
-To link to this file, you can use <code>[cleaning script](/load_and_clean_data.R)</code>.</p>
-<p>When you are loading in data, I recommend using the <code>here::here</code> function to specify the file path. This function is used to specify a path relative to your project’s root directory. Hence, you can read a file using eg, <code>read_csv(here::here("dataset/data_file.csv"))</code>.</p>
-</div>
-<div id="shiny-interactive" class="section level3">
-<h3>Shiny Interactive</h3>
-<p>If you are using a shiny interactive, you’ll need to keep that in a separate folder (i.e. not in <code>static</code> or <code>content</code>). For the shiny interactive you’ll need to publish the app on <code>shinyapps.io</code> where the app can be run. When you publish, make sure to include any data sets you are loading in among the files you publish since those datasets will need to be loaded by your app.</p>
-<hr />
-</div>
-</div>
-<div id="rubric-on-this-page" class="section level2">
-<h2>Rubric: On this page</h2>
-<p>you will</p>
-<ul>
-<li>Describe where/how to find data.
-<ul>
-<li>You must include a link to the original data source(s). Make sure to provide attribution to those who collected the data.</li>
-<li>Why was the data collected/curated? Who put it together? (This is important, if you don’t know why it was collected then that might not be a good dataset to look at.</li>
-</ul></li>
-<li>Describe the different data files used and what each variable means.
-<ul>
-<li>If you have many variables then only describe the most relevant ones and summarize the rest.</li>
-</ul></li>
-<li>Describe any cleaning you had to do for your data.
-<ul>
-<li>You <em>must</em> include a link to your <code>load_and_clean_data.R</code> file.</li>
-<li>Also, describe any additional R packages you used outside of those covered in class.</li>
-<li>Describe and show code for how you combined multiple data files and any cleaning that was necessary for that.</li>
-<li>Some repetition of what you do in your <code>load_and_clean_data.R</code> file is fine and encouraged if it helps explain what you did.</li>
-</ul></li>
-<li>Organization, clarity, cleanliness of the page
-<ul>
-<li>Make sure to remove excessive warnings, use clean easy-to-read code (without side scrolling), organize with sections, use bullets and other organization tools, etc.</li>
-</ul></li>
-</ul>
-</div>
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## New names:</code></pre>
