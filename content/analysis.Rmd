@@ -13,35 +13,13 @@ We describe here our detailed data analysis.
 
 ## Data Analysis Motivation
 
-The variables that we are interested in looking at are the following:
+	The goal of this data analysis is to identify California counties with high air pollution and assess whether these areas have different access to open green space than areas with lower air pollution. We’ll also be exploring how hospitalizations rates for asthma differ across these counties. Although this metric is not a perfect measure of air pollution, it is strongly linked, and California county data on asthma hospitalization rates is available. Within asthma hospitalization rates, we’ll look specifically at age groups and race to assess the varied hospitalization rates of different groups. Racial makeup of a county is often correlated with socioeconomic status, and therefore we hope to examine whether areas with a greater POC (people of color) population have both higher hospitalization rates and less green space. However, it’s important to note that race is certainly not an exact metric for socio-economic status. 
 
-* Total number of hospitalizations per county
-* Total open park area per county
-* Total area per county
-* Total number of parks per county
-* Total hospitalizations per county for race/ethnicity
-* Total hospitalizations of different age groups per county (particularly children)
+To assess access to open green space, the proportion of county area which is parkland and the number of parks per county are used. Both are included because they look at green space in two different ways. To get the best results, both should be considered. Park land data is an imperfect measure of tree or plant coverage because urban parks can contain few plants. Rural regions can have large areas of plant coverage remaining in private hands, and these areas can improve air quality despite not being open to the public. However, parks data is publicly available, and does generally give a good idea of the number of parks most public citizens in a county should have access to, as well as the area that these public green spaces cover. 
 
+Some of the major questions we are interested in answering include: Does a higher amount of open green spaces or a higher number of public parks correlate to lower asthma levels across different California counties? What are the differences in racial and age makeup of hospitalizations across counties? What is the relationship between the racial makeup of asthma hospitalizations and the amount of greenspace in a county? What is the relationship between age makeup of hospitalizations and greenspace? Is there a difference in the relationship between number of open parks and asthma hospitalization rate, and proportion of park land and asthma hospitalization rate? Which serves as a better predictor?
 
-Relationships between the variables that we are interested in looking at:
-
-* In general: air quality as it relates to open green space via asthma hospitalization data
-* (1) Total hospitalization and proportion of county area which is park looks at the relationship between asthma and open, preserved green area. Expect that there is less asthma when there is more park area
-* (2) Total hospitalization and total number of parks per county looks at the relationship between asthma and open, preserved green areas through a different route. Expect that there is less asthma where there are more parks.
-* (3) Total hospitalizations per county for non-white populations and total hospitalizations per county for white populations looks at the prevalence of asthma in racial minority groups. Expect that some counties will have more asthma hospitalizations for racial minority groups than white populations.
-* (4) The results of (3) and the proportion of county area which is park land looks at the relationship between racial minority status, access to open green spaces, and asthma prevalence. Expect that the counties where there is more asthma hospitalization of minority groups to have less open park area. 
-* (5) The results of (3) and the number of parks per count looks at the relationship between racial minority status, access to open green spaces, and asthma prevalence through a second route. Expect that counties where asthma is more prevalent in minority groups than white populations to have fewer parks. 
-* (6) Comparison of the results from (1) and (4) looks at where both childhood asthma and asthma in minority populations are elevated. Counties where both are above some threshold would be identified as having high air pollution related to the socio-economic status of the community. If childhood asthma is high but asthma is not elevated in minority groups, this could be an area of higher air pollution which is not related to oppression or something else entirely. If childhood asthma is not elevated but asthma in non-white groups is, this could be an area with less air pollution but a greater proportion of residents who are not white or something else entirely. 
-
-
-Some questions that we are interested in answering based on the variables are:
-
-* Does access to green space indicate the likelihood of (childhood?) asthma hospitalization? (Is there a correlation between the amount of green spaces and asthma hospitalizations? Is there a correlation between the number of parks and asthma hospitalizations?)
-* Does the proportion of county area which is preserved in parks have a different relationship to asthma hospitalizations than the count of parks per county? Is one or the other a better indicator?
-* What areas have higher asthma hospitalization amoungst non-white groups than white groups? Is there a correlation between this and the proportion of county area which is preserved in parks? Is there a correlation between it and the number of parks in a county? Do the two different metrics for park prevalence have different relationships with the amount of asthma hospitalizations in white vs minority populations? Is one or the other a better indicator?
-* Using proportion of county area which is parkland, are there areas where childhood asthma and asthma with the non-white population are both elevated?
-* Using the number of parks per county, are there areas where both childhood asthma and asthma in minority populations are elevated?
-* Overall, can we relate air quality to open green space via asthma hospitalization data?
+	While exploring the data, we first examined how open greenspace and number of parks differed across California counties. We focused on the variables open park land, number of parks, and proportion of park-to-total county land. We discovered that although most counties only use about 10% of their land for parks, counties often have a high number of outlier areas. These areas are census tracts, which contain between 1200-8000 people each, which means some specific areas within each county have much larger amounts of open green space than the average. We also looked generally at the relationship between open park land and age-adjusted hospitalization rate by county but did not see any major correlation. 
 
 
 ## Modeling and Inference
