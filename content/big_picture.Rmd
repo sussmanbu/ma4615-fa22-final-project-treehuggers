@@ -1,14 +1,60 @@
 ---
-title: Big Picture
+title: More Trees, less Hospitalization?
 description:
 toc: true
-featuredImage: /images/The_Big_Picture_2.jpeg
+featuredImage: https://bjspark.com/wp-content/uploads/2021/03/blog-green-space-1.jpg
 featuredVideo:
 draft: false
 ---
 
 This comes from the file `content/big_picture.Rmd`.
 
+["Did you know trees help prevent asthma and other respiratory diseases? Trees filter particles out of the air we breathe, which decreases our risk of respiratory illnesses, including asthma."](https://forestrynews.blogs.govdelivery.com/2019/05/09/trees-clean-the-air-and-prevent-respiratory-illness/#:~:text=Did%20you%20know%20trees%20help,of%20respiratory%20illnesses%2C%20including%20asthma.) 
+
+Air pollution and asthma are closely linked to each other. And what takes part of this air pollution? Deforestation and Infrastructure. Based on scientific studies of trees, air pollution, and asthma, it is anticipated that locations with less green spaces will have higher rates of asthma. Let's take a closer look at this idea in the state of California in 2018. 
+
+In this project, we will be looking at Parks data, which includes the number and area of parks in each county of CA, and Asthma data, which includes the number and rate of hospitalization in each county by age and race/ethnicity.  
+
+Let's take a look at each dataset separately:
+First, we have the total number and area (square miles) of open parks in each county. Some counties may have more open parks, but the parks have a smaller area compared to other counties that may have less open parks, but the area of the parks there are much bigger.
+```{r echo=FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(plotly))
+load(here::here("dataset/asthmaCA_kids.RData"))
+load(here::here("dataset/asthmaCA_kids_v_adults.RData"))
+load(here::here("dataset/asthmaCA_kids_2.RData"))
+load(here::here("dataset/asthmaCA_race_ethnicity.RData"))
+load(here::here("dataset/clean_parks_data.RData"))
+load(here::here("dataset/parks_asthmaCA_kids.RData"))
+load(here::here("dataset/parks_asthmaCA_kids_v_adults.RData"))
+load(here::here("dataset/parks_asthmaCA_kids_2.RData"))
+load(here::here("dataset/parks_asthmaCA_race_ethnicity.RData"))
+
+sums <- parks_asthmaCA_kids %>% group_by(county_name) %>% mutate(total_tract_area = sum(tract_area_sqmiles), total_open_park_area = sum(total_open_park_area_sqmiles), num_open_parks = sum(open_parks_tract))
+
+avgs <- parks_asthmaCA_kids %>% group_by(county_name) %>% mutate(avg_tract_area = mean(tract_area_sqmiles), avg_open_park_area = mean(total_open_park_area_sqmiles), avg_num_open_parks = mean(open_parks_tract))
+
+ggplotly(sums %>% ggplot(aes(x = num_open_parks, y = total_open_park_area, col = county_name)) + geom_point() + labs(x = "Number of Open Parks", y = "Area of Open Parks", title = "Open Parks & Area", legend = "County"))
+
+```
+In this plot, we are able to see clearly which county has the most number of open parks (ORANGE) and which county has the largest area of open parks (RIVERSIDE). 
+
+Now, here is a look at the total number and rate of asthma hospitalizations in each county of California:
+```{r echo=FALSE}
+asthma <- read.csv(here::here("dataset", "asthma.csv")) 
+asthma$NUMBER_OF_HOSPITALIZATIONS <- as.numeric(asthma$NUMBER_OF_HOSPITALIZATIONS)
+
+asthma_2018 <- asthma %>% 
+  filter(YEAR == "2018", 
+         COUNTY != "California", 
+         STRATA_NAME == "All ages", 
+         !is.na(NUMBER_OF_HOSPITALIZATIONS),
+         !is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE))
+  
+ggplotly(asthma_2018 %>% ggplot(aes(y = NUMBER_OF_HOSPITALIZATIONS, x = AGE_ADJUSTED_HOSPITALIZATION_RATE, col = COUNTY)) + geom_point() + labs(y = "Hospitalization Count", x = "Hospitalization Rate", title = "Total Rate and # of Hospitalizations") + scale_color_viridis_d())
+```
+
+___
 Think of this page as your 538/Upshot style article. This means that you should try to tell a story through the data and your analysis. Read articles from those sites and similar sites to get a feeling for what they are like. Importantly, these should be geared towards the general public. You shouldn't assume the reader understands how to interpret a linear regression. Focus on interpretation and visualizations.
 
 ---

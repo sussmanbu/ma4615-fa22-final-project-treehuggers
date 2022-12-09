@@ -3,7 +3,7 @@ title: Analysis
 description:
 toc: true
 featuredVideo:
-featuredImage: https://bjspark.com/wp-content/uploads/2021/03/blog-green-space-1.jpg
+featuredImage: https://images.ctfassets.net/cxgxgstp8r5d/entry-cm_583-image/475d84453bda342d613dac0c5fa2d5db/entry-cm_583-image.jpg
 draft: false
 ---
 
