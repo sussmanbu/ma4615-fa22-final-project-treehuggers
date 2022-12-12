@@ -62,10 +62,9 @@ map_kids2 <- CA_counties %>% inner_join(parks_asthmaCA_kids_2_countystats, by = 
 ```
 
 ```{r tmaps}
-tm_shape(map_kids_v_adults) + tm_polygons(col = "number_hospitalizations") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
   # need to figure out how to change the legend title for the colors
 
-
+tm_shape(map_kids_v_adults) + tm_polygons(col = "county_avg_hospitalizations") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
 ```
 
 
