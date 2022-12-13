@@ -20,7 +20,7 @@ draft: false
   Other variables in the dataset included count_open_parks_tc10, count_open_parks_tc5, count_open_parks_tc3, and any_open_parks. These were used by the researchers to control for a few census tracts that contained very high numbers of parks, and therefore were top-coded at 10, 5, 3, and 1 (ie, any value greater than n was replaced by the phrase “n or more” in the dataset). Although we explored these variables, they did not end up being extremely relevant to our final analyses. The dataset also included “tract_area” and “tot_park_area”, which described the areas of the census tracts and park lands in square meters, rather than square miles.
   
 
-  Our second dataset, Asthma Hospitalization Rates by County (for California), can be found at the following link: https://catalog.data.gov/dataset/asthma-hospitalization-rates-by-county-16dab. This data is publicly accessible and can be freely downloaded, along with the data dictionary. 
+  Our second dataset, Asthma Hospitalization Rates by County (for California), can be found at the following link: https://data.chhs.ca.gov/dataset/asthma-hospitalization-rates-by-county. This data is publicly accessible and can be freely downloaded, along with the data dictionary. 
   
   This data was collected and published by the California Department of Public Health, along with California Breathing, Environmental Health Investigations Branch. This dataset covers the period from 2015 to 2019 and contains various statistics and demographics related to hospitalizations for asthma. 
   
@@ -33,8 +33,85 @@ draft: false
   
   Therefore, we started by filtering the Parks datasets for only California-based census tracts. To do this, we filtered by the census tract codes that started with “06” - California’s number. We then created a small data dictionary that connected each California county with its census tract numbers and then added “county name” as an additional variable in the dataset. We also did some cleanup of variable names to make them more standardized and clearer for our own use. 
   
+  Our third dataset was compiled from the FFIEC Online Census Data System. The census tract information from each California county was put into one Excel file with the addition of the county names for each tract. The data used to create this dataset can be found at:  https://www2.census.gov/geo/maps/DC2020/PL20/st06_ca/censustract_maps/. To access the tract data for each county, one simply needs to click on the county name file on the left hand side of the screen. This data is publicly accessible and was create to provide transparency to how the US Census calculates various metrics. Additionally, the US Census provides this information to enable the analysis of Census and population data. An index of the counties included is provided as well. 
+  
+  Each county has the variables of "TYPE", "FULLCODE", "STATE", "COUNTY", "TRACT", and "SHEETS". The type variable denotes whether the piece of land being identified is a tract, county, block, or other unit. For all of the data used, the type is "TRACT". The variable for the fullcode gives the entire identifying code of the tract according to the formula: state code, county code and then tract number with no spaces, underscores, or decimal marks. The fullcode is needed to completely and uniquely identify a tract when outside of context of known state or county. The state variable is a two letter code which displays the state within which the tract is located. California has a state code of "06", and all of the data should have this state code. The county variable denotes which county the tract is within using a three number code. The tract variable gives the number of the individual tract through a 6 digit code with a decimal point separately four numbers to the left and two to the right. The sheets variable tells where within the original PDF the data is noted. 
+  
+  Because this dataset is used as a dictionary, it is not extensively analyzed. It is used solely to identify shared ground around which to join the other two datasets. 
+  
   Our code is shown below, along with descriptions of what each segment does:
-	
+
+
+California Tract Dictionary Setup:
+
+path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
+#setwd(path)
+
+CAcountytract <- read_csv("CA_countytract.csv", show_col_types=FALSE) %>% 
+  
+  rename("remaining" = "TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS") %>% 
+  #creating easier to use name for variable 
+  #remains (with or without a number following it) will always have the remainder of the string to be processed 
+  #the original variable name gives the order of the values in the string
+  
+  separate(col="remaining", into = c("TYPE", "remains1"), (5)) %>% 
+  #creating TYPE column to distinguish if piece of land is tract, block, state, etc 
+  
+  separate(col="remains1", into = c("semi1", "remains11"), sep=(1)) %>% 
+  #separating leading semicolon into a separate column to delete later
+  
+  separate(col="remains11", into = c("FULLCODE", "remains2"), sep = (11)) %>% 
+  #creating FULLCODE column 
+  #need this to fully and uniquely identify a tract
+  
+  separate(col="remains2", into = c("semi2", "remains22"), sep=(1)) %>% 
+  #separating semicolon to delete later
+  
+  separate(col="remains22", into = c("STATE", "remains3"), sep = (2)) %>% 
+  #creating STATE column 
+  #gives two number code which indicates what state the piece of land is in
+  #should all be the same at 06 because these data are only for within California
+
+  
+  separate(col="remains3", into = c("semi3", "remains33"), sep=(1)) %>% 
+  #separating semicolon to delete later
+  
+  separate(col="remains33", into = c("COUNTY", "remains4"), sep = (3)) %>% 
+  #creating COUNTY column #gives a three number code which indicates which state the piece of land is in 
+  #two counties in different states can have the same county code 
+  #each county is only in one state
+  #each county contains at least one census tract (some contain many while others have only 1)
+  #county names in all capitals
+  
+  separate(col="remains4", into = c("semi4", "remains44"), sep=(1)) %>% 
+  #separating semicolon to delete later
+  
+  separate(col="remains44", into = c("TRACT", "SHEETS"), sep = ";") %>% 
+  #creating TRACT and SHEETS columns 
+  #tract column contains a tract number of varying length that identifies a census tract within a state and county 
+  #tract location can be found by using state and county 
+  #can be places with same tract number in state if they are in different counties 
+  #sheets column identifies where maps of the tract can be found
+  
+  unite(col = "COUNTY_CODE", c("STATE", "COUNTY"), sep="") %>% 
+  #uniting columns to make COUNTY_CODE
+  #one of our datasets identifies which county something occurs in using this format
+  #leaves original columns in dataset because remove=FALSE
+  #county code is unique to each county in California
+  
+  select(-semi1, -semi2, -semi3, -semi4, -"...3", -"...4", -"...5", -"...6") 
+  #removing the temporary columns used to move the semi colons
+  #remove excess columns accidentally created
+  #could reorder columns here if that would be helpful
+
+saveRDS(CAcountytract, "CAcountytract_clean.RData")
+#head(CAcountytract)
+#if want to test/check the outcome
+```
+
+
+Park Data Analysis:
+
 tract_ca <- nanda_parks_tract_2018_01P %>% filter(grepl('^06', tract_fips10), any_open_park == 1) filters data so that it’s only the CA counties and also only included counties that had at least 1 open park
 
 clean1_tract <- tract_ca %>% select(tract_fips10, count_open_parks, tract_area_sqmiles, tot_park_area_sqmiles, prop_park_area_tract) selects relevant columns (tracts, # open parks per tract, sq miles of tract, total sq miles of parks in tract, proportion of park to tract area)
@@ -52,6 +129,49 @@ clean2_tract <- clean2_tract[, c(1, 6, 2, 3, 4, 5)] reorders columns to put coun
 colnames(clean2_tract) <- c("tractcode", "county_name", "open_parks_tract", "tract_area_sqmiles", "total_open_park_area_sqmiles", "prop_open_park_land_within_tract") quick rename of county name column to be less aggressively uppercase
 
 The following is a link for more details on how we cleaned our data: [load_and_clean_data.R](/load_and_clean_data.R).
+
+
+Asthma Data Cleaning
+
+path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
+#setwd(path)
+
+asthmaCA <- read_csv("asthma.csv", show_col_types=FALSE) %>%
+  filter(AGE_GROUP == "0-17 years") %>%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %>%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %>%
+  select(-COMMENT)
+saveRDS(asthmaCA, "asthmaCA_kids.RData")
+#creates data set of only childhood asthma hospitalization rates
+
+CAasthma <- read_csv("asthma.csv", show_col_types=FALSE) %>%
+  filter(STRATA == "Race/ethnicity") %>%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %>%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %>%
+  select(-COMMENT)
+  #pivot_wider(names_from=STRATA_NAME, values_from=STRATA_NAME)
+saveRDS(CAasthma, "asthmaCA_race_ethnicity.RData")
+#head(CAasthma)
+#creates dataset of asthma hospitalization rates for different races and ethnicities
+
+Cali_asthma <- read_csv("asthma.csv", show_col_types=FALSE) %>%
+  filter(STRATA == "Age groups") %>%
+  filter(AGE_GROUP == c("0-4 years", "5-17")) %>%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %>%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %>%
+  select(-COMMENT)
+saveRDS(Cali_asthma, "asthmaCA_kids_2.RData")
+#head(Cali_asthma)
+#creates dataset of childhood asthma hospitalization with more stratification
+
+asthma_Cali <- read_csv("asthma.csv", show_col_types=FALSE) %>%
+  filter(STRATA == "Child vs. adult") %>%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %>%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %>%
+  select(-COMMENT)
+saveRDS(asthma_Cali, "asthmaCA_kids_v_adults.RData")
+#head(asthma_Cali)
+#creates dataset to compare childhood and adult asthma hospitalization rates 
 
 ```{r}
 source(
