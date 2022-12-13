@@ -10,7 +10,7 @@ USAboundaries::us_counties(states = "California") %>% ggplot() + geom_sf()
 ```{r map_tmap}
 library(tmap)
 
-espg_CA <- 26943
+epsg_CA <- 26943
 epsg_wgs84 <- 4326
 
 # creates an object with the shape of CA state (to layer in tmap)
@@ -59,12 +59,26 @@ map_kids <- CA_counties %>% inner_join(parks_asthmaCA_kids_countystats, by = "co
   
 map_kids2 <- CA_counties %>% inner_join(parks_asthmaCA_kids_2_countystats, by = "county_name")
 
+
+save(map_kids_v_adults, file = "interactive/map_kids_v_adults.RData")
+save(map_race_ethnicity, file = "interactive/map_race_ethnicity.RData")
+save(map_kids, file = "interactive/map_kids.RData")
+save(map_kids2, file = "interactive/map_kids2.RData")
 ```
 
 ```{r tmaps}
   # need to figure out how to change the legend title for the colors
 
 tm_shape(map_kids_v_adults) + tm_polygons(col = "county_avg_hospitalizations") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
+
+tm_shape(map_kids_v_adults) + tm_polygons(col = "county_avg_open_park_area", n = 2, palette = "viridis") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
+
+map_race_ethnicity %>% 
+         filter(race_ethnicity == "Black") %>% 
+          group_by(county_name) %>% 
+          mutate("race_hospitalizations" = sum(number_hospitalizations)) %>%
+  tm_shape() + tm_polygons(col = "race_hospitalizations") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
+
 ```
 
 
