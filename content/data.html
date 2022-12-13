@@ -16,43 +16,162 @@ draft: false
 In order to open the dataset, you must create a free account. After this, both the dataset and an accompanying dictionary describing the variables (NaNDA_Parks_by_Census_Tract_2018_v1-1.pdf) can be downloaded.</p>
 <p>This data was collected by Phillippa Clarke, Robert Melendez, and Megan Chenoweth from the University of Michigan’s Institute for Social Research. The research was funded by the US Department of Health and Human Services, National Institutes of Health, National Institute on Aging; and the Department of Health and Human Services, Administration for Community Living, National Institute on Disability, Independent Living, and Rehabilitation Research.</p>
 <p>This dataset was created by the Trust for Public Land to aid researchers in learning about how access to public parks may contribute to physical and mental health. Since access to parks and greenspace has been shown to positively impact physical activity levels, health while aging, and people’s sense of well-being, this data provides researchers with concrete information about park access within each US census tract so they can further examine the impact of greenspace on health.</p>
-<p>This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories but including Alaska and Hawai’i. The data is from 2018, but was collected in 2020. It describes the number and area of parks for each census tract.</p>
+<p>This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories but including Alaska and Hawai’i. The data is from 2018, but was collated in 2020. It describes the number and area of parks for each census tract.</p>
 <p>The major variables that we considered were “count_open_parks”, which gave the total number of open parks in the census tract, “tract_area_sqmiles”, which described the total area of the census tract in square miles, and “tot_park_area_sqmiles”, which described the total area of parks within the census tract in square miles. These two variables enabled the calculation of “prop_park_area_tract”, which was the proportion of open park land within the total area of the census tract. We also used “tract_fips10”, the code for the census tract, during our data cleaning in order to isolate specific areas of the US and organize the data by county instead of census tract. This data cleaning process is further described below.</p>
 <p>Other variables in the dataset included count_open_parks_tc10, count_open_parks_tc5, count_open_parks_tc3, and any_open_parks. These were used by the researchers to control for a few census tracts that contained very high numbers of parks, and therefore were top-coded at 10, 5, 3, and 1 (ie, any value greater than n was replaced by the phrase “n or more” in the dataset). Although we explored these variables, they did not end up being extremely relevant to our final analyses. The dataset also included “tract_area” and “tot_park_area”, which described the areas of the census tracts and park lands in square meters, rather than square miles.</p>
-<p>Our second dataset, Asthma Hospitalization Rates by County (for California), can be found at the following link: <a href="https://catalog.data.gov/dataset/asthma-hospitalization-rates-by-county-16dab" class="uri">https://catalog.data.gov/dataset/asthma-hospitalization-rates-by-county-16dab</a>. This data is publicly accessible and can be freely downloaded, along with the data dictionary.</p>
+<p>Our second dataset, Asthma Hospitalization Rates by County (for California), can be found at the following link: <a href="https://data.chhs.ca.gov/dataset/asthma-hospitalization-rates-by-county" class="uri">https://data.chhs.ca.gov/dataset/asthma-hospitalization-rates-by-county</a>. This data is publicly accessible and can be freely downloaded, along with the data dictionary.</p>
 <p>This data was collected and published by the California Department of Public Health, along with California Breathing, Environmental Health Investigations Branch. This dataset covers the period from 2015 to 2019 and contains various statistics and demographics related to hospitalizations for asthma.</p>
 <p>Publicly funded hospitals publish annual surveys of some important demographic and health information on a generalized level. This information is collected by the state and distributed to the public; however, in accordance with proper deidentification practices, some of this data has been suppressed if the number of hospitalizations in a certain county is so low that someone could identify the individual person based on the dataset information.</p>
 <p>This dataset contains “county” and “year” variables to identify the geographic location and time period when the data was collected. There is also an “Age group” variable, which contains the following brackets: all ages, 0-4, 0-17, 5-17, 18-64-, 18+, and 65+. The variable “number of hospitalizations” give the number of hospitalizations for asthma in a named county for a named year - per hospitalization, not per person (as in, one person can count for multiple hospitalizations). The variable “age-adjusted hospitalization visit rate” is a numeric that roughly describes the proportion of hospitalizations for a specific county and age group’s population. The “comment” variable states whether data has been suppressed in a specific line of the dataset and why (generally for de-identification purposes). Finally, the “strata” and “strata name” categories contain general and specific demographic levels by which the data has been stratified. This included categories like age group, child vs. adult, and race/ethnicity for the “strata”, and the individual levels/categories were described with “strata name”. We worked a lot with these variables during data cleaning, as described below.</p>
 <p>During data cleaning, we decided that since we would ultimately be combining the two datasets, we would focus on data from California and 2018 from both of the datasets in order to have a single set of data with the same parameters.</p>
 <p>Therefore, we started by filtering the Parks datasets for only California-based census tracts. To do this, we filtered by the census tract codes that started with “06” - California’s number. We then created a small data dictionary that connected each California county with its census tract numbers and then added “county name” as an additional variable in the dataset. We also did some cleanup of variable names to make them more standardized and clearer for our own use.</p>
+<p>Our third dataset was compiled from the FFIEC Online Census Data System. The census tract information from each California county was put into one Excel file with the addition of the county names for each tract. The data used to create this dataset can be found at: <a href="https://www2.census.gov/geo/maps/DC2020/PL20/st06_ca/censustract_maps/" class="uri">https://www2.census.gov/geo/maps/DC2020/PL20/st06_ca/censustract_maps/</a>. To access the tract data for each county, one simply needs to click on the county name file on the left hand side of the screen. This data is publicly accessible and was create to provide transparency to how the US Census calculates various metrics. Additionally, the US Census provides this information to enable the analysis of Census and population data. An index of the counties included is provided as well.</p>
+<p>Each county has the variables of “TYPE”, “FULLCODE”, “STATE”, “COUNTY”, “TRACT”, and “SHEETS”. The type variable denotes whether the piece of land being identified is a tract, county, block, or other unit. For all of the data used, the type is “TRACT”. The variable for the fullcode gives the entire identifying code of the tract according to the formula: state code, county code and then tract number with no spaces, underscores, or decimal marks. The fullcode is needed to completely and uniquely identify a tract when outside of context of known state or county. The state variable is a two letter code which displays the state within which the tract is located. California has a state code of “06”, and all of the data should have this state code. The county variable denotes which county the tract is within using a three number code. The tract variable gives the number of the individual tract through a 6 digit code with a decimal point separately four numbers to the left and two to the right. The sheets variable tells where within the original PDF the data is noted.</p>
+<p>Because this dataset is used as a dictionary, it is not extensively analyzed. It is used solely to identify shared ground around which to join the other two datasets.</p>
 <p>Our code is shown below, along with descriptions of what each segment does:</p>
-<p>tract_ca &lt;- nanda_parks_tract_2018_01P %&gt;% filter(grepl(‘^06’, tract_fips10), any_open_park == 1) filters data so that it’s only the CA counties and also only included counties that had at least 1 open park</p>
-<p>clean1_tract &lt;- tract_ca %&gt;% select(tract_fips10, count_open_parks, tract_area_sqmiles, tot_park_area_sqmiles, prop_park_area_tract) selects relevant columns (tracts, # open parks per tract, sq miles of tract, total sq miles of parks in tract, proportion of park to tract area)</p>
-<p>colnames(clean1_tract) &lt;- c(“tractcode”, “open_parks_tract”, “tract_area_sqmiles”, “total_open_park_area_sqmiles”, “prop_open_park_land_within_tract”) renames columns so it’s more clear what they are</p>
-<p>CA_countytract2 &lt;- CA_countytract %&gt;% mutate(tractcode = str_sub(<code>TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS</code>, 7, 17)) selects for just column with codes and then creates new column that isolates the full code</p>
-<p>joined_CA_countytract &lt;- clean1_tract %&gt;% inner_join(CA_countytract2, by = “tractcode”) joins the CA_countytract2 table with the clean1_tract table by tractcode, keeping all of the rows where the tractcode from clean1_tract is a match for tractcode in CA_countytract2</p>
-<p>clean2_tract &lt;- joined_CA_countytract %&gt;% select(-<code>TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS</code>, -…3, -…4, -…5, -…6) gets rid of extraneous columns; only leaves county names</p>
-<p>clean2_tract &lt;- clean2_tract[, c(1, 6, 2, 3, 4, 5)] reorders columns to put county name next to code</p>
-<p>colnames(clean2_tract) &lt;- c(“tractcode”, “county_name”, “open_parks_tract”, “tract_area_sqmiles”, “total_open_park_area_sqmiles”, “prop_open_park_land_within_tract”) quick rename of county name column to be less aggressively uppercase</p>
-<p>The following is a link for more details on how we cleaned our data: <a href="/load_and_clean_data.R">load_and_clean_data.R</a>.</p>
-<pre class="r"><code>source(
+<p>California Tract Dictionary Setup:</p>
+<p>path &lt;- (“C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset”)
+#setwd(path)</p>
+<p>CAcountytract &lt;- read_csv(“CA_countytract.csv”, show_col_types=FALSE) %&gt;%</p>
+<p>rename(“remaining” = “TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS”) %&gt;%
+#creating easier to use name for variable
+#remains (with or without a number following it) will always have the remainder of the string to be processed
+#the original variable name gives the order of the values in the string</p>
+<p>separate(col=“remaining”, into = c(“TYPE”, “remains1”), (5)) %&gt;%
+#creating TYPE column to distinguish if piece of land is tract, block, state, etc</p>
+<p>separate(col=“remains1”, into = c(“semi1”, “remains11”), sep=(1)) %&gt;%
+#separating leading semicolon into a separate column to delete later</p>
+<p>separate(col=“remains11”, into = c(“FULLCODE”, “remains2”), sep = (11)) %&gt;%
+#creating FULLCODE column
+#need this to fully and uniquely identify a tract</p>
+<p>separate(col=“remains2”, into = c(“semi2”, “remains22”), sep=(1)) %&gt;%
+#separating semicolon to delete later</p>
+<p>separate(col=“remains22”, into = c(“STATE”, “remains3”), sep = (2)) %&gt;%
+#creating STATE column
+#gives two number code which indicates what state the piece of land is in
+#should all be the same at 06 because these data are only for within California</p>
+<p>separate(col=“remains3”, into = c(“semi3”, “remains33”), sep=(1)) %&gt;%
+#separating semicolon to delete later</p>
+<p>separate(col=“remains33”, into = c(“COUNTY”, “remains4”), sep = (3)) %&gt;%
+#creating COUNTY column #gives a three number code which indicates which state the piece of land is in
+#two counties in different states can have the same county code
+#each county is only in one state
+#each county contains at least one census tract (some contain many while others have only 1)
+#county names in all capitals</p>
+<p>separate(col=“remains4”, into = c(“semi4”, “remains44”), sep=(1)) %&gt;%
+#separating semicolon to delete later</p>
+<p>separate(col=“remains44”, into = c(“TRACT”, “SHEETS”), sep = “;”) %&gt;%
+#creating TRACT and SHEETS columns
+#tract column contains a tract number of varying length that identifies a census tract within a state and county
+#tract location can be found by using state and county
+#can be places with same tract number in state if they are in different counties
+#sheets column identifies where maps of the tract can be found</p>
+<p>unite(col = “COUNTY_CODE”, c(“STATE”, “COUNTY”), sep=““) %&gt;%
+#uniting columns to make COUNTY_CODE
+#one of our datasets identifies which county something occurs in using this format
+#leaves original columns in dataset because remove=FALSE
+#county code is unique to each county in California</p>
+<p>select(-semi1, -semi2, -semi3, -semi4, -“…3”, -“…4”, -“…5”, -“…6”)
+#removing the temporary columns used to move the semi colons
+#remove excess columns accidentally created
+#could reorder columns here if that would be helpful</p>
+<p>saveRDS(CAcountytract, “CAcountytract_clean.RData”)
+#head(CAcountytract)
+#if want to test/check the outcome</p>
+<pre><code>
+
+Park Data Analysis:
+
+tract_ca &lt;- nanda_parks_tract_2018_01P %&gt;% filter(grepl(&#39;^06&#39;, tract_fips10), any_open_park == 1) filters data so that it’s only the CA counties and also only included counties that had at least 1 open park
+
+clean1_tract &lt;- tract_ca %&gt;% select(tract_fips10, count_open_parks, tract_area_sqmiles, tot_park_area_sqmiles, prop_park_area_tract) selects relevant columns (tracts, # open parks per tract, sq miles of tract, total sq miles of parks in tract, proportion of park to tract area)
+
+colnames(clean1_tract) &lt;- c(&quot;tractcode&quot;, &quot;open_parks_tract&quot;, &quot;tract_area_sqmiles&quot;, &quot;total_open_park_area_sqmiles&quot;, &quot;prop_open_park_land_within_tract&quot;) renames columns so it’s more clear what they are
+
+CA_countytract2 &lt;- CA_countytract %&gt;% mutate(tractcode = str_sub(`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, 7, 17)) selects for just column with codes and then creates new column that isolates the full code
+
+joined_CA_countytract &lt;- clean1_tract %&gt;% inner_join(CA_countytract2, by = &quot;tractcode&quot;) joins the CA_countytract2 table with the clean1_tract table by tractcode, keeping all of the rows where the tractcode from clean1_tract is a match for tractcode in CA_countytract2 
+
+clean2_tract &lt;- joined_CA_countytract %&gt;% select(-`TYPE; FULLCODE; STATE; COUNTY; TRACT; SHEETS`, -...3, -...4, -...5, -...6) gets rid of extraneous columns; only leaves county names
+
+clean2_tract &lt;- clean2_tract[, c(1, 6, 2, 3, 4, 5)] reorders columns to put county name next to code
+
+colnames(clean2_tract) &lt;- c(&quot;tractcode&quot;, &quot;county_name&quot;, &quot;open_parks_tract&quot;, &quot;tract_area_sqmiles&quot;, &quot;total_open_park_area_sqmiles&quot;, &quot;prop_open_park_land_within_tract&quot;) quick rename of county name column to be less aggressively uppercase
+
+The following is a link for more details on how we cleaned our data: [load_and_clean_data.R](/load_and_clean_data.R).
+
+
+Asthma Data Cleaning
+
+path &lt;- (&quot;C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset&quot;)
+#setwd(path)
+
+asthmaCA &lt;- read_csv(&quot;asthma.csv&quot;, show_col_types=FALSE) %&gt;%
+  filter(AGE_GROUP == &quot;0-17 years&quot;) %&gt;%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %&gt;%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %&gt;%
+  select(-COMMENT)
+saveRDS(asthmaCA, &quot;asthmaCA_kids.RData&quot;)
+#creates data set of only childhood asthma hospitalization rates
+
+CAasthma &lt;- read_csv(&quot;asthma.csv&quot;, show_col_types=FALSE) %&gt;%
+  filter(STRATA == &quot;Race/ethnicity&quot;) %&gt;%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %&gt;%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %&gt;%
+  select(-COMMENT)
+  #pivot_wider(names_from=STRATA_NAME, values_from=STRATA_NAME)
+saveRDS(CAasthma, &quot;asthmaCA_race_ethnicity.RData&quot;)
+#head(CAasthma)
+#creates dataset of asthma hospitalization rates for different races and ethnicities
+
+Cali_asthma &lt;- read_csv(&quot;asthma.csv&quot;, show_col_types=FALSE) %&gt;%
+  filter(STRATA == &quot;Age groups&quot;) %&gt;%
+  filter(AGE_GROUP == c(&quot;0-4 years&quot;, &quot;5-17&quot;)) %&gt;%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %&gt;%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %&gt;%
+  select(-COMMENT)
+saveRDS(Cali_asthma, &quot;asthmaCA_kids_2.RData&quot;)
+#head(Cali_asthma)
+#creates dataset of childhood asthma hospitalization with more stratification
+
+asthma_Cali &lt;- read_csv(&quot;asthma.csv&quot;, show_col_types=FALSE) %&gt;%
+  filter(STRATA == &quot;Child vs. adult&quot;) %&gt;%
+  filter(!is.na(NUMBER_OF_HOSPITALIZATIONS)) %&gt;%
+  filter(!is.na(AGE_ADJUSTED_HOSPITALIZATION_RATE)) %&gt;%
+  select(-COMMENT)
+saveRDS(asthma_Cali, &quot;asthmaCA_kids_v_adults.RData&quot;)
+#head(asthma_Cali)
+#creates dataset to compare childhood and adult asthma hospitalization rates 
+
+
+```r
+source(
   here::here(&quot;static&quot;, &quot;load_and_clean_data.R&quot;),
   echo = FALSE # Use echo=FALSE or omit it to avoid code output  
 )</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-## ✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
-## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
-## ✔ readr   2.1.2      ✔ forcats 0.5.2 
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
+<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
+## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.6     v dplyr   1.0.9
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.2</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
 ## Rows: 20 Columns: 5
-## ── Column specification ────────────────────────────────────────────────────────
+## -- Column specification --------------------------------------------------------
 ## Delimiter: &quot;,&quot;
 ## chr (1): bank
 ## dbl (4): min, white, himin, hiwhite
 ## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ## New names:</code></pre>
