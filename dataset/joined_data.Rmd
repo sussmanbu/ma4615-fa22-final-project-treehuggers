@@ -15,9 +15,9 @@ colnames(asthmaCA_kids) <- c("county_name", "year", "strata", "strata_name", "ag
 asthmaCA_kids <- asthmaCA_kids %>% mutate(county_name = str_to_upper(county_name))
 
 #joining the datasets
-joined1 <- clean_parks_data %>% inner_join(asthmaCA_kids, by = "county_name")
+parks_asthmaCA_kids <- clean_parks_data %>% left_join(asthmaCA_kids, by = "county_name")
 
-saveRDS(joined1, "parks_asthmaCA_kids.RData")
+save(parks_asthmaCA_kids, file = "parks_asthmaCA_kids.RData")
 
 ```
 
@@ -27,9 +27,9 @@ colnames(asthmaCA_kids_2) <- c("county_name", "year", "strata", "strata_name", "
 asthmaCA_kids_2 <- asthmaCA_kids_2 %>% mutate(county_name = str_to_upper(county_name))
 
 #joining the datasets
-joined2 <- clean_parks_data %>% inner_join(asthmaCA_kids_2, by = "county_name")
+parks_asthmaCA_kids_2 <- clean_parks_data %>% left_join(asthmaCA_kids_2, by = "county_name")
 
-saveRDS(joined2, "parks_asthmaCA_kids_2.RData")
+save(parks_asthmaCA_kids_2, file = "parks_asthmaCA_kids_2.RData")
 ```
 
 ```{r joined3_parks_asthmaCA_kids_v_adults}
@@ -38,9 +38,9 @@ colnames(asthmaCA_kids_v_adults) <- c("county_name", "year", "strata", "strata_n
 asthmaCA_kids_v_adults <- asthmaCA_kids_v_adults %>% mutate(county_name = str_to_upper(county_name))
 
 #joining the datasets
-joined3 <- clean_parks_data %>% inner_join(asthmaCA_kids_v_adults, by = "county_name")
+parks_asthmaCA_kids_v_adults <- clean_parks_data %>% left_join(asthmaCA_kids_v_adults, by = "county_name")
 
-saveRDS(joined3, "parks_asthmaCA_kids_v_adults.RData")
+save(parks_asthmaCA_kids_v_adults, file = "parks_asthmaCA_kids_v_adults.RData")
 
 ```
 
@@ -50,9 +50,9 @@ colnames(asthmaCA_race_ethnicity) <- c("county_name", "year", "strata", "race_et
 asthmaCA_race_ethnicity <- asthmaCA_race_ethnicity %>% mutate(county_name = str_to_upper(county_name))
 
 #joining the datasets
-joined4 <- clean_parks_data %>% inner_join(asthmaCA_race_ethnicity, by = "county_name")
+parks_asthmaCA_race_ethnicity <- clean_parks_data %>% left_join(asthmaCA_race_ethnicity, by = "county_name")
 
-saveRDS(joined4, "parks_asthmaCA_race_ethnicity.RData")
+save(parks_asthmaCA_race_ethnicity, file = "parks_asthmaCA_race_ethnicity.RData")
 ```
 
 

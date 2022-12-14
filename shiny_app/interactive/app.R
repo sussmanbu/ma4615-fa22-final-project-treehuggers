@@ -21,37 +21,53 @@ CA_counties <- USAboundaries::us_counties(states = "California") %>%
   select(-namelsad, -state_name, -state_abbr, -jurisdiction_type) %>% 
   mutate("county_name" = str_to_upper(name)) %>% select(-name)
 
-map_race_ethnicity <- load(here::here("shiny_app/interactive", "map_kids_v_adults.RData"))
 strata_choices <- map_kids_v_adults %>%
   pull(strata_name) %>% unique() %>% sort()
-# pull also does not want to work currently because it says
-# "no applicable method for pull applied to object of class character
-
+race_choices <- map_race_ethnicity %>%
+  pull(race_ethnicity) %>% unique() %>% sort()
 
 ui <- fluidPage(
     
-  titlePanel("Asthma Hospitalizations by County and Kid vs. Adult"),
+  titlePanel("Asthma Hospitalizations by County"),
     selectInput(inputId = "strata", 
-                label = "Age Group (Kid vs. Adult)", 
+                label = "County Hospitalizations by Age Group (Kid vs. Adult)", 
                 choices = strata_choices),
         mainPanel(
            plotOutput("map")
+           ),
+    selectInput(inputId = "race",
+                label = "County Hospitalizations by Race/Etnicity",
+                choices = race_choices),
+        mainPanel(
+            plotOutput("map2")
         )
     )
 
 
-# Define server logic required to draw a histogram
 server <- function(input, output) {
 
     output$map <- renderPlot({
-    # this filter currently does not want to work ughhh
+      
         map_kids_v_adults %>% 
          filter(strata_name == input$strata) %>% 
           group_by(county_name) %>% 
           mutate("strata_hospitalizations" = sum(number_hospitalizations)) %>% 
-        tm_shape() + tm_polygons(col = "strata_hospitalizations") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
+        tm_shape() + tm_polygons(col = "strata_hospitalizations", n = 4, palette = "viridis") + 
+        tm_shape(CA_counties) + tm_borders() + 
+        tm_shape(CA_state) + tm_borders(lwd = 2)
     
         })
+    output$map2 <- renderPlot({
+      
+      map_race_ethnicity %>% 
+        filter(race_ethnicity == input$race) %>% 
+        group_by(county_name) %>% 
+        mutate("race_hospitalizations" = sum(number_hospitalizations)) %>% 
+        tm_shape() + tm_polygons(col = "race_hospitalizations", n = 4, palette = "viridis") + 
+        tm_shape(CA_counties) + tm_borders() + 
+        tm_shape(CA_state) + tm_borders(lwd = 2)
+      
+    })
 }
 
 # Run the application 

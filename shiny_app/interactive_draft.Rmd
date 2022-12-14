@@ -51,13 +51,13 @@ parks_asthmaCA_kids_2_countystats <- parks_asthmaCA_kids_2 %>%
 ```{r join_geometry}
 # this chunk joins the geometry to our data
 
-map_kids_v_adults <- CA_counties %>% inner_join(parks_asthmaCA_kids_v_adults_countystats, by = "county_name")
+map_kids_v_adults <- CA_counties %>% left_join(parks_asthmaCA_kids_v_adults_countystats, by = "county_name")
 
-map_race_ethnicity <- CA_counties %>% inner_join(parks_asthmaCA_race_ethnicity_countystats, by = "county_name")
+map_race_ethnicity <- CA_counties %>% left_join(parks_asthmaCA_race_ethnicity_countystats, by = "county_name")
 
-map_kids <- CA_counties %>% inner_join(parks_asthmaCA_kids_countystats, by = "county_name")
+map_kids <- CA_counties %>% left_join(parks_asthmaCA_kids_countystats, by = "county_name")
   
-map_kids2 <- CA_counties %>% inner_join(parks_asthmaCA_kids_2_countystats, by = "county_name")
+map_kids2 <- CA_counties %>% left_join(parks_asthmaCA_kids_2_countystats, by = "county_name")
 
 
 save(map_kids_v_adults, file = "interactive/map_kids_v_adults.RData")
