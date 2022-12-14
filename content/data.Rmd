@@ -15,10 +15,11 @@ draft: false
   
   This dataset was created by the Trust for Public Land to aid researchers in learning about how access to public parks may contribute to physical and mental health. Since access to parks and greenspace has been shown to positively impact physical activity levels, health while aging, and people’s sense of well-being, this data provides researchers with concrete information about park access within each US census tract so they can further examine the impact of greenspace on health.
   
-  This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories but including Alaska and Hawai’i. The data is from 2018, but was collated in 2020. It describes the number and area of parks for each census tract. Our variables of interest are described in the table below. 
+  This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories but including Alaska and Hawai’i. The data is from 2018, but was collated in 2020. It describes the number and area of parks for each census tract. Our variables of interest are described in the table below.
+  
   
 ``` {r echo = FALSE}
-suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(suppressWarnings(library(knitr)))
 suppressPackageStartupMessages(suppressWarnings(library(tidyverse)))
 
 parks_vars <- tibble(
@@ -28,6 +29,7 @@ parks_vars <- tibble(
 
 kable(parks_vars)
 ```
+  
   
   
   Other variables in the dataset included count_open_parks_tc10, count_open_parks_tc5, count_open_parks_tc3, and any_open_parks. These were used by the researchers to control for a few census tracts that contained very high numbers of parks, and therefore were top-coded at 10, 5, 3, and 1 (ie, any value greater than n was replaced by the phrase “n or more” in the dataset). Although we explored these variables, they did not end up being extremely relevant to our final analyses. The dataset also included “tract_area” and “tot_park_area”, which described the areas of the census tracts and park lands in square meters, rather than square miles.
@@ -61,7 +63,7 @@ kable(asthma_vars)
 ``` {r echo = FALSE}
 ffeic_vars = tibble(
   "Variable Name" = c("TYPE", "FULLCODE", "STATE", "COUNTY", "TRACT", "SHEETS"), 
-  "Description" = c("denotes whether the land is a tract, county, block, or other unit (for all data used, the type is TRACT", "entire identifying code of the tract: state code, county code, tract number with no spaces or underscores", "state where tract is located (California's code is 06)", "county where tract is located", "individual tract number", "notes where this data was located in the original PDF" )
+  "Description" = c("denotes whether the land is a tract, county, block, or other unit (for all data used, the type is TRACT)", "entire identifying code of the tract: state code, county code, tract number with no spaces or underscores", "state where tract is located (California's code is 06)", "county where tract is located", "individual tract number", "notes where this data was located in the original PDF" )
 )
 
 kable(ffeic_vars)
