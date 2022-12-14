@@ -11,10 +11,10 @@ This comes from the file `content/analysis.Rmd`.
 
 We describe here our detailed data analysis.
 
-## Data Analysis Motivation
+## Analysis Motivation
+
 
 	The goal of this data analysis is to explore the relationship between asthma hospitalizations, as a measure of the human impact of air pollution, and the amount of green space in different California counties. We hope to learn whether higher levels of asthma hospitalization correlate to lower proportions of green space. 
-
 
 
 Although asthma hospitalization rates are not a perfect measure of air pollution, they are strongly linked, and California county data on asthma hospitalization rates is publicly available. Within asthma hospitalization rates, we’ll look specifically at age groups and race to assess the varied hospitalization rates of different groups. Racial makeup of a county is often correlated with socioeconomic status, and therefore we hope to examine whether areas with a greater POC (people of color) population have both higher hospitalization rates and less green space, which are both factors that can correlate with areas of lower socioeconomic status. However, it’s important to note that race is certainly not an exact metric for socio-economic status. Our observations may have implications on how socioeconomic levels of a county are linked to differing levels of asthma hospitalizations or green space, but we will not be conclusively defining that correlation within this study. 
@@ -34,9 +34,9 @@ Some of the major questions we are interested in answering include: Does a highe
 
 ## Modeling and Inference
 
-```{r}
-suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(plotly))
+```{r echo = FALSE}
+suppressPackageStartupMessages(suppressWarnings(library(tidyverse)))
+suppressPackageStartupMessages(suppressWarnings(library(plotly)))
 
 print(getwd())
 
