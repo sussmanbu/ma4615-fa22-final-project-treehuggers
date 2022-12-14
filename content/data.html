@@ -12,29 +12,14 @@ draft: false
 
 </div>
 
+<div id="datasets" class="section level2">
+<h2>Datasets</h2>
 <p>Our first dataset, the NaNDA Parks data “Parks by Census Tract, United States, 2018,” came from the following source: <a href="https://www.openicpsr.org/openicpsr/project/117921/version/V1/view" class="uri">https://www.openicpsr.org/openicpsr/project/117921/version/V1/view</a>.
 In order to open the dataset, you must create a free account. After this, both the dataset and an accompanying dictionary describing the variables (NaNDA_Parks_by_Census_Tract_2018_v1-1.pdf) can be downloaded.</p>
-<p>This data was collected by Phillippa Clarke, Robert Melendez, and Megan Chenoweth from the University of Michigan’s Institute for Social Research. The research was funded by the US Department of Health and Human Services, National Institutes of Health, National Institute on Aging; and the Department of Health and Human Services, Administration for Community Living, National Institute on Disability, Independent Living, and Rehabilitation Research.</p>
+<p>This data was collected by Phillippa Clarke, Robert Melendez, and Megan Chenoweth from the University of Michigan’s Institute for Social Research. The research was funded by the US department of Health and Human Services, National Institutes of Health, National Institute on Aging; and the Department of Health and Human Services, Administration for Community Living, National Institute on Disability, Independent Living, and Rehabilitation Research.</p>
 <p>This dataset was created by the Trust for Public Land to aid researchers in learning about how access to public parks may contribute to physical and mental health. Since access to parks and greenspace has been shown to positively impact physical activity levels, health while aging, and people’s sense of well-being, this data provides researchers with concrete information about park access within each US census tract so they can further examine the impact of greenspace on health.</p>
 <p>This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories but including Alaska and Hawai’i. The data is from 2018, but was collated in 2020. It describes the number and area of parks for each census tract. Our variables of interest are described in the table below.</p>
 <pre><code>## Warning: package &#39;knitr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
-## v ggplot2 3.3.5     v purrr   0.3.4
-## v tibble  3.1.6     v dplyr   1.0.9
-## v tidyr   1.2.0     v stringr 1.4.0
-## v readr   2.1.2     v forcats 0.5.2</code></pre>
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
 <table>
 <colgroup>
 <col width="22%" />
@@ -69,17 +54,102 @@ In order to open the dataset, you must create a free account. After this, both t
 </tr>
 </tbody>
 </table>
-<p>The major variables that we considered were “count_open_parks”, which gave the total number of open parks in the census tract, “tract_area_sqmiles”, which described the total area of the census tract in square miles, and “tot_park_area_sqmiles”, which described the total area of parks within the census tract in square miles. These two variables enabled the calculation of “prop_park_area_tract”, which was the proportion of open park land within the total area of the census tract. We also used “tract_fips10”, the code for the census tract, during our data cleaning in order to isolate specific areas of the US and organize the data by county instead of census tract. This data cleaning process is further described below.</p>
 <p>Other variables in the dataset included count_open_parks_tc10, count_open_parks_tc5, count_open_parks_tc3, and any_open_parks. These were used by the researchers to control for a few census tracts that contained very high numbers of parks, and therefore were top-coded at 10, 5, 3, and 1 (ie, any value greater than n was replaced by the phrase “n or more” in the dataset). Although we explored these variables, they did not end up being extremely relevant to our final analyses. The dataset also included “tract_area” and “tot_park_area”, which described the areas of the census tracts and park lands in square meters, rather than square miles.</p>
 <p>Our second dataset, Asthma Hospitalization Rates by County (for California), can be found at the following link: <a href="https://data.chhs.ca.gov/dataset/asthma-hospitalization-rates-by-county" class="uri">https://data.chhs.ca.gov/dataset/asthma-hospitalization-rates-by-county</a>. This data is publicly accessible and can be freely downloaded, along with the data dictionary.</p>
 <p>This data was collected and published by the California Department of Public Health, along with California Breathing, Environmental Health Investigations Branch. This dataset covers the period from 2015 to 2019 and contains various statistics and demographics related to hospitalizations for asthma.</p>
 <p>Publicly funded hospitals publish annual surveys of some important demographic and health information on a generalized level. This information is collected by the state and distributed to the public; however, in accordance with proper deidentification practices, some of this data has been suppressed if the number of hospitalizations in a certain county is so low that someone could identify the individual person based on the dataset information.</p>
-<p>This dataset contains “county” and “year” variables to identify the geographic location and time period when the data was collected. There is also an “Age group” variable, which contains the following brackets: all ages, 0-4, 0-17, 5-17, 18-64-, 18+, and 65+. The variable “number of hospitalizations” give the number of hospitalizations for asthma in a named county for a named year - per hospitalization, not per person (as in, one person can count for multiple hospitalizations). The variable “age-adjusted hospitalization visit rate” is a numeric that roughly describes the proportion of hospitalizations for a specific county and age group’s population. The “comment” variable states whether data has been suppressed in a specific line of the dataset and why (generally for de-identification purposes). Finally, the “strata” and “strata name” categories contain general and specific demographic levels by which the data has been stratified. This included categories like age group, child vs. adult, and race/ethnicity for the “strata”, and the individual levels/categories were described with “strata name”. We worked a lot with these variables during data cleaning, as described below.</p>
+<p>The variables we focused on within this dataset are described in the table below.</p>
+<table>
+<colgroup>
+<col width="27%" />
+<col width="72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Variable Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">county</td>
+<td align="left">county where data was collected</td>
+</tr>
+<tr class="even">
+<td align="left">year</td>
+<td align="left">year when data was collected</td>
+</tr>
+<tr class="odd">
+<td align="left">Age group</td>
+<td align="left">ages of individuals hospitalized, divided into brackets (all ages, 0-4, 0-17, 5-17, 18-64, 18+, 65+)</td>
+</tr>
+<tr class="even">
+<td align="left">number of hospitalizations</td>
+<td align="left">number of asthma hospitalizations per county, per year (one person can be hospitalized multiple times)</td>
+</tr>
+<tr class="odd">
+<td align="left">age-adjusted hospitalization visit rate</td>
+<td align="left">numeric that roughly describes the proportion of hospitalizations for a county and age group’s population</td>
+</tr>
+<tr class="even">
+<td align="left">comment</td>
+<td align="left">states whether data has been suppressed for this row and why</td>
+</tr>
+<tr class="odd">
+<td align="left">strata</td>
+<td align="left">general demographic levels like age group or race/ethnicity</td>
+</tr>
+<tr class="even">
+<td align="left">strata name</td>
+<td align="left">specific categories within strata, like White, Black, etc for race</td>
+</tr>
+</tbody>
+</table>
+<p>Our third dataset was compiled from the FFIEC Online Census Data System. The census tract information from each California county was put into one Excel file with the addition of the county names for each tract. The data used to create this dataset can be found at: <a href="https://www2.census.gov/geo/maps/DC2020/PL20/st06_ca/censustract_maps/" class="uri">https://www2.census.gov/geo/maps/DC2020/PL20/st06_ca/censustract_maps/</a>. To access the tract data for each county, one simply needs to click on the county name file on the left hand side of the screen. This data is publicly accessible and was create to provide transparency to how the US Census calculates various metrics. Additionally, the US Census provides this information to enable the analysis of Census and population data. An index of the counties included is provided as well.</p>
+<p>Descriptions of the variables for this dataset can be found in the table below. Because this dataset is used as a dictionary, it was not extensively analyzed. It was used solely to identify shared ground around which to join the other two datasets.</p>
+<table>
+<colgroup>
+<col width="11%" />
+<col width="88%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Variable Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">TYPE</td>
+<td align="left">denotes whether the land is a tract, county, block, or other unit (for all data used, the type is TRACT</td>
+</tr>
+<tr class="even">
+<td align="left">FULLCODE</td>
+<td align="left">entire identifying code of the tract: state code, county code, tract number with no spaces or underscores</td>
+</tr>
+<tr class="odd">
+<td align="left">STATE</td>
+<td align="left">state where tract is located (California’s code is 06)</td>
+</tr>
+<tr class="even">
+<td align="left">COUNTY</td>
+<td align="left">county where tract is located</td>
+</tr>
+<tr class="odd">
+<td align="left">TRACT</td>
+<td align="left">individual tract number</td>
+</tr>
+<tr class="even">
+<td align="left">SHEETS</td>
+<td align="left">notes where this data was located in the original PDF</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="data-cleaning" class="section level2">
+<h2>Data Cleaning</h2>
 <p>During data cleaning, we decided that since we would ultimately be combining the two datasets, we would focus on data from California and 2018 from both of the datasets in order to have a single set of data with the same parameters.</p>
 <p>Therefore, we started by filtering the Parks datasets for only California-based census tracts. To do this, we filtered by the census tract codes that started with “06” - California’s number. We then created a small data dictionary that connected each California county with its census tract numbers and then added “county name” as an additional variable in the dataset. We also did some cleanup of variable names to make them more standardized and clearer for our own use.</p>
-<p>Our third dataset was compiled from the FFIEC Online Census Data System. The census tract information from each California county was put into one Excel file with the addition of the county names for each tract. The data used to create this dataset can be found at: <a href="https://www2.census.gov/geo/maps/DC2020/PL20/st06_ca/censustract_maps/" class="uri">https://www2.census.gov/geo/maps/DC2020/PL20/st06_ca/censustract_maps/</a>. To access the tract data for each county, one simply needs to click on the county name file on the left hand side of the screen. This data is publicly accessible and was create to provide transparency to how the US Census calculates various metrics. Additionally, the US Census provides this information to enable the analysis of Census and population data. An index of the counties included is provided as well.</p>
-<p>Each county has the variables of “TYPE”, “FULLCODE”, “STATE”, “COUNTY”, “TRACT”, and “SHEETS”. The type variable denotes whether the piece of land being identified is a tract, county, block, or other unit. For all of the data used, the type is “TRACT”. The variable for the fullcode gives the entire identifying code of the tract according to the formula: state code, county code and then tract number with no spaces, underscores, or decimal marks. The fullcode is needed to completely and uniquely identify a tract when outside of context of known state or county. The state variable is a two letter code which displays the state within which the tract is located. California has a state code of “06”, and all of the data should have this state code. The county variable denotes which county the tract is within using a three number code. The tract variable gives the number of the individual tract through a 6 digit code with a decimal point separately four numbers to the left and two to the right. The sheets variable tells where within the original PDF the data is noted.</p>
-<p>Because this dataset is used as a dictionary, it is not extensively analyzed. It is used solely to identify shared ground around which to join the other two datasets.</p>
 <p>Our code is shown below, along with descriptions of what each segment does:</p>
 <p>California Tract Dictionary Setup:</p>
 <p>path &lt;- (“C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset”)
@@ -210,3 +280,4 @@ source(
 ## i Use `spec()` to retrieve the full column specification for this data.
 ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ## New names:</code></pre>
+</div>
