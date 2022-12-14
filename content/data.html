@@ -16,7 +16,59 @@ draft: false
 In order to open the dataset, you must create a free account. After this, both the dataset and an accompanying dictionary describing the variables (NaNDA_Parks_by_Census_Tract_2018_v1-1.pdf) can be downloaded.</p>
 <p>This data was collected by Phillippa Clarke, Robert Melendez, and Megan Chenoweth from the University of Michigan’s Institute for Social Research. The research was funded by the US Department of Health and Human Services, National Institutes of Health, National Institute on Aging; and the Department of Health and Human Services, Administration for Community Living, National Institute on Disability, Independent Living, and Rehabilitation Research.</p>
 <p>This dataset was created by the Trust for Public Land to aid researchers in learning about how access to public parks may contribute to physical and mental health. Since access to parks and greenspace has been shown to positively impact physical activity levels, health while aging, and people’s sense of well-being, this data provides researchers with concrete information about park access within each US census tract so they can further examine the impact of greenspace on health.</p>
-<p>This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories but including Alaska and Hawai’i. The data is from 2018, but was collated in 2020. It describes the number and area of parks for each census tract.</p>
+<p>This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories but including Alaska and Hawai’i. The data is from 2018, but was collated in 2020. It describes the number and area of parks for each census tract. Our variables of interest are described in the table below.</p>
+<pre><code>## Warning: package &#39;knitr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
+## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.6     v dplyr   1.0.9
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.2</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.1.3</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="77%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Variable Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">count_open_parks</td>
+<td align="left">total number of open parks in census tract</td>
+</tr>
+<tr class="even">
+<td align="left">tract_area_sqmiles</td>
+<td align="left">total square mileage of census tract</td>
+</tr>
+<tr class="odd">
+<td align="left">tot_park_area_sqmiles</td>
+<td align="left">total square mileage of park land in census tract</td>
+</tr>
+<tr class="even">
+<td align="left">prop_park_area_tract</td>
+<td align="left">proportion of census land used for parks</td>
+</tr>
+<tr class="odd">
+<td align="left">tract_fips10</td>
+<td align="left">code for the census tract, used for data cleaning to organize data by county</td>
+</tr>
+</tbody>
+</table>
 <p>The major variables that we considered were “count_open_parks”, which gave the total number of open parks in the census tract, “tract_area_sqmiles”, which described the total area of the census tract in square miles, and “tot_park_area_sqmiles”, which described the total area of parks within the census tract in square miles. These two variables enabled the calculation of “prop_park_area_tract”, which was the proportion of open park land within the total area of the census tract. We also used “tract_fips10”, the code for the census tract, during our data cleaning in order to isolate specific areas of the US and organize the data by county instead of census tract. This data cleaning process is further described below.</p>
 <p>Other variables in the dataset included count_open_parks_tc10, count_open_parks_tc5, count_open_parks_tc3, and any_open_parks. These were used by the researchers to control for a few census tracts that contained very high numbers of parks, and therefore were top-coded at 10, 5, 3, and 1 (ie, any value greater than n was replaced by the phrase “n or more” in the dataset). Although we explored these variables, they did not end up being extremely relevant to our final analyses. The dataset also included “tract_area” and “tot_park_area”, which described the areas of the census tracts and park lands in square meters, rather than square miles.</p>
 <p>Our second dataset, Asthma Hospitalization Rates by County (for California), can be found at the following link: <a href="https://data.chhs.ca.gov/dataset/asthma-hospitalization-rates-by-county" class="uri">https://data.chhs.ca.gov/dataset/asthma-hospitalization-rates-by-county</a>. This data is publicly accessible and can be freely downloaded, along with the data dictionary.</p>
@@ -149,24 +201,7 @@ source(
   here::here(&quot;static&quot;, &quot;load_and_clean_data.R&quot;),
   echo = FALSE # Use echo=FALSE or omit it to avoid code output  
 )</code></pre>
-<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
-## v ggplot2 3.3.5     v purrr   0.3.4
-## v tibble  3.1.6     v dplyr   1.0.9
-## v tidyr   1.2.0     v stringr 1.4.0
-## v readr   2.1.2     v forcats 0.5.2</code></pre>
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.1.3</code></pre>
-<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()
-## Rows: 20 Columns: 5
+<pre><code>## Rows: 20 Columns: 5
 ## -- Column specification --------------------------------------------------------
 ## Delimiter: &quot;,&quot;
 ## chr (1): bank
