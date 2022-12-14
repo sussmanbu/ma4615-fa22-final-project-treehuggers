@@ -12,6 +12,9 @@ library(USAboundaries)
 library(tmap)
 library(shiny)
 
+map_kids_v_adults <- load(here::here("interactive", "map_kids_v_adults.RData"))
+map_race_ethnicity <- load(here::here("interactive", "map_race_ethnicity.RData"))
+
 epsg_CA <- 26943
 epsg_wgs84 <- 4326
 CA_state <- USAboundaries::us_states() %>% filter(name == "California") %>%
@@ -36,7 +39,7 @@ ui <- fluidPage(
            plotOutput("map")
            ),
     selectInput(inputId = "race",
-                label = "County Hospitalizations by Race/Etnicity",
+                label = "County Hospitalizations by Race/Ethnicity",
                 choices = race_choices),
         mainPanel(
             plotOutput("map2")
@@ -63,7 +66,7 @@ server <- function(input, output) {
         filter(race_ethnicity == input$race) %>% 
         group_by(county_name) %>% 
         mutate("race_hospitalizations" = sum(number_hospitalizations)) %>% 
-        tm_shape() + tm_polygons(col = "race_hospitalizations", n = 4, palette = "viridis") + 
+        tm_shape() + tm_polygons(col = "race_hospitalizations", n = 4, palette = "viridis", colorNA = NULL) + 
         tm_shape(CA_counties) + tm_borders() + 
         tm_shape(CA_state) + tm_borders(lwd = 2)
       

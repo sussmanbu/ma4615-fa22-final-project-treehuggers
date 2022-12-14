@@ -1,0 +1,13 @@
+name: treehuggers_interactive
+title: treehuggers_interactive
+username:
+account: mjniksch
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7893909
+bundleId: 6637453
+url: https://mjniksch.shinyapps.io/treehuggers_interactive/
+when: 1671047635.22103
+lastSyncTime: 1671047635.22103
+asMultiple: FALSE
+asStatic: FALSE
