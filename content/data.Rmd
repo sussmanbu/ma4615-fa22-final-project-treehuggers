@@ -15,7 +15,7 @@ draft: false
   
   This dataset was created by the Trust for Public Land to aid researchers in learning about how access to public parks may contribute to physical and mental health. Since access to parks and greenspace has been shown to positively impact physical activity levels, health while aging, and people’s sense of well-being, this data provides researchers with concrete information about park access within each US census tract so they can further examine the impact of greenspace on health.
   
-  This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories but including Alaska and Hawai’i. The data is from 2018, but was collated in 2020. It describes the number and area of parks for each census tract. Our variables of interest are described in the table below.
+  In this dataset, park area includes areas with a wide variety of settings including grassy, forested, or paved, among others. Land is designated as a park by governmental authorities and if it is open to the public. This dataset has 11 columns and about 73,000 rows, which represent the census tracts in the US, excluding island territories but including Alaska and Hawai’i. The data is from 2018, but was collated in 2020. It describes the number and area of parks for each census tract. Our variables of interest are described in the table below.
   
   
 ``` {r echo = FALSE}
@@ -80,6 +80,7 @@ kable(ffeic_vars)
 
 California Tract Dictionary Setup:
 
+``` {r eval = FALSE}
 path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
 #setwd(path)
 
@@ -146,8 +147,10 @@ saveRDS(CAcountytract, "CAcountytract_clean.RData")
 ```
 
 
+
 Park Data Analysis:
 
+``` {r eval = FALSE}
 tract_ca <- nanda_parks_tract_2018_01P %>% filter(grepl('^06', tract_fips10), any_open_park == 1) filters data so that it’s only the CA counties and also only included counties that had at least 1 open park
 
 clean1_tract <- tract_ca %>% select(tract_fips10, count_open_parks, tract_area_sqmiles, tot_park_area_sqmiles, prop_park_area_tract) selects relevant columns (tracts, # open parks per tract, sq miles of tract, total sq miles of parks in tract, proportion of park to tract area)
@@ -165,10 +168,12 @@ clean2_tract <- clean2_tract[, c(1, 6, 2, 3, 4, 5)] reorders columns to put coun
 colnames(clean2_tract) <- c("tractcode", "county_name", "open_parks_tract", "tract_area_sqmiles", "total_open_park_area_sqmiles", "prop_open_park_land_within_tract") quick rename of county name column to be less aggressively uppercase
 
 The following is a link for more details on how we cleaned our data: [load_and_clean_data.R](/load_and_clean_data.R).
+```
 
 
 Asthma Data Cleaning
 
+``` {r eval = FALSE}
 path <- ("C:/Users/User/Documents/Boston University/2022/Fall/Data Sci in R/ma4615-fa22-final-project-treehuggers/dataset")
 #setwd(path)
 
@@ -208,6 +213,7 @@ asthma_Cali <- read_csv("asthma.csv", show_col_types=FALSE) %>%
 saveRDS(asthma_Cali, "asthmaCA_kids_v_adults.RData")
 #head(asthma_Cali)
 #creates dataset to compare childhood and adult asthma hospitalization rates 
+```
 
 ```{r}
 source(
