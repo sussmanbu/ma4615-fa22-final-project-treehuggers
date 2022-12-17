@@ -81,5 +81,21 @@ map_race_ethnicity %>%
 
 ```
 
+```{r more_map_ideas}
+# highlight Fresno county, Black age_adjusted hospitalization rate
+# six times as high as White 
+
+map_race_ethnicity %>% filter(county_name == "FRESNO", race_ethnicity == "Black") %>% tm_shape() + tm_polygons(col = "age_adjusted_hospitalization_rate", palette = "viridis")
+
+# make this interactive to select which race/ethnicity
+map_race_ethnicity %>% filter(race_ethnicity == "Hispanic") %>% ggplot(aes(y = county_name, x = age_adjusted_hospitalization_rate)) + geom_col(position = "dodge")
+
+# just Fresno county; can also make this interactive for the user to select
+# different counties
+map_race_ethnicity %>% filter(county_name == "FRESNO") %>% 
+  ggplot(aes(y = race_ethnicity, x = age_adjusted_hospitalization_rate, fill = race_ethnicity)) + geom_col(position = "dodge")
+
+
+```
 
 

@@ -12,8 +12,8 @@ library(USAboundaries)
 library(tmap)
 library(shiny)
 
-map_kids_v_adults <- load(here::here("interactive", "map_kids_v_adults.RData"))
-map_race_ethnicity <- load(here::here("interactive", "map_race_ethnicity.RData"))
+map_kids_v_adults <- load(here::here("shiny_app/interactive/map_kids_v_adults.RData"))
+map_race_ethnicity <- load(here::here("shiny_app/interactive/map_race_ethnicity.RData"))
 
 epsg_CA <- 26943
 epsg_wgs84 <- 4326
@@ -24,7 +24,7 @@ CA_counties <- USAboundaries::us_counties(states = "California") %>%
   select(-namelsad, -state_name, -state_abbr, -jurisdiction_type) %>% 
   mutate("county_name" = str_to_upper(name)) %>% select(-name)
 
-strata_choices <- map_kids_v_adults %>%
+strata_choices <- map_kids_v_adults %>% 
   pull(strata_name) %>% unique() %>% sort()
 race_choices <- map_race_ethnicity %>%
   pull(race_ethnicity) %>% unique() %>% sort()
@@ -59,8 +59,8 @@ server <- function(input, output) {
         tm_shape(CA_counties) + tm_borders() + 
         tm_shape(CA_state) + tm_borders(lwd = 2)
     
-        })
-    output$map2 <- renderPlot({
+    })
+     output$map2 <- renderPlot({
       
       map_race_ethnicity %>% 
         filter(race_ethnicity == input$race) %>% 
@@ -71,6 +71,15 @@ server <- function(input, output) {
         tm_shape(CA_state) + tm_borders(lwd = 2)
       
     })
+     output$map3 <- renderPlot({
+       map_race_ethnicity %>%
+         filter(race_ethnicity == input$race) %>%
+         group_by(county_name) %>%
+         mutate("race_avg_hospitalization_rate" = mean(age_adjusted_hospitalization_rate)) %>%
+         tm_shape() + tm_polygons(col = "race_avg_hospitalization_rate", palette = "viridis") +
+         tm_shape(CA_counties) + tm_borders() +
+         tm_shape(CA_state) + tm_borders(lwd = 2)
+     })
 }
 
 # Run the application 
