@@ -42,7 +42,8 @@ ui <- fluidPage(
                 label = "County Hospitalizations by Race/Ethnicity",
                 choices = race_choices),
         mainPanel(
-            plotOutput("map2")
+            plotOutput("map2"),
+            plotOutput("map3")
         )
     )
 
