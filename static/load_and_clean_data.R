@@ -152,7 +152,8 @@ CA_county_asthma_parks <- CA_county_asthma_parks %>%
 CA_county_asthma_parks <- CA_county_asthma_parks %>%
   full_join(hospitalizations_total, by = c("county_name" = "county_name"))
 
-CA_county_asthma_parks <- CA_county_asthma_parks %>%
+asthma_parks_race <- CA_county_asthma_parks %>%
   filter(!is.na(total_county_area_sqm))
 
-save(CA_county_asthma_parks, file = here::here("dataset/CA_county_asthma_parks.RData"))
+save(asthma_parks_race, file = here::here("dataset/asthma_parks_race.RData"))
+
