@@ -1,7 +1,7 @@
 ---
 title: Data
 description:
-toc: true
+toc: false
 featuredVideo:
 featuredImage: images/tree.jpeg
 draft: false
@@ -55,19 +55,7 @@ kable(asthma_vars)
 ```
 
 
-  Our third dataset was compiled from the FFIEC Online Census Data System. The census tract information from each California county was put into one Excel file with the addition of the county names for each tract. The data used to create this dataset can be found at:  https://www2.census.gov/geo/maps/DC2020/PL20/st06_ca/censustract_maps/. To access the tract data for each county, one simply needs to click on the county name file on the left hand side of the screen. This data is publicly accessible and was create to provide transparency to how the US Census calculates various metrics. Additionally, the US Census provides this information to enable the analysis of Census and population data. An index of the counties included is provided as well.
-  
-  
-  Descriptions of the variables for this dataset can be found in the table below. Because this dataset is used as a dictionary, it was not extensively analyzed. It was used solely to identify shared ground around which to join the other two datasets. 
- 
-``` {r echo = FALSE}
-ffeic_vars = tibble(
-  "Variable Name" = c("TYPE", "FULLCODE", "STATE", "COUNTY", "TRACT", "SHEETS"), 
-  "Description" = c("denotes whether the land is a tract, county, block, or other unit (for all data used, the type is TRACT)", "entire identifying code of the tract: state code, county code, tract number with no spaces or underscores", "state where tract is located (California's code is 06)", "county where tract is located", "individual tract number", "notes where this data was located in the original PDF" )
-)
-
-kable(ffeic_vars)
-```
+  In order to convert the census tracts in the NaNDA Parks dataset to California counties that matched the asthma hospitalizations dataset, we used the FFIEC Online Census Data System. The data used can be found at:  https://www2.census.gov/geo/maps/DC2020/PL20/st06_ca/censustract_maps/. This data is publicly accessible and was create to provide transparency to how the US Census calculates various metrics. We used this dataset primarily for the identification codes that contained the state code, county code and tract number, in order to isolate the California census tracts and separate the tracts out by CA county. 
 
 
 ## Data Cleaning
