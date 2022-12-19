@@ -8,27 +8,18 @@
 #
 
 # Load Packages
+library(shiny)
 library(tidyverse)
 library(sf)
-library(USAboundaries)
 library(tmap)
-library(shiny)
 
 # Load Data
 load(here::here("shiny_app/interactive/map_race_ethnicity.RData"))
 df <- map_race_ethnicity
-class(df)
 
 # Load Various Mapping Requirements
-epsg_CA <- 26943
-epsg_wgs84 <- 4326
-CA_state <- USAboundaries::us_states() %>% filter(name == "California") %>%
-  st_set_crs(epsg_wgs84) %>% st_transform(epsg_CA)
-CA_counties <- USAboundaries::us_counties(states = "California") %>%
-  st_set_crs(epsg_wgs84) %>% st_transform(epsg_CA) %>% 
-  select(-namelsad, -state_name, -state_abbr, -jurisdiction_type) %>% 
-  mutate("county_name" = str_to_upper(name)) %>% select(-name)
-
+CA_state <- load(here::here("shiny_app/interactive/CA_state.RData"))
+CA_counties <- load(here::here("shiny_app/interactive/CA_counties.RData"))
 
 # Create Variable Choices for Reactive Filter
 race_choices <- c("Black", "Hispanic", "White")
@@ -61,9 +52,10 @@ server <- function(input, output) {
   output$map <- renderPlot({
    st_sf(df %>% filter(race_ethnicity == input$race) %>%
       group_by(county_name)) %>% 
-      tm_shape() + tm_polygons(col = "age_adjusted_hospitalization_rate", palette = "viridis") +
-      tm_shape(CA_counties) + tm_borders() +
-      tm_shape(CA_state) + tm_borders(lwd = 2)
+      tm_shape() + tm_polygons(col = "age_adjusted_hospitalization_rate", palette = "viridis") 
+    #+
+      # tm_shape(CA_counties) + tm_borders() +
+      # tm_shape(CA_state) + tm_borders(lwd = 2)
   })
   output$barPlot <- renderPlot({
     df %>%

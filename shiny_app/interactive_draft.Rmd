@@ -22,6 +22,9 @@ CA_counties <- USAboundaries::us_counties(states = "California") %>%
   select(-namelsad, -state_name, -state_abbr, -jurisdiction_type) %>% 
   mutate("county_name" = str_to_upper(name)) %>% select(-name)
 
+save(CA_state, file = "interactive/CA_state.RData")
+save(CA_counties, file = "interactive/CA_counties.RData")
+
 # general map of CA with state border with thicker line weight than county borders
 tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
 ```
