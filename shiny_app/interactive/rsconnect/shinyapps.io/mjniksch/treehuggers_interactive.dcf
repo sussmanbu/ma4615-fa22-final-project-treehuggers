@@ -5,10 +5,9 @@ account: mjniksch
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7893909
-bundleId: 6654435
+bundleId: 6654826
 url: https://mjniksch.shinyapps.io/treehuggers_interactive/
-when: 1671469594.89547
-lastSyncTime: 1671469594.89547
+when: 1671476316.54468
+lastSyncTime: 1671476316.54468
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: map_kids.RData|map_kids2.RData
