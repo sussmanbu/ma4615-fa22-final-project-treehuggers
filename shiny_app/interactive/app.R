@@ -15,8 +15,8 @@ library(tidyverse)
 # library(raster)
 
 # Load Data
-load("map_race_ethnicity.RData")
-df <- map_race_ethnicity
+load("parks_asthmaCA_race_ethnicity.RData")
+df <- parks_asthmaCA_race_ethnicity
 
 # Load Various Mapping Requirements
 #CA_state <- load(here::here("shiny_app/interactive/CA_state.RData"))
