@@ -7,10 +7,6 @@ featuredImage: https://images.ctfassets.net/cxgxgstp8r5d/entry-cm_583-image/475d
 draft: false
 ---
 
-This comes from the file `content/analysis.Rmd`.
-
-We describe here our detailed data analysis.
-
 ## Analysis Motivation
 
 
@@ -32,7 +28,9 @@ Some of the major questions we are interested in answering include: Does a highe
 While exploring the data, we first examined how open greenspace and number of parks differed across California counties. We focused on the variables open park land, number of parks, and proportion of park-to-total county land. We discovered that although most counties only use about 10% of their land for parks, counties often have a high number of outlier areas. These areas are census tracts, which contain between 1200-8000 people each, which means some specific areas within each county have much larger amounts of open green space than the average. We also looked generally at the relationship between open park land and age-adjusted hospitalization rate by county but did not see any major correlation. 
 
 
-## Modeling and Inference
+## Exploratory Data Analysis
+
+First, we load our datasets and mutate them to add columns with summary statistics for each county (code not shown for brevity).
 
 ```{r echo=FALSE}
 suppressPackageStartupMessages(suppressWarnings(library(tidyverse)))
@@ -61,64 +59,113 @@ mutate(county_open_park_area = sum(total_open_park_area_sqmiles), county_open_pa
 ```
 
 
-DATA: parks_asthma_CA_kids_v_adults
+First, we take a look at some of the overall trends across counties regarding open park area and asthma hospitalizations and age-adjusted hospitalization rate.
 
-* Overall Plot of County Tract Open Park Area by County and colored by County Tract Number of Hospitalizations
 
-The plot below analyzes the total open park area, colored by the number of hospitalizations per census tract, within each CA county. These points are also from least open park area to most open park area, on average, for each county. Although there is not a clear relationship between total park area and hospitalization numbers, we can start to see that on the right side of the plot, the datapoints are generally purple. Therefore, the counties with the highest average open park area have low hospitalization totals. 
+Overall Plot of County Tract Open Park Area by County and colored by County Tract Number of Hospitalizations
 
-```{r}
+* The plot below analyzes the total open park area, colored by the number of hospitalizations per census tract, within each CA county. These points are also from least open park area to most open park area, on average, for each county. Although there is not a clear relationship between total park area and hospitalization numbers, we can start to see that on the right side of the plot, the data points are generally purple. Therefore, the counties with the highest average open park area have low hospitalization totals. 
+
+```{r echo=FALSE}
 parks_asthmaCA_kids_v_adults %>% 
 group_by(county_name) %>% 
   ggplot(aes(x = county_name %>% reorder(total_open_park_area_sqmiles), y = total_open_park_area_sqmiles, color = number_hospitalizations)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + labs(x = "County Name", y = "County Tract Open Park Area (square miles)", color = "County Tract Number of Hospitalizations", title = "Open Park Area within Census Tract, by County") + scale_color_viridis_c(option = "plasma")
 
 ```
 
-* Overall Plot of County Open Park Area by County and colored by County’s Number of Hospitalizations (fewer number of points since there’s one summary point per county, next trying with averages instead of sums)
 
-```{r}
+Overall Plot of County Open Park Area by County and colored by County’s Number of Hospitalizations
+
+* Using the parks_asthmaCA_kids_v_adults data again, the plot below renders the total open park area within each county in square miles (sum of all of the open park areas among tracts of that county) and also colors by the county's number of hospitalizations. This plot helps resolve some of the overplotting from the previous plot, since this plot uses one summary point per county, rather than multiple points representing each tract within the county.
+
+* According to the below plot, it appears that Riverside County (the county farthest to the right on the plot and with the greatest open park area) has a relatively higher number of hospitalizations (pink, 1e+05 to 2e+05) compared to the other points. This point may be an anomaly, as it does not appear to be a part of the general trend of the plot (with most counties being in the purple, 0 to 1e+05).
+
+* Another point that does not appear to follow this general trend is the point for El Dorado County, which appears yellow near the center of the plot. Despite being near the middle of the range for open park area, El Dorado has the highest number of hospitalizations out of the counties displayed, with 4e+05 plus hospitalizations.
+* To summarize, from this plot we can see that there does not appear to be a distinct difference in number of asthma-related hospitalizations for counties that have lower versus higher square mileage of open park area.
+
+```{r echo = FALSE}
 parks_asthmaCA_kids_v_adults_countystats %>% 
 ggplot(aes(x = county_name %>% reorder(county_open_park_area), y = county_open_park_area, color = county_number_hospitalizations)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + labs(x = "County Name", y = "County Open Park Area (square miles)", color = "County Number of Hospitalizations") + scale_color_viridis_c(option = "plasma")
 ```
 
-* Overall Plot of County Average (by tract) Open Park Area by County and colored by County’s Average (by tract) Hospitalizations
 
-```{r}
-parks_asthmaCA_kids_v_adults_countystats %>% 
-ggplot(aes(x = county_name %>% reorder(county_avg_open_park_area), y = county_avg_open_park_area, color = county_avg_hospitalizations)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + labs(x = "County Name", y = "County Average (by tract) Open Park Area (square miles)", color = "County Average (by tract) Hospitalizations") + scale_color_viridis_c(option = "plasma")
+Next, we'll facet the data by age to get a sense of trends for each age group (kids ages 0-17 or adults 18+).
+
+Faceted by Kids v. Adult: Age-Adjusted Hospitalization Rate by County and colored by County Open Park Area
+
+* Using the parks_athma_CA_kids_v_adults dataset, this plot shows that in general the age-adjusted hospitalization rate by county (which is the rate of hospitalizations for a county adjusted for the age group's population in that county) is much higher for kids (0-17 years) than for adults (18+ years). As you can see from the plot, the highest hospitalization rate for adults is around 5, whereas the highest hospitalization rate for kids is above 15 and most of the counties have hospitalization rates for kids that are above 5. This tells us that, generally, kids have higher asthma hospitalization rates in every county.
+
+* This plot also shows that Fresno County has the highest asthma hospitalization rate for both kids and adults, making it a county that we could analyze further.
+
+* Lastly, this plot again confirms that there does not appear to be a distinct difference in asthma hospitalization rate for counties that have lower versus higher square mileage of open park area. However, as noted before, Riverside County sticks out as having more than 3000 square miles of open park area, though its asthma hospitalization rate is relatively low compared to other counties. This puts our earlier plot into perspective, as we noted that Riverside County had the most hospitalizations despite its high open park area, but looking at its age-adjusted hospitalization rate instead of its number of hospitalizations clarifies that Riverside County is not as interesting of a data point as we initially thought.
+
+```{r echo = FALSE}
+parks_asthmaCA_kids_v_adults_countystats %>%
+  filter(!is.na(age_adjusted_hospitalization_rate)) %>%
+  group_by(county_name) %>% 
+  ggplot(aes(y = county_name %>% reorder(age_adjusted_hospitalization_rate), x = age_adjusted_hospitalization_rate, color = county_open_park_area)) + geom_point() + facet_wrap(~ strata_name) + theme(axis.text.x = element_text(angle = 90)) + labs(x = "Age-Adjusted Hospitalization Rate", y = "County", color = "County Open Park Area") + scale_color_viridis_c()
 ```
 
-* Faceted by Kids v. Adult: Age-Adjusted Hospitalization Rate by County and colored by County Open Park Area
 
-```{r}
-parks_asthmaCA_kids_v_adults_countystats %>% 
-filter(!is.na(age_adjusted_hospitalization_rate)) %>%
-group_by(county_name) %>% 
-ggplot(aes(x = county_name %>% reorder(age_adjusted_hospitalization_rate), y = age_adjusted_hospitalization_rate, color = county_open_park_area)) + geom_point() + facet_wrap(~ strata_name) + theme(axis.text.x = element_text(angle = 90)) + labs(x = "County", y = "Age-Adjusted Hospitalization Rate", color = "County Open Park Area") + scale_color_viridis_c()
+
+
+Next, we created maps (using a combination of the USAboundaries, sf, and tmap packages) to visualize the asthma hospitalization rates across different counties by each Race/Ethnicity. Since there was hardly any data for AI/AN category, we do not include it in our map. Note also: these maps were originally going to be featured in our interactive, but there were some issues with tmap and shiny. Since there are only three different maps, we decided to feature them here instead, as they are still important visualizations of our data!
+
+```{r echo = FALSE}
+suppressPackageStartupMessages(library(sf))
+suppressPackageStartupMessages(library(USAboundaries))
+suppressPackageStartupMessages(library(tmap))
+
+epsg_CA <- 26943
+epsg_wgs84 <- 4326
+
+# creates an object with the shape of CA state (to layer in tmap)
+CA_state <- USAboundaries::us_states() %>% filter(name == "California") %>%
+  st_set_crs(epsg_wgs84) %>% st_transform(epsg_CA)
+# creates an object with the shape of CA counties (to layer in tmap)
+CA_counties <- USAboundaries::us_counties(states = "California") %>%
+  st_set_crs(epsg_wgs84) %>% st_transform(epsg_CA) %>% 
+  select(-namelsad, -state_name, -state_abbr, -jurisdiction_type) %>% 
+  mutate("county_name" = str_to_upper(name)) %>% select(-name)
+
+map_race_ethnicity <- parks_asthmaCA_race_ethnicity %>% full_join(CA_counties, by = "county_name")
 ```
 
-* Similar as above: faceted by Kids v. Adult: Number of Hospitalizations by County and colored by County Open Park Area
 
-```{r}
-parks_asthmaCA_kids_v_adults_countystats %>% filter(!is.na(age_adjusted_hospitalization_rate)) %>% group_by(county_name) %>% 
-  ggplot(aes(x = county_name %>% reorder(number_hospitalizations),
-             y = number_hospitalizations, color = county_open_park_area)) +
-    geom_point() + facet_wrap(~ strata_name) + 
-  theme(axis.text.x = element_text(angle = 90)) + 
-  labs(x = "County", y = "Number of Hospitalizations", color = "County Open Park Area") + scale_color_viridis_c()
+Map of California Counties and Age-Adjusted Hospitalization Rate for White Individuals
+
+```{r echo = FALSE}
+st_sf(map_race_ethnicity %>% filter(race_ethnicity == "White") %>%
+  group_by(county_name)) %>% 
+  tm_shape() + tm_polygons(col = "age_adjusted_hospitalization_rate", palette = "viridis") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
 ```
 
-* Some models
 
-```{r}
-parks_asthmaCA_kids_v_adults_countystats <- parks_asthmaCA_kids_v_adults_countystats %>%
-  filter(!is.na(county_number_hospitalizations), !is.na(county_open_park_area))
 
-mod1 <- lm(county_number_hospitalizations ~ county_open_park_area, data = parks_asthmaCA_kids_v_adults_countystats)
-beta <- coef(mod1)
-parks_asthmaCA_kids_v_adults_countystats %>% ggplot(aes(x = county_open_park_area, y = county_number_hospitalizations)) + geom_point() + geom_abline(intercept = beta[1], slope = beta[2], color = "red")
+Map of California Counties and Age-Adjusted Hospitalization Rate for Hispanic Individuals
+
+```{r echo = FALSE}
+st_sf(map_race_ethnicity %>% filter(race_ethnicity == "Hispanic") %>%
+  group_by(county_name)) %>% 
+  tm_shape() + tm_polygons(col = "age_adjusted_hospitalization_rate", palette = "viridis") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
 ```
 
+
+
+Map of California Counties and Age-Adjusted Hospitalization Rate for Black Individuals
+
+```{r echo = FALSE}
+st_sf(map_race_ethnicity %>% filter(race_ethnicity == "Black") %>%
+  group_by(county_name)) %>% 
+  tm_shape() + tm_polygons(col = "age_adjusted_hospitalization_rate", palette = "viridis") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
+```
+
+* As seen from the map legends, the age-adjusted hospitalization rates for Black individuals have a much higher range overall. The maps for White and Hispanic individuals have highest rates in the ranges 5 to 6 and 6 to 8, whereas the highest range for Black individuals is 30 to 40. Therefore, these maps highlight the health disparity for Black individuals in California based on their disproportionately high rates of asthma hospitalization compared to their White and Hispanic counterparts.
+
+*Additionally, from all of these maps, Fresno County (the yellow county in the center of the state) pops out as a county of interest yet again (as it did earlier on in our EDA), as it has the highest asthma hospitalization rate for each race/ethnicity group. Imperial County (at the very bottom of the state) appears to have a high asthma hospitalization rate compared to other counties.
+
+
+## NEED HELP CLEANING THIS UP - WILL PUT ANOTHER HEADER AT END OF SECTION
 
 DATA: parks_asthmaCA_race_ethnicity
 
@@ -238,6 +285,19 @@ ggplotly(sums %>% ggplot(aes(x = total_open_park_area, y = number_hospitalizatio
 ggplotly(sums %>% ggplot(aes(x = total_open_park_area, y = number_hospitalizations, col = county_name)) + geom_jitter() + labs(x = "Open Parks", y = "Hospitalizations", col = "County Name"))
 ```
 
+## END OF SECTION I NEED HELP WITH LOL
+
+## Modeling and Inference
+
+```{r}
+parks_asthmaCA_kids_v_adults_countystats <- parks_asthmaCA_kids_v_adults_countystats %>%
+  filter(!is.na(county_number_hospitalizations), !is.na(county_open_park_area))
+
+mod1 <- lm(county_number_hospitalizations ~ county_open_park_area, data = parks_asthmaCA_kids_v_adults_countystats)
+beta <- coef(mod1)
+parks_asthmaCA_kids_v_adults_countystats %>% ggplot(aes(x = county_open_park_area, y = county_number_hospitalizations)) + geom_point() + geom_abline(intercept = beta[1], slope = beta[2], color = "red")
+```
+
 
 ## Flaws and Limitations
 
@@ -247,50 +307,3 @@ ggplotly(sums %>% ggplot(aes(x = total_open_park_area, y = number_hospitalizatio
 * There are many more contributors to air quality and asthma than accessibility to open green spaces
 * We don't currently have census data on total populations in the counties which is a problem especially for the race and ethnicity data since we don't have a concept of how large or small the number of hospitalizations are in comparison to the total population. However, we are looking to integrate this data imminently
 
-## Note on Attribution
-
-If you are directly quoting from a source, please make that clear. You can show quotes using `>` like this
-
-```
-> To be or not to be.
-```
-
-> To be or not to be.
-
-Also, make sure to provide a link or citation to where you are quoting from.
-
--------
-
-
-## Rubric: On this page
-
-you will
-
-
-* Introduce what motivates your Data Analysis (DA)
-  * Which variables and relationships are you most interested in?
-  * What questions are you interested in answering?
-* Breadth of the DA
-  * Make sure that you ask enough initial questions to explore the different variables in your data.
-  * i.e. Do you explore more than just one or two variables? Do you explore a few different relationships or many?
-* Depth of the DA
-  * When you answer one question, usually more questions arise as well. 
-  * The depth of the DA is about coming up with and exploring the answers to these questions, often iterating the process a few times.
-* Modeling and Inference 
-  * You should also include some kind of formal statistical model and/or inference. This could be a linear regression, logistic regression, hypothesis testing etc.
-  * Explain the techniques you used for validating your results.
-  * Describe the results of your modelling and make sure to give a sense of the uncertainty in your estimates and conclusions.
-* Explain the flaws and limitations of your analysis
-  * Are there some assumptions that you needed to make that might not hold? Is there other data that would help to answer your questions? ...
-* Clarity Figures
-  * Are your figures/tables/results easy to read, informative, without problems like overplotting, hard-to-read labels, etc?
-  * Each figure should provide a key insight. Too many figures or other data summaries can detract from this.
-* Clarity of Explanations
-  * Do you introduce why you are doing each analysis?
-  * How well do you explain each figure/result?
-  * Do you provide interpretations that suggest further analysis or explanations for observed phenomenon?
-* Organization and cleanliness.
-  * Make sure to remove excessive warnings, use clean easy-to-read code, organize with sections or multiple pages, use bullets, etc.
-  
-  
-**NOTE**: Your Data Analysis can be broken up into multiple pages if that helps with your organization.
