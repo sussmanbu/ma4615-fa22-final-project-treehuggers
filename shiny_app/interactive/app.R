@@ -12,6 +12,7 @@ library(shiny)
 library(tidyverse)
 library(sf)
 library(tmap)
+library(raster)
 
 # Load Data
 load(here::here("shiny_app/interactive/map_race_ethnicity.RData"))
