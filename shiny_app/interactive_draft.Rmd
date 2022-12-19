@@ -26,44 +26,22 @@ CA_counties <- USAboundaries::us_counties(states = "California") %>%
 tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
 ```
 
-```{r sum_stats}
-# county summary stats for each of data before joining to geometry
-
-parks_asthmaCA_kids_v_adults_countystats <- parks_asthmaCA_kids_v_adults %>%
-  group_by(county_name) %>% 
-  mutate(county_open_park_area = sum(total_open_park_area_sqmiles), county_open_parks = sum(open_parks_tract), county_number_hospitalizations = sum(number_hospitalizations), county_avg_open_park_area = mean(total_open_park_area_sqmiles), county_avg_open_parks = mean(open_parks_tract), county_avg_hospitalizations = mean(number_hospitalizations))
-
-parks_asthmaCA_race_ethnicity_countystats <- parks_asthmaCA_race_ethnicity %>%
-  group_by(county_name) %>%
-  mutate(county_open_park_area = sum(total_open_park_area_sqmiles), county_open_parks = sum(open_parks_tract), county_number_hospitalizations = sum(number_hospitalizations), county_avg_open_park_area = mean(total_open_park_area_sqmiles), county_avg_open_parks = mean(open_parks_tract), county_avg_hospitalizations = mean(number_hospitalizations))
-
-parks_asthmaCA_kids_countystats <- parks_asthmaCA_kids %>%
-  group_by(county_name) %>%
-  mutate(county_open_park_area = sum(total_open_park_area_sqmiles), county_open_parks = sum(open_parks_tract), county_number_hospitalizations = sum(number_hospitalizations), county_avg_open_park_area = mean(total_open_park_area_sqmiles), county_avg_open_parks = mean(open_parks_tract), county_avg_hospitalizations = mean(number_hospitalizations))
-
-parks_asthmaCA_kids_2_countystats <- parks_asthmaCA_kids_2 %>%
-  group_by(county_name) %>%
-  mutate(county_open_park_area = sum(total_open_park_area_sqmiles), county_open_parks = sum(open_parks_tract), county_number_hospitalizations = sum(number_hospitalizations), county_avg_open_park_area = mean(total_open_park_area_sqmiles), county_avg_open_parks = mean(open_parks_tract), county_avg_hospitalizations = mean(number_hospitalizations))
-
-```
-
 
 ```{r join_geometry}
 # this chunk joins the geometry to our data
 
-map_kids_v_adults <- CA_counties %>% left_join(parks_asthmaCA_kids_v_adults_countystats, by = "county_name")
+map_kids_v_adults <- parks_asthmaCA_kids_v_adults %>% full_join(CA_counties, by = "county_name")
 
-map_race_ethnicity <- CA_counties %>% left_join(parks_asthmaCA_race_ethnicity_countystats, by = "county_name")
+map_race_ethnicity <- parks_asthmaCA_race_ethnicity %>% full_join(CA_counties, by = "county_name")
 
-map_kids <- CA_counties %>% left_join(parks_asthmaCA_kids_countystats, by = "county_name")
+# map_kids <- CA_counties %>% left_join(parks_asthmaCA_kids, by = "county_name")
   
-map_kids2 <- CA_counties %>% left_join(parks_asthmaCA_kids_2_countystats, by = "county_name")
-
+# map_kids2 <- CA_counties %>% left_join(parks_asthmaCA_kids_2, by = "county_name")
 
 save(map_kids_v_adults, file = "interactive/map_kids_v_adults.RData")
 save(map_race_ethnicity, file = "interactive/map_race_ethnicity.RData")
-save(map_kids, file = "interactive/map_kids.RData")
-save(map_kids2, file = "interactive/map_kids2.RData")
+# save(map_kids, file = "interactive/map_kids.RData")
+# save(map_kids2, file = "interactive/map_kids2.RData")
 ```
 
 ```{r tmaps}
