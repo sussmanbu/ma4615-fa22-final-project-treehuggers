@@ -109,6 +109,9 @@ parks_asthmaCA_kids_v_adults_countystats %>% filter(!is.na(age_adjusted_hospital
 * Some models
 
 ```{r}
+parks_asthmaCA_kids_v_adults_countystats <- parks_asthmaCA_kids_v_adults_countystats %>%
+  filter(!is.na(county_number_hospitalizations), !is.na(county_open_park_area))
+
 mod1 <- lm(county_number_hospitalizations ~ county_open_park_area, data = parks_asthmaCA_kids_v_adults_countystats)
 beta <- coef(mod1)
 parks_asthmaCA_kids_v_adults_countystats %>% ggplot(aes(x = county_open_park_area, y = county_number_hospitalizations)) + geom_point() + geom_abline(intercept = beta[1], slope = beta[2], color = "red")
