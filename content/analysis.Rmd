@@ -157,7 +157,113 @@ parks_asthmaCA_kids_v_adults_countystats %>% ggplot(aes(x = county_open_park_are
 
 print(summary(mod2))
 ```
-At this point in our data exploration, we had found significant evidence that an increase in the amount of open park space in California counties was associated with a decrease in the number of hospitalizations. However, the asthma hospitalization dataset also included information on different age and racial demographics for hospitalization, and we started exploring this further and noticing some important trends. Our second analysis page, which covers this exploration, can be found here: [Analysis of Hospitalization Trends](/analysis_hospitalization/)
+At this point in our data exploration, we had found significant evidence that an increase in the amount of open park space in California counties was associated with a decrease in the number of hospitalizations. However, the asthma hospitalization dataset also included information on different age and racial demographics for hospitalization, and we started exploring this further and noticing some important trends. 
+
+In this section of the data analysis, we look more closely at the different demographics for asthma hospitalizations within California counties in order to notice major trends between different ages and racial groups. 
+
+
+First, we facet the data by age to get a sense of trends for each age group (kids ages 0-17 or adults 18+).
+
+Faceted by Kids v. Adult: Age-Adjusted Hospitalization Rate by County and colored by County Open Park Area
+
+Using the parks_athma_CA_kids_v_adults dataset, this plot shows that in general the age-adjusted hospitalization rate by county (which is the rate of hospitalizations for a county adjusted for the age group's population in that county) is much higher for kids (0-17 years) than for adults (18+ years). As you can see from the plot, the highest hospitalization rate for adults is around 5, whereas the highest hospitalization rate for kids is above 15 and most of the counties have hospitalization rates for kids that are above 5. This tells us that, generally, kids have higher asthma hospitalization rates in every county. Perhaps this is partially because asthma prevalence is higher in children than adults, in general.
+
+This plot also shows that Fresno County has the highest asthma hospitalization rate for both kids and adults, making it a county that we could analyze further. However, Riverside County sticks out as having more than 3000 square miles of open park area, though its asthma hospitalization rate is relatively low compared to other counties. This puts our earlier plot into perspective. We noted that Riverside County had the most hospitalizations despite its high open park area, but looking at its age-adjusted hospitalization rate instead of its number of hospitalizations clarifies that Riverside County is not as interesting of a data point as we initially thought.
+
+
+```{r echo=FALSE}
+suppressPackageStartupMessages(suppressWarnings(library(tidyverse)))
+suppressPackageStartupMessages(suppressWarnings(library(plotly)))
+
+load(here::here("dataset/asthmaCA_kids.RData"))
+load(here::here("dataset/asthmaCA_kids_v_adults.RData"))
+load(here::here("dataset/asthmaCA_kids_2.RData"))
+load(here::here("dataset/asthmaCA_race_ethnicity.RData"))
+load(here::here("dataset/clean_parks_data.RData"))
+load(here::here("dataset/parks_asthmaCA_kids.RData"))
+load(here::here("dataset/parks_asthmaCA_kids_v_adults.RData"))
+load(here::here("dataset/parks_asthmaCA_kids_2.RData"))
+load(here::here("dataset/parks_asthmaCA_race_ethnicity.RData"))
+load(here::here("dataset/asthma_parks_race.Rdata"))
+
+```
+
+```{r echo=FALSE}
+parks_asthmaCA_kids_v_adults_countystats <- parks_asthmaCA_kids_v_adults %>% group_by(county_name) %>% 
+mutate(county_open_park_area = sum(total_open_park_area_sqmiles), county_open_parks = sum(open_parks_tract), county_number_hospitalizations = sum(number_hospitalizations), county_avg_open_park_area = mean(total_open_park_area_sqmiles), county_avg_open_parks = mean(open_parks_tract), county_avg_hospitalizations = mean(number_hospitalizations))
+
+#creates dataset with the summary statistics for counties (sums and averages)
+```
+
+
+```{r echo = FALSE}
+parks_asthmaCA_kids_v_adults_countystats %>%
+  filter(!is.na(age_adjusted_hospitalization_rate)) %>%
+  group_by(county_name) %>% 
+  ggplot(aes(y = county_name %>% reorder(age_adjusted_hospitalization_rate), x = age_adjusted_hospitalization_rate, color = county_open_park_area)) + geom_point() + facet_wrap(~ strata_name) + theme(axis.text.x = element_text(angle = 90)) + labs(x = "Age-Adjusted Hospitalization Rate", y = "County", color = "County Open Park Area", title = "Age-Adjusted Hospitalization Rate for Children vs. Adults", subtitle = "Counties in California, 2018") + scale_color_viridis_c()
+```
+
+
+
+Next, we create maps (using a combination of the USAboundaries, sf, and tmap packages) to visualize the asthma hospitalization rates across different counties by each Race/Ethnicity. Since there was hardly any data for AI/AN category, we do not include it in our map. Note also: these maps were originally going to be featured in our interactive, but there were some issues with tmap and shiny. Since there are only three different maps, we decided to feature them here instead, as they are still important visualizations of our data!
+
+```{r echo = FALSE}
+suppressPackageStartupMessages(suppressWarnings(library(sf)))
+suppressPackageStartupMessages(suppressWarnings(library(USAboundaries)))
+suppressPackageStartupMessages(suppressWarnings(library(tmap)))
+
+epsg_CA <- 26943
+epsg_wgs84 <- 4326
+
+# creates an object with the shape of CA state (to layer in tmap)
+CA_state <- USAboundaries::us_states() %>% filter(name == "California") %>%
+  st_set_crs(epsg_wgs84) %>% st_transform(epsg_CA)
+# creates an object with the shape of CA counties (to layer in tmap)
+CA_counties <- USAboundaries::us_counties(states = "California") %>%
+  st_set_crs(epsg_wgs84) %>% st_transform(epsg_CA) %>% 
+  select(-namelsad, -state_name, -state_abbr, -jurisdiction_type) %>% 
+  mutate("county_name" = str_to_upper(name)) %>% select(-name)
+
+map_race_ethnicity <- parks_asthmaCA_race_ethnicity %>% full_join(CA_counties, by = "county_name")
+```
+
+
+Map of California Counties and Age-Adjusted Hospitalization Rate for White Individuals
+
+```{r echo = FALSE}
+st_sf(map_race_ethnicity %>% filter(race_ethnicity == "White") %>%
+  group_by(county_name)) %>% 
+  tm_shape() + tm_polygons(col = "age_adjusted_hospitalization_rate", palette = "viridis") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
+```
+
+
+
+Map of California Counties and Age-Adjusted Hospitalization Rate for Hispanic Individuals
+
+```{r echo = FALSE}
+st_sf(map_race_ethnicity %>% filter(race_ethnicity == "Hispanic") %>%
+  group_by(county_name)) %>% 
+  tm_shape() + tm_polygons(col = "age_adjusted_hospitalization_rate", palette = "viridis") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
+```
+
+
+
+Map of California Counties and Age-Adjusted Hospitalization Rate for Black Individuals
+
+```{r echo = FALSE}
+st_sf(map_race_ethnicity %>% filter(race_ethnicity == "Black") %>%
+  group_by(county_name)) %>% 
+  tm_shape() + tm_polygons(col = "age_adjusted_hospitalization_rate", palette = "viridis") + tm_shape(CA_counties) + tm_borders() + tm_shape(CA_state) + tm_borders(lwd = 2)
+```
+
+As seen from the map legends, the age-adjusted hospitalization rates for Black individuals have a much higher range overall. The maps for White and Hispanic individuals have highest rates in the ranges 5 to 6 and 6 to 8, whereas the highest range for Black individuals is 30 to 40. Therefore, these maps highlight the health disparity for Black individuals in California based on their disproportionately high rates of asthma hospitalization compared to their White and Hispanic counterparts.
+
+Additionally, from all of these maps, Fresno County (the yellow county in the center of the state) pops out as a county of interest yet again, as it has the highest asthma hospitalization rate for each race/ethnicity group. Imperial County (at the very bottom of the state) appears to have a high asthma hospitalization rate compared to other counties.
+
+Overall, we conclude that differences in age and racial group do correlate with differences in asthma hospitalization levels across California county populations. Particularly, Black people's disproportionately high rates of asthma merit further study into the root causes of this health disparity. 
+
+
+## Limitations
 
 Some major limitations of this section of data exploration were that not all California counties were included in the initial NaNDA parks dataset, which means they were not all included in our final analysis. Approximately 15 counties were excluded. It was not clear to us when choosing the NaNDA parks dataset that this was the case, as we didn't know all the California county names, and we were unable to find a second dataset that covered this information completely. However, in the future it would be good to have a more complete dataset. 
 
