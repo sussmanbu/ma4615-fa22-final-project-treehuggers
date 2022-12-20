@@ -6,7 +6,6 @@ featuredImage: https://bjspark.com/wp-content/uploads/2021/03/blog-green-space-1
 featuredVideo:
 draft: false
 ---
-
 The presence of trees and other greenery has long been linked to the idea of clean and clear air. Plants produce the oxygen we breathe, and because of this, a higher number of plants is naturally associated with better air quality. In fact, trees have been shown to help prevent asthma and other respiratory diseases. [They filter harmful particles out of the air, which decreases the risk of respiratory illnesses such as asthma.](https://forestrynews.blogs.govdelivery.com/2019/05/09/trees-clean-the-air-and-prevent-respiratory-illness/#:~:text=Did%20you%20know%20trees%20help,of%20respiratory%20illnesses%2C%20including%20asthma)
 
 It is no wonder, then, why many cities have initiatives to plant trees or create more green spaces. The high density of both humans and infrastructure in cities, especially very large ones, coupled with the low density of trees and other plants greatly increases the amount of air pollution and the risk of respiratory illness. It is anticipated through [scientific studies](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8199317/) that a lack of green spaces is correlated to higher rates of asthma for certain demographics.
