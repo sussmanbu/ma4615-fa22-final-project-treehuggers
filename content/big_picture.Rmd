@@ -6,24 +6,23 @@ featuredImage: https://bjspark.com/wp-content/uploads/2021/03/blog-green-space-1
 featuredVideo:
 draft: false
 ---
+Title: The Power of the Plant: More Green Spaces, Fewer Hospitalizations?
 
-["Did you know trees help prevent asthma and other respiratory diseases? Trees filter particles out of the air we breathe, which decreases our risk of respiratory illnesses, including asthma."](https://forestrynews.blogs.govdelivery.com/2019/05/09/trees-clean-the-air-and-prevent-respiratory-illness/#:~:text=Did%20you%20know%20trees%20help,of%20respiratory%20illnesses%2C%20including%20asthma.) 
+The presence of trees and other greenery has long been linked to the idea of clean and clear air. Plants produce the oxygen we breathe, and because of this, a higher number of plants is naturally associated with better air quality. In fact, trees have been shown to help prevent asthma and other respiratory diseases. ["They filter harmful particles out of the air, which decreases the risk of respiratory illnesses such as asthma."](https://forestrynews.blogs.govdelivery.com/2019/05/09/trees-clean-the-air-and-prevent-respiratory-illness/#:~:text=Did%20you%20know%20trees%20help,of%20respiratory%20illnesses%2C%20including%20asthma)
 
-The presence of trees and other greenery has long been linked to the idea of clean and clear air. Plants produce the oxygen we breathe, and because of this, a higher number of plants is naturally associated with better air quality. In fact, trees have been shown to help prevent asthma and other respiratory diseases. They filter harmful particles out of the air, which decreases the risk of respiratory illnesses such as asthma.
+It is no wonder, then, why many cities have initiatives to plant trees or create more green spaces. The high density of both humans and infrastructure in cities, especially very large ones, coupled with the low density of trees and other plants greatly increases the amount of air pollution and the risk of respiratory illness. It is anticipated through ["scientific studies"](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8199317/) that a lack of green spaces is correlated to higher rates of asthma for certain demographics.
 
-It is no wonder why many cities have initiatives to plant trees or create more green spaces. The high density of both humans and infrastructure in cities, especially very large ones, coupled with the  low density of trees and other plants, greatly increases the amount of air pollution and the risk of respiratory illness. It is anticipated through scientific studies that a lack of green spaces is correlated to higher rates of asthma. 
+We chose to further explore the relationship between the amount of green space in an area and the number of hospitalizations due to asthma to ultimately see the extent to which an increased amount of green spaces improves air quality. We limited our analysis to the counties in California, and in addition to comparing the amount of green space to the asthma hospitalization rate, we explored any potential significant discrepancies between the hospitalizations of different races to see who, if anyone, is at higher risk of being hospitalized for asthma and what relationship, if any, this has with the amount of green space.
 
-We chose to explore the relationship between the amount of green space and the number of asthma hospitalizations in California to ultimately learn whether increased green space improves air quality and has a positive impact on public health. In addition to comparing the amount of green space to the asthma hospitalization rate, we explored the differences between asthma hospitalization rates of different races and age groups to see who, if anyone, is at higher risk of being hospitalized for asthma and what relationship, if any, this has with the amount of green space.
+## Branching Out and Comparing Data: Open Park Space, Asthma Hospitalizations, and Race
 
-
-## Looking at Open Park Area and Asthma Hospitalizations 
-We began with two sets of data, one containing information about the amount of open green spaces in different California counties and the other documenting the number of hospitalizations due to asthma based on age and race in each county. Firstly, we examined which counties had the most green space and greatest number of hospitalizations. The only county we did not include in these analyses was Los Angeles, because its drastically larger population and size made it an outlier.
+We began with two sets of data from the year 2018, one containing information about the amount of open green spaces in different California counties and the other documenting the number of hospitalizations due to asthma based on age and race in each county. First, we examined which counties had the most green space and greatest number of hospitalizations. Some counties were not included in these analyses because they were extreme outliers, such as Los Angeles, or because they were not present in the parks dataset.
 
 This plot looks at the total number and total area (in square miles) of open parks in each California county.
 
-```{r echo=FALSE}
-suppressPackageStartupMessages(suppressWarnings(library(tidyverse)))
-suppressPackageStartupMessages(suppressWarnings(library(plotly)))
+```{r echo = FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(plotly))
 load(here::here("dataset/asthmaCA_kids.RData"))
 load(here::here("dataset/asthmaCA_kids_v_adults.RData"))
 load(here::here("dataset/asthmaCA_kids_2.RData"))
@@ -33,29 +32,77 @@ load(here::here("dataset/parks_asthmaCA_kids.RData"))
 load(here::here("dataset/parks_asthmaCA_kids_v_adults.RData"))
 load(here::here("dataset/parks_asthmaCA_kids_2.RData"))
 load(here::here("dataset/parks_asthmaCA_race_ethnicity.RData"))
+load(here::here("dataset/CA_county_asthma_parks.Rdata"))
 
 sums <- parks_asthmaCA_kids %>% group_by(county_name) %>% mutate(total_tract_area = sum(tract_area_sqmiles), total_open_park_area = sum(total_open_park_area_sqmiles), num_open_parks = sum(open_parks_tract))
 
 avgs <- parks_asthmaCA_kids %>% group_by(county_name) %>% mutate(avg_tract_area = mean(tract_area_sqmiles), avg_open_park_area = mean(total_open_park_area_sqmiles), avg_num_open_parks = mean(open_parks_tract))
 
-suppressWarnings(
-  ggplotly(sums %>% ggplot(aes(x = num_open_parks, y = total_open_park_area, col = county_name)) + geom_point() + labs(x = "Number of Open Parks", y = "Area of Open Parks", title = "Open Parks & Area", legend = "County"))
-  )
+ggplotly(sums %>% ggplot(aes(x = num_open_parks, y = total_open_park_area, col = county_name)) + geom_point() + labs(x = "Number of Open Parks", y = "Area of Open Parks", title = "Number of Open Parks & Open Parks Area", color = "County"))
+```
+```{r echo=FALSE}
+parks_asthmaCA_kids_v_adults_countystats <- parks_asthmaCA_kids_v_adults %>% group_by(county_name) %>% 
+mutate(county_open_park_area = sum(total_open_park_area_sqmiles), county_open_parks = sum(open_parks_tract), county_number_hospitalizations = sum(number_hospitalizations), county_avg_open_park_area = mean(total_open_park_area_sqmiles), county_avg_open_parks = mean(open_parks_tract), county_avg_hospitalizations = mean(number_hospitalizations))
 
+#creates dataset with the summary statistics for counties (sums and averages)
 ```
 
-As we can see, the county with the most open park spaces is Orange (1170), but the county with the greatest area of open park space is Riverside (1742 sq miles). We can also see that these counties are fairly significant outliers; every county except Orange has under 700 open parks and every county except Riverside has under 900 square miles of open park land. A significant number of counties are clustered at under 10 square miles of open park land. 
+Figure 1. The x axis shows the number of open parks while the y axis shows the total area of open parks. The points are colored by county.
 
+As we can see, the county with the most open park spaces is Orange (1,170), but the county with the greatest area of open park space is Riverside (1,742 sq miles). We can also see that these counties are fairly significant outliers; every county except Orange has under 700 open parks and every county except Riverside has under 900 square miles of open park land. A significant number of counties are clustered at under 10 square miles of open park land. 
 
-In this second plot, we explore the relationship between the amount of open park area and the total hospitalization counts across California districts. 
+Now, here is a look at the total number and rate of asthma hospitalizations in each county of California.
+
 ``` {r echo = FALSE}
-load(here::here("dataset/CA_county_asthma_parks.Rdata"))
+nocala <- asthmaCA_kids %>% filter(!county_name %in% c("CALIFORNIA", "LOS ANGELES"))
 
-suppressWarnings(
-  ggplotly(CA_county_asthma_parks %>%
-  ggplot(aes(x = total_county_park_area_sqm, y = number_hospitalizations_total, col = county_name)) + geom_point() + scale_color_gradient(name = "Total County Area (sqm)") + ylim(0,1500) + labs(title = "Total Open Park Area vs. Number of Asthma Hospitalizations Across California Counties", x = "Open Park Area (sq miles)", y = "Number of Asthma Hospitalizations", subtitle = "Data from 2018, excludes Los Angeles county.") + scale_color_viridis_d())
-)
+ggplotly(nocala %>% ggplot(aes(y = number_hospitalizations, x = age_adjusted_hospitalization_rate, col = county_name)) + geom_point() + labs(y = "Number of Hospitalizations", x = "Hospitalization Rate", color = "Total Rate and Number of Hospitalizations"))
 ```
 
-We can see that generally, towards the left side of the graph, where the amount of open park area is lower, the hospitalization totals extend to much higher values. Towards the right side of the graph, counties with very high square mileages of open parks generally have very low numbers of hospitalizations. This suggests that counties with higher amounts of open park space might have lower asthma hospitalization numbers, but further exploration is needed, particularly as there are fewer counties with high open park space totals. 
+Figure 2. The x axis shows the asthma hospitalization rate while the y axis shows the number of asthma hospitalizations. The points are colored by county.
 
+The county with the highest number of hospitalizations in 2018 was San Diego with 662 hospitalizations while the county with the highest hospitalization rate was Fresno (15.3).
+
+While these graphs provide context for which counties have high asthma hospitalization rates and a large amount of open park area, they do not provide a comparison between our two variables of interest. The next plot compares the number of hospitalizations in each county to the total area of open parks in order to visualize how these characteristics may relate to each other if at all.
+
+```{r echo = FALSE}
+ggplotly(parks_asthmaCA_kids_v_adults_countystats %>% ggplot(aes(x = county_number_hospitalizations, y = county_open_park_area, col = county_name)) + geom_point() + labs(x = "Number of Hospitalizations", y = "Area of Open Parks", title = "Number of Hospitalizations vs Open Park Area", color = "County"))
+```
+
+Figure 3. Using differently adjusted stats for number of hospitalizations, the x axis shows the number of hospitalizations while the y axis shows the total open park area. The points are colored by county.
+
+We can see from this graph that several of the counties that have a larger amount of open park space, such as Shasta and Monterey, also have a very low number of hospitalizations. Alternatively, counties such as Alameda and Sacramento with a smaller amount of open park space have a larger number of hospitalizations.
+
+Notable outliers include Riverside, which has an extremely large area of open parks but not an extremely low number of hospitalizations, and Orange, which has the greatest number of hospitalizations by far but the amount of open park space, while less than some other counties, is not extremely low.
+
+It is important to note, once again, that some counties included in the initial hospitalization data, such as San Diego, were not included in these plots due to their absence in the original parks data.
+
+We also decided to look at how race and ethnicity may come into play, and how they may impact or be impacted by the hospitalization rates or amount of open park space.
+
+First, we look at race and ethnicity as it relates to the number of hospitalizations in each county.
+
+```{r echo = FALSE}
+ggplotly(parks_asthmaCA_race_ethnicity %>% ggplot(aes(x = race_ethnicity, y = number_hospitalizations, col = county_name)) + geom_point() + labs(x = "Race/Ethnicity", y = "Number of Hospitalizations", title = "Number of Hospitalizations and Race/Ethnicity", color = "County"))
+```
+
+Figure 4. The x axis shows the race/ethnicity while the y axis shows the number of hospitalizations. The points are colored by county.
+
+Looking at individual races and counties, we can see that certain counties, such as Fresno and Riverside, have a much higher number of hospitalizations for Hispanic people than they do for White or Black people. Other counties, like Sacramento and Alameda, have a higher number of hospitalizations for Black people than either Hispanic or White people, while Orange county has a significantly higher number of hospitalizations for White people than any other race or any other county for that matter. For all of the counties, Asian/PI people have a lower number of hospitalizations than any other race, with Orange and Alameda being exceptions.
+
+This indicates that the impact that race has on the number of hospitalizations varies greatly from county to county, but several counties do have one race that has a disproportionately larger number of hospitalizations.
+
+Does the amount of open park space have any kind of impact on the hospitalization rates of different races? Our next plot examines this. 
+
+```{r echo = FALSE}
+ggplotly(parks_asthmaCA_race_ethnicity %>% ggplot(aes(x = race_ethnicity, y = number_hospitalizations, col = total_open_park_area_sqmiles)) + geom_point() + labs(x = "Race/Ethnicity", y = "Number of Hospitalizations", title = "Amount of Open Park Area and Race/Ethnicity Hospitalization Numbers", color = "Area of Open Parks"))
+```
+
+Figure 5. The x axis shows the race/ethnicity while the y axis shows the number of hospitalizations. The points are colored by open park area.
+
+We can see that there does not seem to be any kind of significant relationship between the hospitalization rates of different races and how much open park space there is. Among the higher points, there are no distinct differences in the color of the points for any of the races, nor is there any clear clustering of a darker or lighter color among the lower points.
+
+## Back to Our Roots: Takeaways
+
+Based on our analysis of the counties of California, ignoring the outliers, the amount of open green space in a county does seem to have a consistent impact on asthma hospitalization rates, with counties with larger amounts of open green spaces having lower numbers of hospitalizations. It also seems like race and ethnicity may play a role in the number of hospitalizations, although further analysis on this is necessary. In order to dive deeper, we made an ["interactive"](https://mjniksch.shinyapps.io/treehuggers_interactive/?_ga=2.162400570.744484460.1671457729-1545722871.1671457729) where we can look at individual counties and see the hospitalization rates of different races. This way, one can hone in on specific counties or look for patterns between or within the races.
+
+We must acknowledge that since we were initially only focused on exploring the relationship between open spaces and hospitalization rates, we do not have census information on the race makeup of the counties, and so the higher hospitalization rates for different races may be due to race population discrepancies between counties. More research would be required to delve further into this and determine how significant of a role race truly plays in asthma hospitalization rates.
