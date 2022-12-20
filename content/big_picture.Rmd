@@ -109,8 +109,7 @@ ggplotly(parks_asthmaCA_race_ethnicity %>% ggplot(aes(x = race_ethnicity, y = nu
 Figure 5. The x axis shows the race/ethnicity while the y axis shows the number of hospitalizations. The points are colored by open park area.  
 <br />
 
-We can see that there does not seem to be any kind of significant relationship between the hospitalization rates of different races and how much open park space there is. Among the higher points, there are no distinct differences in the color of the points for any of the races, nor is there any clear clustering of darker or lighter color among the lower points.  
-<br />
+We can see that there does not seem to be any kind of significant relationship between the hospitalization rates of different races and how much open park space there is. Among the higher points, there are no distinct differences in the color of the points for any of the races, nor is there any clear clustering of darker or lighter color among the lower points.
 
 ## Back to Our Roots: Takeaways
 
