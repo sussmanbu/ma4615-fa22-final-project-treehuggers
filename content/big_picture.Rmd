@@ -1,12 +1,11 @@
 ---
-title: More Trees, Less Hospitalization?
+title: The Power of the Plant! More Green Spaces, Fewer Hospitalizations?
 description: Here, we explain our major findings about the relationship between green space and hospitalizations in California counties, as well as differences in hospitalization rates across racial and age groups. 
 toc: true
 featuredImage: https://bjspark.com/wp-content/uploads/2021/03/blog-green-space-1.jpg
 featuredVideo:
 draft: false
 ---
-Title: The Power of the Plant: More Green Spaces, Fewer Hospitalizations?
 
 The presence of trees and other greenery has long been linked to the idea of clean and clear air. Plants produce the oxygen we breathe, and because of this, a higher number of plants is naturally associated with better air quality. In fact, trees have been shown to help prevent asthma and other respiratory diseases. [They filter harmful particles out of the air, which decreases the risk of respiratory illnesses such as asthma.](https://forestrynews.blogs.govdelivery.com/2019/05/09/trees-clean-the-air-and-prevent-respiratory-illness/#:~:text=Did%20you%20know%20trees%20help,of%20respiratory%20illnesses%2C%20including%20asthma)
 
@@ -14,7 +13,7 @@ It is no wonder, then, why many cities have initiatives to plant trees or create
 
 We chose to further explore the relationship between the amount of green space in an area and the number of hospitalizations due to asthma to ultimately see the extent to which an increased amount of green spaces improves air quality. We limited our analysis to the counties in California, and in addition to comparing the amount of green space to the asthma hospitalization rate, we explored any potential significant discrepancies between the hospitalizations of different races to see who, if anyone, is at higher risk of being hospitalized for asthma and what relationship, if any, this has with the amount of green space.
 
-## Branching Out and Comparing Data: Open Park Space, Asthma Hospitalizations, and Race
+# BRANCHING OUT AND COMPARING DATA: OPEN PARK SPACE, ASTHMA HOSPITALIZATIONS, AND RACE
 
 We began with two sets of data from the year 2018, one containing information about the amount of open green spaces in different California counties and the other documenting the number of hospitalizations due to asthma based on age and race in each county. First, we examined which counties had the most green space and greatest number of hospitalizations. Some counties were not included in these analyses because they were extreme outliers, such as Los Angeles, or because they were not present in the parks dataset.
 
@@ -76,6 +75,7 @@ It is important to note, once again, that some counties included in the initial 
 
 We also decided to look at how race and ethnicity may come into play, and how they may impact or be impacted by the hospitalization rates or amount of open park space.
 
+
 First, we look at race and ethnicity as it relates to the number of hospitalizations in each county.
 
 ```{r echo = FALSE}
@@ -96,7 +96,7 @@ Figure 5. The x axis shows the race/ethnicity while the y axis shows the number 
 
 We can see that there does not seem to be any kind of significant relationship between the hospitalization rates of different races and how much open park space there is. Among the higher points, there are no distinct differences in the color of the points for any of the races, nor is there any clear clustering of a darker or lighter color among the lower points.
 
-## Back to Our Roots: Takeaways
+# BACK TO OUR ROOTS: TAKEAWAYS
 
 Based on our analysis of the counties of California, ignoring the outliers, the amount of open green space in a county does seem to have a consistent impact on asthma hospitalization rates, with counties with larger amounts of open green spaces having lower numbers of hospitalizations. It also seems like race and ethnicity may play a role in the number of hospitalizations, although further analysis on this is necessary. In order to dive deeper, we made an [interactive](https://mjniksch.shinyapps.io/treehuggers_interactive/?_ga=2.162400570.744484460.1671457729-1545722871.1671457729) where we can look at individual counties and see the hospitalization rates of different races. This way, one can hone in on specific counties or look for patterns between or within the races.
 
