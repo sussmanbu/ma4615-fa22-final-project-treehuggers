@@ -16,7 +16,7 @@ We chose to further explore the relationship between the amount of green space i
 
 We began with two sets of data from the year 2018, one containing information about the amount of green spaces in different California counties and the other documenting the number of hospitalizations due to asthma based on age and race in each county. First, we examined which counties had the most green space and greatest number of hospitalizations. Some counties were not included in these analyses because they were extreme outliers, such as Los Angeles, or because they were not present in the parks dataset. \n
 
-This plot looks at the total number and total area (in square miles) of open parks in each California county.
+\n This plot looks at the total number and total area (in square miles) of open parks in each California county.
 
 ```{r echo = FALSE}
 suppressPackageStartupMessages(library(tidyverse))
