@@ -44,58 +44,77 @@ mutate(county_open_park_area = sum(total_open_park_area_sqmiles), county_open_pa
 
 #creates dataset with the summary statistics for counties (sums and averages)
 ```
-Figure 1. The x axis shows the number of open parks while the y axis shows the total area of open parks. The points are colored by county.
+Figure 1. The x axis shows the number of open parks while the y axis shows the total area of open parks. The points are colored by county.  
+<br />
 
-As we can see, the county with the most open park spaces is Orange (1,170), but the county with the greatest area of open park space is Riverside (1,742 sq. miles). We can also see that these counties are fairly significant outliers. Every county except Orange has under 700 open parks and every county except Riverside has under 900 sq. miles of open park land. A significant number of counties is clustered at under 10 sq. miles of open park land.
+As we can see, the county with the most open park spaces is Orange (1,170), but the county with the greatest area of open park space is Riverside (1,742 sq. miles). We can also see that these counties are fairly significant outliers. Every county except Orange has under 700 open parks and every county except Riverside has under 900 sq. miles of open park land. A significant number of counties is clustered at under 10 sq. miles of open park land.  
+<br />
 
-Now, here is a look at the total number and rate of asthma hospitalizations in each county of California.
+Now, here is a look at the total number and rate of asthma hospitalizations in each county of California.  
+<br />
 
 ``` {r echo = FALSE}
 nocala <- asthmaCA_kids %>% filter(!county_name %in% c("CALIFORNIA", "LOS ANGELES"))
 
 ggplotly(nocala %>% ggplot(aes(y = number_hospitalizations, x = age_adjusted_hospitalization_rate, col = county_name)) + geom_point() + labs(y = "Number of Hospitalizations", x = "Hospitalization Rate", color = "Total Rate and Number of Hospitalizations"))
 ```
-Figure 2. The x axis shows the asthma hospitalization rate while the y axis shows the number of asthma hospitalizations. The points are colored by county.
+Figure 2. The x axis shows the asthma hospitalization rate while the y axis shows the number of asthma hospitalizations. The points are colored by county.  
+<br />
 
-The county with the highest number of hospitalizations in 2018 was San Diego with 662 hospitalizations while the county with the highest hospitalization rate was Fresno (15.3).
+The county with the highest number of hospitalizations in 2018 was San Diego with 662 hospitalizations while the county with the highest hospitalization rate was Fresno (15.3).  
+<br />
 
-While these graphs provide context for which counties have high asthma hospitalization rates and a large amount of open park area, they do not provide a comparison between our two variables of interest. The next plot compares the number of hospitalizations in each county to the total area of open parks in order to visualize how these characteristics may relate to each other if at all.
+While these graphs provide context for which counties have high asthma hospitalization rates and a large amount of open park area, they do not provide a comparison between our two variables of interest. The next plot compares the number of hospitalizations in each county to the total area of open parks in order to visualize how these characteristics may relate to each other if at all.  
+<br />
 
 ```{r echo = FALSE}
 ggplotly(parks_asthmaCA_kids_v_adults_countystats %>% ggplot(aes(x = county_number_hospitalizations, y = county_open_park_area, col = county_name)) + geom_point() + labs(x = "Number of Hospitalizations", y = "Area of Open Parks", title = "Number of Hospitalizations vs Open Park Area", color = "County"))
 ```
-Figure 3. Using differently adjusted states for number of hospitalizations, the x axis shows the number of hospitalizations while the y axis shows the total open park area. The points are colored by county.
+Figure 3. Using differently adjusted states for number of hospitalizations, the x axis shows the number of hospitalizations while the y axis shows the total open park area. The points are colored by county.  
+<br />
 
-We can see from this graph that several of the counties that have a larger amount of open park space, such as Shasta and Monterey, also have a very low number of hospitalizations. Alternatively, counties such as Alameda and Sacramento with a smaller amount of open park space have a larger amount of hospitalizations.
+We can see from this graph that several of the counties that have a larger amount of open park space, such as Shasta and Monterey, also have a very low number of hospitalizations. Alternatively, counties such as Alameda and Sacramento with a smaller amount of open park space have a larger amount of hospitalizations.  
+<br />
 
-Notable outliers include Riverside, which has an extremely large area of open parks but not an extremely low number of hospitalizations, and Orange, which has the greatest number of hospitalizations by far but the amount of open park space, while less than some other counties, is not extremely low.
+Notable outliers include Riverside, which has an extremely large area of open parks but not an extremely low number of hospitalizations, and Orange, which has the greatest number of hospitalizations by far but the amount of open park space, while less than some other counties, is not extremely low.  
+<br />
 
-It is important to note, once again, that some counties included in the initial hospitalization data, such as San Diego, were not included in this plot or the following plots due to their absence in the original parks data.
+It is important to note, once again, that some counties included in the initial hospitalization data, such as San Diego, were not included in this plot or the following plots due to their absence in the original parks data.  
+<br />
 
-We also decided to look at how race and ethnicity may come into play, and how they may impact or be impacted by the hospitalization rates or amount of open park space.
+We also decided to look at how race and ethnicity may come into play, and how they may impact or be impacted by the hospitalization rates or amount of open park space.  
+<br />
 
-First, we look at race and ethnicity as it relates to the number of hospitalizations in each county.
+First, we look at race and ethnicity as it relates to the number of hospitalizations in each county.  
+<br />
 
 ```{r echo = FALSE}
 ggplotly(parks_asthmaCA_race_ethnicity %>% ggplot(aes(x = race_ethnicity, y = number_hospitalizations, col = county_name)) + geom_point() + labs(x = "Race/Ethnicity", y = "Number of Hospitalizations", title = "Number of Hospitalizations and Race/Ethnicity", color = "County"))
 ```
-Figure 4. The x axis shows the race/ethnicity while the y axis shows the number of hospitalizations. The points are colored by county.
+Figure 4. The x axis shows the race/ethnicity while the y axis shows the number of hospitalizations. The points are colored by county.  
+<br />
 
-Looking at individual races and counties, we can see that certain counties, such as Fresno and Riverside, have a much higher number of hospitalizations for Hispanic people than they do for White or Black people. Other counties, like Sacramento and Alameda, have a higher number of hospitalizations for Black people than either Hispanic or White people, while Orange county has a significantly higher number of hospitalizations for White peopel than any other race or other county for that matter. For all of the counties, Asian/PI people have a lower number of hospitalizations than any other race, with Orange and Alameda being exceptions.
+Looking at individual races and counties, we can see that certain counties, such as Fresno and Riverside, have a much higher number of hospitalizations for Hispanic people than they do for White or Black people. Other counties, like Sacramento and Alameda, have a higher number of hospitalizations for Black people than either Hispanic or White people, while Orange county has a significantly higher number of hospitalizations for White peopel than any other race or other county for that matter. For all of the counties, Asian/PI people have a lower number of hospitalizations than any other race, with Orange and Alameda being exceptions.  
+<br />
 
-This indicates that the impact that race has on the number of hospitalizations varies greatly from county to county, but several counties do have one race that has a disproportionately larger number of hospitalizations.
+This indicates that the impact that race has on the number of hospitalizations varies greatly from county to county, but several counties do have one race that has a disproportionately larger number of hospitalizations.  
+<br />
 
-Does the amount of open park space have any kind of impact on the hospitalization rates of different races? Our next plot examines this.
+Does the amount of open park space have any kind of impact on the hospitalization rates of different races? Our next plot examines this.  
+<br />
 
 ```{r echo = FALSE}
 ggplotly(parks_asthmaCA_race_ethnicity %>% ggplot(aes(x = race_ethnicity, y = number_hospitalizations, col = total_open_park_area_sqmiles)) + geom_point() + labs(x = "Race/Ethnicity", y = "Number of Hospitalizations", title = "Amount of Open Park Area and Race/Ethnicity Hospitalization Numbers", color = "Area of Open Parks"))
 ```
-Figure 5. The x axis shows the race/ethnicity while the y axis shows the number of hospitalizations. The points are colored by open park area.
+Figure 5. The x axis shows the race/ethnicity while the y axis shows the number of hospitalizations. The points are colored by open park area.  
+<br />
 
-We can see that there does not seem to be any kind of significant relationship between the hospitalization rates of different races and how much open park space there is. Among the higher points, there are no distinct differences in the color of the points for any of the races, nor is there any clear clustering of darker or lighter color among the lower points.
+We can see that there does not seem to be any kind of significant relationship between the hospitalization rates of different races and how much open park space there is. Among the higher points, there are no distinct differences in the color of the points for any of the races, nor is there any clear clustering of darker or lighter color among the lower points.  
+<br />
 
 ## Back to Our Roots: Takeaways
 
-Based on our analysis of the counties of California in 2018, ignoring outliers, the amount of open green space in a county does seem to have a consistent impact on asthma hospitalization rates, with counties with larger amounts of open green spaces having lower numbers of hospitalizations. This may prove that having more green space in a city does improve the air quality. It also seems like race and ethnicity may play a role in the number of hospitalizations, although further analysis of this is necessary. In order to dive deeper, we made an [interactive](https://mjniksch.shinyapps.io/treehuggers_interactive/?_ga=2.162400570.744484460.1671457729-1545722871.1671457729) where we can look at individual counties and see the hospitalization rates of different races. This way, one can hone in on specific counties of interest or look for pattern between or within races.
+Based on our analysis of the counties of California in 2018, ignoring outliers, the amount of open green space in a county does seem to have a consistent impact on asthma hospitalization rates, with counties with larger amounts of open green spaces having lower numbers of hospitalizations. This may prove that having more green space in a city does improve the air quality. It also seems like race and ethnicity may play a role in the number of hospitalizations, although further analysis of this is necessary. In order to dive deeper, we made an [interactive](https://mjniksch.shinyapps.io/treehuggers_interactive/?_ga=2.162400570.744484460.1671457729-1545722871.1671457729) where we can look at individual counties and see the hospitalization rates of different races. This way, one can hone in on specific counties of interest or look for pattern between or within races.  
+<br />
 
 We must acknowledge that since we were initially only focused on exploring the relationship between open spaces and hospitalization rates, we do not have census information on the race makeup of the counties, and so the higher hospitalization rates for different races may be due to race population discrepancies between counties. More research would be required to delve further into this and determine how significant of a role race truly plays in asthma hospitalization rates.
