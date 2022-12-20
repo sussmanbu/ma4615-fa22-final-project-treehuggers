@@ -1,6 +1,6 @@
 ---
 title: Data
-description:
+description: Here, we present our original data sources and describe the cleaning and joining processes that we used before analyzing the data.
 toc: false
 featuredVideo:
 featuredImage: images/tree.jpeg
@@ -316,7 +316,7 @@ save(asthma_parks_race, file = here::here("dataset/asthma_parks_race.RData"))
 
 
 
-The following is a link for more details on how we cleaned our data: [load_and_clean_data.R](/load_and_clean_data.R).
+The following is a link for how we cleaned our data, as well as a copy of the code that you can run to clean the data yourself: [load_and_clean_data.R](/load_and_clean_data.R).
 
 
 
