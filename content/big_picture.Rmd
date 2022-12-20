@@ -56,7 +56,7 @@ Now, here is a look at the total number and rate of asthma hospitalizations in e
 ``` {r echo = FALSE}
 nocala <- asthmaCA_kids %>% filter(!county_name %in% c("CALIFORNIA", "LOS ANGELES"))
 
-ggplotly(nocala %>% ggplot(aes(y = number_hospitalizations, x = age_adjusted_hospitalization_rate, col = county_name)) + geom_point() + labs(y = "Number of Hospitalizations", x = "Hospitalization Rate", title = "Asthma Hopitalization Rates & Numbers", color = "County"))
+ggplotly(nocala %>% ggplot(aes(y = number_hospitalizations, x = age_adjusted_hospitalization_rate, col = county_name)) + geom_point() + labs(y = "Number of Hospitalizations", x = "Hospitalization Rate", title = "Asthma Hospitalization Rates & Numbers", color = "County"))
 ```
 Figure 2. The x axis shows the asthma hospitalization rate while the y axis shows the number of asthma hospitalizations. The points are colored by county.  
 <br />
